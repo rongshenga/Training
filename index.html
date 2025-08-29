@@ -70,46 +70,27 @@
             font-size: 1em;
         }
         
-        /* Navigation */
-        .navigation {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-
-        #week-display {
+        /* Week Headers */
+        .week-header {
             font-size: 1.5em;
             font-weight: bold;
             text-align: center;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--border-color);
         }
 
-        button {
-            background-color: var(--accent-color);
-            color: var(--primary-text);
-            border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 1em;
-            transition: background-color 0.2s;
-        }
-
-        button:hover {
-            background-color: var(--accent-hover);
-        }
-        
-        button:disabled {
-            background-color: var(--secondary-bg);
-            cursor: not-allowed;
+        .week-header:first-of-type {
+            margin-top: 1rem;
         }
 
         /* Workout Day Cards */
         .card {
             background-color: var(--secondary-bg);
             border-radius: 8px;
-            padding: 20px;
-            margin: 20px 0;
+            padding: 15px;
+            margin: 15px 0;
             box-shadow: 0 2px 4px rgba(0,0,0,0.3);
         }
 
@@ -129,8 +110,8 @@
 
         .progress-box {
             display: inline-block;
-            width: 30px;
-            height: 30px;
+            width: 24px;
+            height: 24px;
             border: 2px solid var(--border-color);
             margin-right: 5px;
             margin-bottom: 5px;
@@ -163,64 +144,49 @@
             </div>
         </section>
 
-        <section class="navigation">
-            <button id="prev-week">Previous Week</button>
-            <h2 id="week-display"></h2>
-            <button id="next-week">Next Week</button>
-        </section>
-
-        <main id="workout-days">
-            <!-- Workout day cards will be dynamically inserted here -->
+        <main id="workout-plan">
+            <!-- All 8 weeks of the workout plan will be dynamically inserted here -->
         </main>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             // --- DATA ---
-            // The complete 8-week workout program data structure.
             const workoutProgram = [
-              // Week 1: Accumulation
               { week: 1, phase: 'Accumulation', days: [
                 { day: 'Sunday', title: 'Volume Bench', exercise: 'Bench Press', sets: 4, reps: 8, intensity: 0.65 },
                 { day: 'Thursday', title: 'Strength Bench', exercise: 'Bench Press', sets: 5, reps: 5, intensity: 0.775 },
                 { day: 'Friday', title: 'Strength Squat', exercise: 'Squat', sets: 5, reps: 5, intensity: 0.75 }
               ]},
-              // Week 2: Accumulation
               { week: 2, phase: 'Accumulation', days: [
                 { day: 'Sunday', title: 'Volume Bench', exercise: 'Bench Press', sets: 4, reps: 8, intensity: 0.675 },
                 { day: 'Thursday', title: 'Strength Bench', exercise: 'Bench Press', sets: 5, reps: 5, intensity: 0.80 },
                 { day: 'Friday', title: 'Strength Squat', exercise: 'Squat', sets: 5, reps: 5, intensity: 0.775 }
               ]},
-              // Week 3: Accumulation
               { week: 3, phase: 'Accumulation', days: [
                 { day: 'Sunday', title: 'Volume Bench', exercise: 'Bench Press', sets: 4, reps: 8, intensity: 0.70 },
                 { day: 'Thursday', title: 'Strength Bench', exercise: 'Bench Press', sets: 5, reps: 5, intensity: 0.825 },
                 { day: 'Friday', title: 'Strength Squat', exercise: 'Squat', sets: 5, reps: 5, intensity: 0.80 }
               ]},
-              // Week 4: Deload
               { week: 4, phase: 'Deload', days: [
                 { day: 'Thursday', title: 'Technical Bench', exercise: 'Bench Press', sets: 3, reps: 5, intensity: 0.60 },
                 { day: 'Friday', title: 'Technical Squat', exercise: 'Squat', sets: 3, reps: 5, intensity: 0.60 }
               ]},
-              // Week 5: Intensification
               { week: 5, phase: 'Intensification', days: [
                 { day: 'Sunday', title: 'Technical Bench', exercise: 'Bench Press', sets: 4, reps: 5, intensity: 0.70 },
                 { day: 'Thursday', title: 'Intensity Bench', exercise: 'Bench Press', sets: 4, reps: 3, intensity: 0.875 },
                 { day: 'Friday', title: 'Intensity Squat', exercise: 'Squat', sets: 5, reps: 3, intensity: 0.85 }
               ]},
-              // Week 6: Intensification
               { week: 6, phase: 'Intensification', days: [
                 { day: 'Sunday', title: 'Technical Bench', exercise: 'Bench Press', sets: 4, reps: 5, intensity: 0.725 },
                 { day: 'Thursday', title: 'Intensity Bench', exercise: 'Bench Press', sets: 3, reps: 3, intensity: 0.90 },
                 { day: 'Friday', title: 'Intensity Squat', exercise: 'Squat', sets: 4, reps: 3, intensity: 0.875 }
               ]},
-              // Week 7: Intensification
               { week: 7, phase: 'Intensification', days: [
                 { day: 'Sunday', title: 'Activation Bench', exercise: 'Bench Press', sets: 5, reps: 3, intensity: 0.75 },
                 { day: 'Thursday', title: 'Peak Bench', exercise: 'Bench Press', sets: 3, reps: 2, intensity: 0.925 },
                 { day: 'Friday', title: 'Peak Squat', exercise: 'Squat', sets: 3, reps: 3, intensity: 0.90 }
               ]},
-              // Week 8: Peak & Test
               { week: 8, phase: 'Peak & Test', days: [
                 { day: 'Thursday', title: 'Test Day', exercise: 'Bench Press', test: true },
                 { day: 'Friday', title: 'Test Day', exercise: 'Squat', test: true }
@@ -229,27 +195,21 @@
 
             // --- APPLICATION STATE ---
             let state = {
-                currentWeek: 1,
                 benchPressTM: 0,
                 squatTM: 0,
-                progressData: {} // Example: { 'w1d0s0': true, 'w1d0s1': false }
+                progressData: {}
             };
 
             // --- DOM ELEMENTS ---
             const benchTmInput = document.getElementById('bench-tm');
             const squatTmInput = document.getElementById('squat-tm');
-            const weekDisplay = document.getElementById('week-display');
-            const workoutContainer = document.getElementById('workout-days');
-            const prevWeekBtn = document.getElementById('prev-week');
-            const nextWeekBtn = document.getElementById('next-week');
+            const workoutContainer = document.getElementById('workout-plan');
 
             // --- LOCALSTORAGE LOGIC ---
-            // Saves the entire application state to localStorage.
             function saveData() {
                 localStorage.setItem('workoutLogData', JSON.stringify(state));
             }
 
-            // Loads the state from localStorage, or sets defaults if no data is found.
             function loadData() {
                 const savedData = localStorage.getItem('workoutLogData');
                 if (savedData) {
@@ -258,7 +218,6 @@
             }
 
             // --- UTILITY FUNCTIONS ---
-            // Calculates and rounds the weight to the nearest 2.5kg.
             function calculateWeight(tm, intensity) {
                 if (tm <= 0) return 0;
                 const weight = tm * intensity;
@@ -266,66 +225,55 @@
             }
 
             // --- RENDER/DISPLAY FUNCTIONS ---
-            // Main function to update the entire display based on the current state.
             function updateDisplay() {
-                updateWeekDisplay();
-                updateWorkoutDays();
+                updateWorkoutPlan();
                 updateTMInputs();
-                updateNavButtons();
             }
             
-            // Updates the TM input fields with values from the state.
             function updateTMInputs() {
                 benchTmInput.value = state.benchPressTM > 0 ? state.benchPressTM : '';
                 squatTmInput.value = state.squatTM > 0 ? state.squatTM : '';
             }
-            
-            // Updates the week and phase title.
-            function updateWeekDisplay() {
-                const currentWeekData = workoutProgram.find(wk => wk.week === state.currentWeek);
-                if (currentWeekData) {
-                    weekDisplay.textContent = `Week ${state.currentWeek}: ${currentWeekData.phase}`;
-                }
-            }
-            
-            // Enables/disables navigation buttons at the start/end of the program.
-            function updateNavButtons() {
-                prevWeekBtn.disabled = state.currentWeek === 1;
-                nextWeekBtn.disabled = state.currentWeek === workoutProgram.length;
-            }
 
-            // Dynamically generates and displays the workout cards for the current week.
-            function updateWorkoutDays() {
+            // Renders the entire 8-week program to the page.
+            function updateWorkoutPlan() {
                 workoutContainer.innerHTML = ''; // Clear previous content
-                const currentWeekData = workoutProgram.find(wk => wk.week === state.currentWeek);
 
-                if (!currentWeekData) return;
+                workoutProgram.forEach(weekData => {
+                    // Create and append the header for the week
+                    const weekHeader = document.createElement('h2');
+                    weekHeader.className = 'week-header';
+                    weekHeader.textContent = `Week ${weekData.week}: ${weekData.phase}`;
+                    workoutContainer.appendChild(weekHeader);
 
-                currentWeekData.days.forEach((day, dayIndex) => {
-                    const dayCard = document.createElement('div');
-                    dayCard.className = 'card';
+                    // Render the workout cards for each day of the week
+                    weekData.days.forEach((day, dayIndex) => {
+                        const dayCard = document.createElement('div');
+                        dayCard.className = 'card';
 
-                    let content = `<h3>${day.day} - ${day.title}</h3>`;
+                        let content = `<h3>${day.day} - ${day.title}</h3>`;
 
-                    if (day.test) {
-                        content += `<p>Test your 1 Rep Max for ${day.exercise}!</p>`;
-                    } else {
-                        const tm = day.exercise === 'Bench Press' ? state.benchPressTM : state.squatTM;
-                        const weight = calculateWeight(tm, day.intensity);
-                        content += `<p>${day.exercise}: <strong>${weight}kg</strong> - ${day.sets} sets of ${day.reps} reps</p>`;
-                        
-                        let progressHTML = '<div class="progress-container">';
-                        for (let i = 0; i < day.sets; i++) {
-                            const progressId = `w${state.currentWeek}d${dayIndex}s${i}`;
-                            const isCompleted = state.progressData[progressId] ? 'completed' : '';
-                            progressHTML += `<div class="progress-box ${isCompleted}" data-progress-id="${progressId}"></div>`;
+                        if (day.test) {
+                            content += `<p>Test your 1 Rep Max for ${day.exercise}!</p>`;
+                        } else {
+                            const tm = day.exercise === 'Bench Press' ? state.benchPressTM : state.squatTM;
+                            const weight = calculateWeight(tm, day.intensity);
+                            content += `<p>${day.exercise}: <strong>${weight}kg</strong> - ${day.sets} sets of ${day.reps} reps</p>`;
+                            
+                            let progressHTML = '<div class="progress-container">';
+                            for (let i = 0; i < day.sets; i++) {
+                                // Unique ID for each progress box across all weeks
+                                const progressId = `w${weekData.week}d${dayIndex}s${i}`;
+                                const isCompleted = state.progressData[progressId] ? 'completed' : '';
+                                progressHTML += `<div class="progress-box ${isCompleted}" data-progress-id="${progressId}"></div>`;
+                            }
+                            progressHTML += '</div>';
+                            content += progressHTML;
                         }
-                        progressHTML += '</div>';
-                        content += progressHTML;
-                    }
 
-                    dayCard.innerHTML = content;
-                    workoutContainer.appendChild(dayCard);
+                        dayCard.innerHTML = content;
+                        workoutContainer.appendChild(dayCard);
+                    });
                 });
             }
 
@@ -341,21 +289,13 @@
                 }
                 
                 saveData();
-                updateWorkoutDays(); // Re-render workouts with new weights
+                updateWorkoutPlan(); // Re-render the entire plan with new weights
             }
 
-            function handleWeekChange(direction) {
-                state.currentWeek += direction;
-                saveData();
-                updateDisplay();
-            }
-
-            // Toggles the completion status of a set when a progress box is clicked.
             function handleProgressToggle(event) {
                 const target = event.target;
                 if (target.classList.contains('progress-box')) {
                     const progressId = target.dataset.progressId;
-                    // Toggle the state: if it exists and is true, set to false, otherwise set to true
                     state.progressData[progressId] = !state.progressData[progressId];
                     target.classList.toggle('completed');
                     saveData();
@@ -366,11 +306,8 @@
             function init() {
                 loadData();
                 
-                // Add event listeners
                 benchTmInput.addEventListener('input', handleTMChange);
                 squatTmInput.addEventListener('input', handleTMChange);
-                prevWeekBtn.addEventListener('click', () => handleWeekChange(-1));
-                nextWeekBtn.addEventListener('click', () => handleWeekChange(1));
                 workoutContainer.addEventListener('click', handleProgressToggle);
 
                 updateDisplay(); // Initial render
