@@ -179,7 +179,7 @@
               ]},
               { week: 6, phase: 'Intensification', days: [
                 { day: 'Sunday', title: 'Technical Bench', exercise: 'Bench Press', sets: 4, reps: 5, intensity: 0.725 },
-                { day: 'Thursday', title: 'Intensity Bench', exercise: 'Bench Press', sets: 3, reps: 3, intensity: 0.90 },
+                { day: 'Thursday', 'title': 'Intensity Bench', exercise: 'Bench Press', sets: 3, reps: 3, intensity: 0.90 },
                 { day: 'Friday', title: 'Intensity Squat', exercise: 'Squat', sets: 4, reps: 3, intensity: 0.875 }
               ]},
               { week: 7, phase: 'Intensification', days: [
@@ -187,9 +187,10 @@
                 { day: 'Thursday', title: 'Peak Bench', exercise: 'Bench Press', sets: 3, reps: 2, intensity: 0.925 },
                 { day: 'Friday', title: 'Peak Squat', exercise: 'Squat', sets: 3, reps: 3, intensity: 0.90 }
               ]},
+              // Week 8: Peak & Test
               { week: 8, phase: 'Peak & Test', days: [
-                { day: 'Thursday', title: 'Test Day', exercise: 'Bench Press', test: true },
-                { day: 'Friday', title: 'Test Day', exercise: 'Squat', test: true }
+                { day: 'Thursday', title: 'Peak Test', exercise: 'Bench Press', sets: 3, reps: 1, intensity: 0.95 },
+                { day: 'Friday', title: 'Peak Test', exercise: 'Squat', sets: 3, reps: 1, intensity: 0.95 }
               ]}
             ];
 
@@ -258,7 +259,7 @@
                         } else {
                             const tm = day.exercise === 'Bench Press' ? state.benchPressTM : state.squatTM;
                             const weight = calculateWeight(tm, day.intensity);
-                            content += `<p>${day.exercise}: <strong>${weight}kg</strong> - ${day.sets} sets of ${day.reps} reps</p>`;
+                            content += `<p>${day.exercise}: <strong>${weight}kg</strong> (${day.intensity * 100}%) - ${day.sets} sets of ${day.reps} reps</p>`;
                             
                             let progressHTML = '<div class="progress-container">';
                             for (let i = 0; i < day.sets; i++) {
