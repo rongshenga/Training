@@ -124,6 +124,21 @@
             background-color: var(--success-color);
             border-color: var(--success-color);
         }
+
+        /* Responsive Grid Layout for Workout Plan */
+        @media (min-width: 768px) {
+            #workout-plan {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px; /* Adjust gap between columns */
+                align-items: start;
+            }
+
+            .week-container {
+                /* This is a good practice for grid/column layouts */
+                break-inside: avoid;
+            }
+        }
     </style>
 </head>
 <body>
@@ -241,11 +256,15 @@
                 workoutContainer.innerHTML = ''; // Clear previous content
 
                 workoutProgram.forEach(weekData => {
+                    // Create a container for the entire week
+                    const weekContainer = document.createElement('div');
+                    weekContainer.className = 'week-container';
+
                     // Create and append the header for the week
                     const weekHeader = document.createElement('h2');
                     weekHeader.className = 'week-header';
                     weekHeader.textContent = `Week ${weekData.week}: ${weekData.phase}`;
-                    workoutContainer.appendChild(weekHeader);
+                    weekContainer.appendChild(weekHeader);
 
                     // Render the workout cards for each day of the week
                     weekData.days.forEach((day, dayIndex) => {
@@ -273,8 +292,9 @@
                         }
 
                         dayCard.innerHTML = content;
-                        workoutContainer.appendChild(dayCard);
+                        weekContainer.appendChild(dayCard);
                     });
+                    workoutContainer.appendChild(weekContainer);
                 });
             }
 
