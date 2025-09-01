@@ -1,279 +1,311 @@
 document.addEventListener('DOMContentLoaded', () => {
-            // --- DATA ---
-            const workoutProgram = [
-              { week: 1, phase: 'Accumulation', days: [
+    // --- DATA ---
+    const workoutProgram = [
+        {
+            week: 1, phase: 'Accumulation', days: [
                 { day: 'Sunday', title: 'Volume Bench', exercise: 'Bench Press', sets: 4, reps: 8, intensity: 0.65 },
                 { day: 'Thursday', title: 'Strength Bench', exercise: 'Bench Press', sets: 5, reps: 5, intensity: 0.775 },
                 { day: 'Friday', title: 'Strength Squat', exercise: 'Squat', sets: 5, reps: 5, intensity: 0.75 }
-              ]},
-              { week: 2, phase: 'Accumulation', days: [
+            ]
+        },
+        {
+            week: 2, phase: 'Accumulation', days: [
                 { day: 'Sunday', title: 'Volume Bench', exercise: 'Bench Press', sets: 4, reps: 8, intensity: 0.675 },
                 { day: 'Thursday', title: 'Strength Bench', exercise: 'Bench Press', sets: 5, reps: 5, intensity: 0.80 },
                 { day: 'Friday', title: 'Strength Squat', exercise: 'Squat', sets: 5, reps: 5, intensity: 0.775 }
-              ]},
-              { week: 3, phase: 'Accumulation', days: [
+            ]
+        },
+        {
+            week: 3, phase: 'Accumulation', days: [
                 { day: 'Sunday', title: 'Volume Bench', exercise: 'Bench Press', sets: 4, reps: 8, intensity: 0.70 },
                 { day: 'Thursday', title: 'Strength Bench', exercise: 'Bench Press', sets: 5, reps: 5, intensity: 0.825 },
                 { day: 'Friday', title: 'Strength Squat', exercise: 'Squat', sets: 5, reps: 5, intensity: 0.80 }
-              ]},
-              { week: 4, phase: 'Deload', days: [
-                                { day: 'Sunday', title: 'Technical Bench', exercise: 'Bench Press', sets: 3, reps: 5, intensity: 0.60 },
+            ]
+        },
+        {
+            week: 4, phase: 'Deload', days: [
+                { day: 'Sunday', title: 'Technical Bench', exercise: 'Bench Press', sets: 3, reps: 5, intensity: 0.60 },
                 { day: 'Thursday', title: 'Technical Bench', exercise: 'Bench Press', sets: 3, reps: 5, intensity: 0.60 },
                 { day: 'Friday', title: 'Technical Squat', exercise: 'Squat', sets: 3, reps: 5, intensity: 0.60 }
-              ]},
-              { week: 5, phase: 'Intensification', days: [
+            ]
+        },
+        {
+            week: 5, phase: 'Intensification', days: [
                 { day: 'Sunday', title: 'Technical Bench', exercise: 'Bench Press', sets: 4, reps: 5, intensity: 0.70 },
                 { day: 'Thursday', title: 'Intensity Bench', exercise: 'Bench Press', sets: 4, reps: 3, intensity: 0.875 },
                 { day: 'Friday', title: 'Intensity Squat', exercise: 'Squat', sets: 5, reps: 3, intensity: 0.85 }
-              ]},
-              { week: 6, phase: 'Intensification', days: [
+            ]
+        },
+        {
+            week: 6, phase: 'Intensification', days: [
                 { day: 'Sunday', title: 'Technical Bench', exercise: 'Bench Press', sets: 4, reps: 5, intensity: 0.725 },
                 { day: 'Thursday', 'title': 'Intensity Bench', exercise: 'Bench Press', sets: 3, reps: 3, intensity: 0.90 },
                 { day: 'Friday', title: 'Intensity Squat', exercise: 'Squat', sets: 4, reps: 3, intensity: 0.875 }
-              ]},
-              { week: 7, phase: 'Intensification', days: [
+            ]
+        },
+        {
+            week: 7, phase: 'Intensification', days: [
                 { day: 'Sunday', title: 'Activation Bench', exercise: 'Bench Press', sets: 5, reps: 3, intensity: 0.75 },
                 { day: 'Thursday', title: 'Peak Bench', exercise: 'Bench Press', sets: 3, reps: 2, intensity: 0.925 },
                 { day: 'Friday', title: 'Peak Squat', exercise: 'Squat', sets: 3, reps: 3, intensity: 0.90 }
-              ]},
-              // Week 8: Peak & Test
-              { week: 8, phase: 'Peak & Test', days: [
+            ]
+        },
+        // Week 8: Peak & Test
+        {
+            week: 8, phase: 'Peak & Test', days: [
                 { day: 'Thursday', title: 'Peak Test', exercise: 'Bench Press', sets: 3, reps: 1, intensity: 0.95 },
                 { day: 'Friday', title: 'Peak Test', exercise: 'Squat', sets: 3, reps: 1, intensity: 0.95 }
-              ]}
-            ];
+            ]
+        }
+    ];
 
-            let CANONICAL_TITLE_OPTIONS = {};
+    let CANONICAL_TITLE_OPTIONS = {};
 
-            // --- APPLICATION STATE ---
-                        let state = {
-                benchPressTM: 0,
-                squatTM: 0,
-                progressData: {},
-                editMode: false,
-                history: [],
-                program: [
-                  { week: 1, phase: 'Accumulation', days: [
+    // --- APPLICATION STATE ---
+    let state = {
+        benchPressTM: 0,
+        squatTM: 0,
+        progressData: {},
+        editMode: false,
+        history: [],
+        program: [
+            {
+                week: 1, phase: 'Accumulation', days: [
                     { day: 'Sunday', title: 'Volume Bench', exercise: 'Bench Press', sets: 4, reps: 8, intensity: 0.65 },
                     { day: 'Thursday', title: 'Strength Bench', exercise: 'Bench Press', sets: 5, reps: 5, intensity: 0.775 },
                     { day: 'Friday', title: 'Strength Squat', exercise: 'Squat', sets: 5, reps: 5, intensity: 0.75 }
-                  ]},
-                  { week: 2, phase: 'Accumulation', days: [
+                ]
+            },
+            {
+                week: 2, phase: 'Accumulation', days: [
                     { day: 'Sunday', title: 'Volume Bench', exercise: 'Bench Press', sets: 4, reps: 8, intensity: 0.675 },
                     { day: 'Thursday', title: 'Strength Bench', exercise: 'Bench Press', sets: 5, reps: 5, intensity: 0.80 },
                     { day: 'Friday', title: 'Strength Squat', exercise: 'Squat', sets: 5, reps: 5, intensity: 0.775 }
-                  ]},
-                  { week: 3, phase: 'Accumulation', days: [
+                ]
+            },
+            {
+                week: 3, phase: 'Accumulation', days: [
                     { day: 'Sunday', title: 'Volume Bench', exercise: 'Bench Press', sets: 4, reps: 8, intensity: 0.70 },
                     { day: 'Thursday', title: 'Strength Bench', exercise: 'Bench Press', sets: 5, reps: 5, intensity: 0.825 },
                     { day: 'Friday', title: 'Strength Squat', exercise: 'Squat', sets: 5, reps: 5, intensity: 0.80 }
-                  ]},
-                  { week: 4, phase: 'Deload', days: [
-                                    { day: 'Sunday', title: 'Technical Bench', exercise: 'Bench Press', sets: 3, reps: 5, intensity: 0.60 },
+                ]
+            },
+            {
+                week: 4, phase: 'Deload', days: [
+                    { day: 'Sunday', title: 'Technical Bench', exercise: 'Bench Press', sets: 3, reps: 5, intensity: 0.60 },
                     { day: 'Thursday', title: 'Technical Bench', exercise: 'Bench Press', sets: 3, reps: 5, intensity: 0.60 },
                     { day: 'Friday', title: 'Technical Squat', exercise: 'Squat', sets: 3, reps: 5, intensity: 0.60 }
-                  ]},
-                  { week: 5, phase: 'Intensification', days: [
+                ]
+            },
+            {
+                week: 5, phase: 'Intensification', days: [
                     { day: 'Sunday', title: 'Technical Bench', exercise: 'Bench Press', sets: 4, reps: 5, intensity: 0.70 },
                     { day: 'Thursday', title: 'Intensity Bench', exercise: 'Bench Press', sets: 4, reps: 3, intensity: 0.875 },
                     { day: 'Friday', title: 'Intensity Squat', exercise: 'Squat', sets: 5, reps: 3, intensity: 0.85 }
-                  ]},
-                  { week: 6, phase: 'Intensification', days: [
+                ]
+            },
+            {
+                week: 6, phase: 'Intensification', days: [
                     { day: 'Sunday', title: 'Technical Bench', exercise: 'Bench Press', sets: 4, reps: 5, intensity: 0.725 },
                     { day: 'Thursday', 'title': 'Intensity Bench', exercise: 'Bench Press', sets: 3, reps: 3, intensity: 0.90 },
                     { day: 'Friday', title: 'Intensity Squat', exercise: 'Squat', sets: 4, reps: 3, intensity: 0.875 }
-                  ]},
-                  { week: 7, phase: 'Intensification', days: [
+                ]
+            },
+            {
+                week: 7, phase: 'Intensification', days: [
                     { day: 'Sunday', title: 'Activation Bench', exercise: 'Bench Press', sets: 5, reps: 3, intensity: 0.75 },
                     { day: 'Thursday', title: 'Peak Bench', exercise: 'Bench Press', sets: 3, reps: 2, intensity: 0.925 },
                     { day: 'Friday', title: 'Peak Squat', exercise: 'Squat', sets: 3, reps: 3, intensity: 0.90 }
-                  ]},
-                  // Week 8: Peak & Test
-                  { week: 8, phase: 'Peak & Test', days: [
+                ]
+            },
+            // Week 8: Peak & Test
+            {
+                week: 8, phase: 'Peak & Test', days: [
                     { day: 'Thursday', title: 'Peak Test', exercise: 'Bench Press', sets: 3, reps: 1, intensity: 0.95 },
                     { day: 'Friday', title: 'Peak Test', exercise: 'Squat', sets: 3, reps: 1, intensity: 0.95 }
-                  ]}
                 ]
-            };
-
-            // --- DOM ELEMENTS ---
-            const benchTmInput = document.getElementById('bench-tm');
-            const squatTmInput = document.getElementById('squat-tm');
-            const workoutContainer = document.getElementById('workout-plan');
-            const editModeToggle = document.getElementById('edit-mode-toggle');
-            const archiveBtn = document.getElementById('archive-cycle-btn');
-            const viewHistoryBtn = document.getElementById('view-history-btn');
-            const modalConfirmBtn = document.getElementById('modal-confirm-btn');
-            const modalCancelBtn = document.getElementById('modal-cancel-btn');
-
-            // --- LOCALSTORAGE LOGIC ---
-            function saveData() {
-                localStorage.setItem('workoutLogData', JSON.stringify(state));
             }
+        ]
+    };
 
-            function loadData() {
-                const savedData = localStorage.getItem('workoutLogData');
-                if (savedData) {
-                    const parsedData = JSON.parse(savedData);
-                    // Merge saved data with default state to ensure new properties are not lost
-                    state = { ...state, ...parsedData };
-                    state.history = parsedData.history || []; // Ensure history is an array
+    // --- DOM ELEMENTS ---
+    const benchTmInput = document.getElementById('bench-tm');
+    const squatTmInput = document.getElementById('squat-tm');
+    const workoutContainer = document.getElementById('workout-plan');
+    const editModeToggle = document.getElementById('edit-mode-toggle');
+    const archiveBtn = document.getElementById('archive-cycle-btn');
+    const viewHistoryBtn = document.getElementById('view-history-btn');
+    const modalConfirmBtn = document.getElementById('modal-confirm-btn');
+    const modalCancelBtn = document.getElementById('modal-cancel-btn');
+
+    // --- LOCALSTORAGE LOGIC ---
+    function saveData() {
+        localStorage.setItem('workoutLogData', JSON.stringify(state));
+    }
+
+    function loadData() {
+        const savedData = localStorage.getItem('workoutLogData');
+        if (savedData) {
+            const parsedData = JSON.parse(savedData);
+            // Merge saved data with default state to ensure new properties are not lost
+            state = { ...state, ...parsedData };
+            state.history = parsedData.history || []; // Ensure history is an array
+        }
+    }
+
+    // --- UTILITY FUNCTIONS ---
+    function getUniqueOptions(program, key) {
+        const allValues = program.flatMap(week => week.days.map(day => day[key]));
+        return [...new Set(allValues)];
+    }
+
+    function getTitleOptionsByExercise(program) {
+        const mapping = {};
+        program.forEach(week => {
+            week.days.forEach(day => {
+                if (!mapping[day.exercise]) {
+                    mapping[day.exercise] = new Set();
                 }
-            }
+                mapping[day.exercise].add(day.title);
+            });
+        });
 
-            // --- UTILITY FUNCTIONS ---
-            function getUniqueOptions(program, key) {
-                const allValues = program.flatMap(week => week.days.map(day => day[key]));
-                return [...new Set(allValues)];
-            }
+        // Convert sets to arrays
+        for (const exercise in mapping) {
+            mapping[exercise] = [...mapping[exercise]];
+        }
 
-            function getTitleOptionsByExercise(program) {
-                const mapping = {};
-                program.forEach(week => {
-                    week.days.forEach(day => {
-                        if (!mapping[day.exercise]) {
-                            mapping[day.exercise] = new Set();
-                        }
-                        mapping[day.exercise].add(day.title);
-                    });
-                });
-                
-                // Convert sets to arrays
-                for (const exercise in mapping) {
-                    mapping[exercise] = [...mapping[exercise]];
-                }
-                
-                return mapping;
-            }
+        return mapping;
+    }
 
-            function createSelectHTML(options, selectedValue, dataAttributes) {
-                let attrs = '';
-                for (const key in dataAttributes) {
-                    attrs += `data-${key}="${dataAttributes[key]}" `;
-                }
+    function createSelectHTML(options, selectedValue, dataAttributes) {
+        let attrs = '';
+        for (const key in dataAttributes) {
+            attrs += `data-${key}="${dataAttributes[key]}" `;
+        }
 
-                let optionsHTML = options.map(option =>
-                    `<option value="${option}" ${option === selectedValue ? 'selected' : ''}>${option}</option>`
-                ).join('');
+        let optionsHTML = options.map(option =>
+            `<option value="${option}" ${option === selectedValue ? 'selected' : ''}>${option}</option>`
+        ).join('');
 
-                return `<select ${attrs}>${optionsHTML}</select>`;
-            }
-            function calculateWeight(tm, intensity) {
-                if (tm <= 0) return 0;
-                const weight = tm * intensity;
-                return Math.round(weight / 2.5) * 2.5;
-            }
+        return `<select ${attrs}>${optionsHTML}</select>`;
+    }
+    function calculateWeight(tm, intensity) {
+        if (tm <= 0) return 0;
+        const weight = tm * intensity;
+        return Math.round(weight / 2.5) * 2.5;
+    }
 
-            // --- RENDER/DISPLAY FUNCTIONS ---
-                        function updateDisplay() {
-                updateWorkoutPlan();
-                updateTMInputs();
-                updateEditModeButton();
-                renderHistory();
-            }
-            
-            function renderHistory() {
-                const historyContainer = document.getElementById('history-container');
-                historyContainer.innerHTML = ''; // Clear existing
-                const h2 = document.querySelector('#history-view h2');
-                
-                if (!state.history || state.history.length === 0) {
-                    h2.textContent = 'No Archived Cycles Found';
-                    historyContainer.innerHTML = '';
-                    return;
-                }
+    // --- RENDER/DISPLAY FUNCTIONS ---
+    function updateDisplay() {
+        updateWorkoutPlan();
+        updateTMInputs();
+        updateEditModeButton();
+        renderHistory();
+    }
 
-                h2.textContent = 'Archived Cycles';
+    function renderHistory() {
+        const historyContainer = document.getElementById('history-container');
+        historyContainer.innerHTML = ''; // Clear existing
+        const h2 = document.querySelector('#history-view h2');
 
-                state.history.forEach((archive, index) => {
-                    const archiveWrapper = document.createElement('div');
-                    archiveWrapper.className = 'archive-cycle';
-                    
-                    const archiveHeader = document.createElement('h3');
-                    archiveHeader.className = 'archive-header'; // Make it clickable
-                    const archiveDate = new Date(archive.archivedAt).toLocaleString();
-                    const isEditing = archive.editMode || false;
-                    archiveHeader.innerHTML = `
+        if (!state.history || state.history.length === 0) {
+            h2.textContent = 'No Archived Cycles Found';
+            historyContainer.innerHTML = '';
+            return;
+        }
+
+        h2.textContent = 'Archived Cycles';
+
+        state.history.forEach((archive, index) => {
+            const archiveWrapper = document.createElement('div');
+            archiveWrapper.className = 'archive-cycle';
+
+            const archiveHeader = document.createElement('h3');
+            archiveHeader.className = 'archive-header'; // Make it clickable
+            const archiveDate = new Date(archive.archivedAt).toLocaleString();
+            const isEditing = archive.editMode || false;
+            archiveHeader.innerHTML = `
                         <span>Cycle Archived on ${archiveDate} (TMs: Bench ${archive.benchPressTM}kg, Squat ${archive.squatTM}kg)</span>
                         <button class="btn-edit-plan-history" data-history-index="${index}">${isEditing ? 'Save Plan' : 'Edit Plan'}</button>
                         <button class="btn-edit-tm-history" data-history-index="${index}">Edit TMs</button>
                         <button class="btn-delete-history" data-history-index="${index}">Delete</button>
                     `;
-                    archiveWrapper.appendChild(archiveHeader);
+            archiveWrapper.appendChild(archiveHeader);
 
-                    const contentWrapper = document.createElement('div');
-                    contentWrapper.className = 'archive-content collapsed'; // Default to collapsed
-                    archiveWrapper.appendChild(contentWrapper);
+            const contentWrapper = document.createElement('div');
+            contentWrapper.className = 'archive-content collapsed'; // Default to collapsed
+            archiveWrapper.appendChild(contentWrapper);
 
-                    const planContainer = document.createElement('div');
-                    planContainer.className = 'archived-plan';
-                    contentWrapper.appendChild(planContainer);
-                    
-                    const tmData = { benchPressTM: archive.benchPressTM, squatTM: archive.squatTM };
-                    const isEditable = archive.editMode || false; // Assume false if not set
-                    renderPlan(planContainer, archive.program, tmData, archive.progressData, isEditable, true, index);
-                    
-                    historyContainer.appendChild(archiveWrapper);
-                });
-            }
-            
-                        function updateTMInputs() {
-                benchTmInput.value = state.benchPressTM > 0 ? state.benchPressTM : '';
-                squatTmInput.value = state.squatTM > 0 ? state.squatTM : '';
-            }
+            const planContainer = document.createElement('div');
+            planContainer.className = 'archived-plan';
+            contentWrapper.appendChild(planContainer);
 
-            function updateEditModeButton() {
-                editModeToggle.textContent = state.editMode ? 'Disable Edit Mode' : 'Enable Edit Mode';
-            }
+            const tmData = { benchPressTM: archive.benchPressTM, squatTM: archive.squatTM };
+            const isEditable = archive.editMode || false; // Assume false if not set
+            renderPlan(planContainer, archive.program, tmData, archive.progressData, isEditable, true, index);
 
-            function renderPlan(containerElement, programData, tmData, progressData, isEditable, isHistory, historyIndex = -1) {
-                const uniqueDays = getUniqueOptions(programData, 'day');
-                const uniqueExercises = getUniqueOptions(programData, 'exercise');
-                const titleOptionsByExercise = CANONICAL_TITLE_OPTIONS;
+            historyContainer.appendChild(archiveWrapper);
+        });
+    }
 
-                containerElement.innerHTML = ''; // Clear previous content
+    function updateTMInputs() {
+        benchTmInput.value = state.benchPressTM > 0 ? state.benchPressTM : '';
+        squatTmInput.value = state.squatTM > 0 ? state.squatTM : '';
+    }
 
-                programData.forEach(weekData => {
-                    const weekContainer = document.createElement('div');
-                    weekContainer.className = 'week-container';
+    function updateEditModeButton() {
+        editModeToggle.textContent = state.editMode ? 'Disable Edit Mode' : 'Enable Edit Mode';
+    }
 
-                    const weekHeader = document.createElement('h2');
-                    weekHeader.className = 'week-header';
-                    weekHeader.textContent = `Week ${weekData.week}: ${weekData.phase}`;
-                    weekContainer.appendChild(weekHeader);
+    function renderPlan(containerElement, programData, tmData, progressData, isEditable, isHistory, historyIndex = -1) {
+        const uniqueDays = getUniqueOptions(programData, 'day');
+        const uniqueExercises = getUniqueOptions(programData, 'exercise');
+        const titleOptionsByExercise = CANONICAL_TITLE_OPTIONS;
 
-                    weekData.days.forEach((day, dayIndex) => {
-                        const dayCard = document.createElement('div');
-                        dayCard.className = 'card';
-                        if (isEditable) {
-                            dayCard.classList.add('editable');
-                        }
+        containerElement.innerHTML = ''; // Clear previous content
 
-                        if (isEditable) {
-                            const weekIdx = weekData.week - 1;
-                            
-                            // Data attributes to identify which part of the state to update
-                            const baseDataAttrs = { 
-                                'week-idx': weekIdx, 
-                                'day-idx': dayIndex,
-                            };
-                            if (isHistory) {
-                                baseDataAttrs['history-idx'] = historyIndex;
-                            }
+        programData.forEach(weekData => {
+            const weekContainer = document.createElement('div');
+            weekContainer.className = 'week-container';
 
-                            const createDataAttrs = (prop) => ({ ...baseDataAttrs, prop });
+            const weekHeader = document.createElement('h2');
+            weekHeader.className = 'week-header';
+            weekHeader.textContent = `Week ${weekData.week}: ${weekData.phase}`;
+            weekContainer.appendChild(weekHeader);
 
-                            const daySelectHTML = createSelectHTML(uniqueDays, day.day, createDataAttrs('day'));
-                            const relevantTitles = titleOptionsByExercise[day.exercise] || [];
-                            const titleSelectHTML = createSelectHTML(relevantTitles, day.title, createDataAttrs('title'));
-                            const exerciseSelectHTML = createSelectHTML(uniqueExercises, day.exercise, createDataAttrs('exercise'));
+            weekData.days.forEach((day, dayIndex) => {
+                const dayCard = document.createElement('div');
+                dayCard.className = 'card';
+                if (isEditable) {
+                    dayCard.classList.add('editable');
+                }
 
-                            const createInput = (type, value, prop) => 
-                                `<input type="${type}" value="${value}" ${type === 'number' ? 'step="0.001"' : ''} ` +
-                                Object.entries(createDataAttrs(prop)).map(([key, val]) => `data-${key}="${val}"`).join(' ') +
-                                '>';
+                if (isEditable) {
+                    const weekIdx = weekData.week - 1;
 
-                            dayCard.innerHTML = `
+                    // Data attributes to identify which part of the state to update
+                    const baseDataAttrs = {
+                        'week-idx': weekIdx,
+                        'day-idx': dayIndex,
+                    };
+                    if (isHistory) {
+                        baseDataAttrs['history-idx'] = historyIndex;
+                    }
+
+                    const createDataAttrs = (prop) => ({ ...baseDataAttrs, prop });
+
+                    const daySelectHTML = createSelectHTML(uniqueDays, day.day, createDataAttrs('day'));
+                    const relevantTitles = titleOptionsByExercise[day.exercise] || [];
+                    const titleSelectHTML = createSelectHTML(relevantTitles, day.title, createDataAttrs('title'));
+                    const exerciseSelectHTML = createSelectHTML(uniqueExercises, day.exercise, createDataAttrs('exercise'));
+
+                    const createInput = (type, value, prop) =>
+                        `<input type="${type}" value="${value}" ${type === 'number' ? 'step="0.001"' : ''} ` +
+                        Object.entries(createDataAttrs(prop)).map(([key, val]) => `data-${key}="${val}"`).join(' ') +
+                        '>';
+
+                    dayCard.innerHTML = `
                                 <div>Day: ${daySelectHTML}</div>
                                 <div>Exercise: ${exerciseSelectHTML}</div>
                                 <div>Title: ${titleSelectHTML}</div>
@@ -281,110 +313,110 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <div>Reps: ${createInput('number', day.reps, 'reps')}</div>
                                 <div>Intensity: ${createInput('number', day.intensity, 'intensity')}</div>
                             `;
-                        } else {
-                            let content = `<h3>${day.day} - ${day.title}</h3>`;
-                            const tm = day.exercise === 'Bench Press' ? tmData.benchPressTM : tmData.squatTM;
-                            const weight = calculateWeight(tm, day.intensity);
-                            content += `<p>${day.exercise}: <strong>${weight}kg</strong> (${day.intensity * 100}%) - ${day.sets} sets of ${day.reps} reps</p>`;
-                            
-                            let progressHTML = '<div class="progress-container">';
-                            for (let i = 0; i < day.sets; i++) {
-                                const progressId = isHistory 
-                                    ? `h${historyIndex}w${weekData.week}d${dayIndex}s${i}` 
-                                    : `w${weekData.week}d${dayIndex}s${i}`;
-                                const isCompleted = progressData[progressId] ? 'completed' : '';
-                                const progressBoxAttrs = isHistory
-                                    ? 'style="cursor: default;"'
-                                    : `data-progress-id="${progressId}"`;
-                                progressHTML += `<div class="progress-box ${isCompleted}" ${progressBoxAttrs}></div>`;
-                            }
-                            progressHTML += '</div>';
-                            content += progressHTML;
-                            dayCard.innerHTML = content;
-                        }
-                        weekContainer.appendChild(dayCard);
-                    });
-                    containerElement.appendChild(weekContainer);
-                });
-            }
+                } else {
+                    let content = `<h3>${day.day} - ${day.title}</h3>`;
+                    const tm = day.exercise === 'Bench Press' ? tmData.benchPressTM : tmData.squatTM;
+                    const weight = calculateWeight(tm, day.intensity);
+                    content += `<p>${day.exercise}: <strong>${weight}kg</strong> (${day.intensity * 100}%) - ${day.sets} sets of ${day.reps} reps</p>`;
 
-            // Renders the entire 8-week program to the page.
-            function updateWorkoutPlan() {
-                const tmData = { benchPressTM: state.benchPressTM, squatTM: state.squatTM };
-                renderPlan(workoutContainer, state.program, tmData, state.progressData, state.editMode, false);
-            }
-
-            // --- EVENT HANDLERS ---
-            function handleTMChange(event) {
-                const { id, value } = event.target;
-                const tmValue = parseFloat(value) || 0;
-                
-                if (id === 'bench-tm') {
-                    state.benchPressTM = tmValue;
-                } else if (id === 'squat-tm') {
-                    state.squatTM = tmValue;
-                }
-                
-                saveData();
-                updateWorkoutPlan(); // Re-render the entire plan with new weights
-            }
-
-                        function handleProgressToggle(event) {
-                const target = event.target;
-                if (target.classList.contains('progress-box')) {
-                    const progressId = target.dataset.progressId;
-                    state.progressData[progressId] = !state.progressData[progressId];
-                    target.classList.toggle('completed');
-                    saveData();
-                }
-            }
-
-            function handleHistoryClick(event) {
-                const deleteBtn = event.target.closest('.btn-delete-history');
-                if (deleteBtn) {
-                    const historyIndex = parseInt(deleteBtn.dataset.historyIndex, 10);
-                    showModal({
-                        title: 'Delete History?',
-                        text: 'Are you sure you want to permanently delete this archived cycle?',
-                        confirmText: 'Delete',
-                        onConfirm: () => {
-                            state.history.splice(historyIndex, 1);
-                            saveData();
-                            renderHistory(); // Re-render the history view
-                        }
-                    });
-                    return;
-                }
-
-                const editTmBtn = event.target.closest('.btn-edit-tm-history');
-                if (editTmBtn) {
-                    const historyIndex = parseInt(editTmBtn.dataset.historyIndex, 10);
-                    showEditHistoryModal(historyIndex);
-                    return;
-                }
-
-                const editPlanBtn = event.target.closest('.btn-edit-plan-history');
-                if (editPlanBtn) {
-                    const historyIndex = parseInt(editPlanBtn.dataset.historyIndex, 10);
-                    // Toggle edit mode for the specific history item
-                    state.history[historyIndex].editMode = !state.history[historyIndex].editMode;
-                    saveData();
-                    renderHistory();
-                    return; // Stop further processing
-                }
-
-                const header = event.target.closest('.archive-header');
-                if (header) {
-                    const content = header.nextElementSibling;
-                    if (content && content.classList.contains('archive-content')) {
-                        content.classList.toggle('collapsed');
+                    let progressHTML = '<div class="progress-container">';
+                    for (let i = 0; i < day.sets; i++) {
+                        const progressId = isHistory
+                            ? `h${historyIndex}w${weekData.week}d${dayIndex}s${i}`
+                            : `w${weekData.week}d${dayIndex}s${i}`;
+                        const isCompleted = progressData[progressId] ? 'completed' : '';
+                        const progressBoxAttrs = isHistory
+                            ? 'style="cursor: default;"'
+                            : `data-progress-id="${progressId}"`;
+                        progressHTML += `<div class="progress-box ${isCompleted}" ${progressBoxAttrs}></div>`;
                     }
+                    progressHTML += '</div>';
+                    content += progressHTML;
+                    dayCard.innerHTML = content;
                 }
-            }
+                weekContainer.appendChild(dayCard);
+            });
+            containerElement.appendChild(weekContainer);
+        });
+    }
 
-            function showEditHistoryModal(index) {
-                const historyItem = state.history[index];
-                const bodyHtml = `
+    // Renders the entire 8-week program to the page.
+    function updateWorkoutPlan() {
+        const tmData = { benchPressTM: state.benchPressTM, squatTM: state.squatTM };
+        renderPlan(workoutContainer, state.program, tmData, state.progressData, state.editMode, false);
+    }
+
+    // --- EVENT HANDLERS ---
+    function handleTMChange(event) {
+        const { id, value } = event.target;
+        const tmValue = parseFloat(value) || 0;
+
+        if (id === 'bench-tm') {
+            state.benchPressTM = tmValue;
+        } else if (id === 'squat-tm') {
+            state.squatTM = tmValue;
+        }
+
+        saveData();
+        updateWorkoutPlan(); // Re-render the entire plan with new weights
+    }
+
+    function handleProgressToggle(event) {
+        const target = event.target;
+        if (target.classList.contains('progress-box')) {
+            const progressId = target.dataset.progressId;
+            state.progressData[progressId] = !state.progressData[progressId];
+            target.classList.toggle('completed');
+            saveData();
+        }
+    }
+
+    function handleHistoryClick(event) {
+        const deleteBtn = event.target.closest('.btn-delete-history');
+        if (deleteBtn) {
+            const historyIndex = parseInt(deleteBtn.dataset.historyIndex, 10);
+            showModal({
+                title: 'Delete History?',
+                text: 'Are you sure you want to permanently delete this archived cycle?',
+                confirmText: 'Delete',
+                onConfirm: () => {
+                    state.history.splice(historyIndex, 1);
+                    saveData();
+                    renderHistory(); // Re-render the history view
+                }
+            });
+            return;
+        }
+
+        const editTmBtn = event.target.closest('.btn-edit-tm-history');
+        if (editTmBtn) {
+            const historyIndex = parseInt(editTmBtn.dataset.historyIndex, 10);
+            showEditHistoryModal(historyIndex);
+            return;
+        }
+
+        const editPlanBtn = event.target.closest('.btn-edit-plan-history');
+        if (editPlanBtn) {
+            const historyIndex = parseInt(editPlanBtn.dataset.historyIndex, 10);
+            // Toggle edit mode for the specific history item
+            state.history[historyIndex].editMode = !state.history[historyIndex].editMode;
+            saveData();
+            renderHistory();
+            return; // Stop further processing
+        }
+
+        const header = event.target.closest('.archive-header');
+        if (header) {
+            const content = header.nextElementSibling;
+            if (content && content.classList.contains('archive-content')) {
+                content.classList.toggle('collapsed');
+            }
+        }
+    }
+
+    function showEditHistoryModal(index) {
+        const historyItem = state.history[index];
+        const bodyHtml = `
                     <div class="tm-inputs" style="flex-direction: column; gap: 1rem; margin-bottom: 0;">
                         <div>
                             <label for="history-bench-tm">Bench Press TM (kg)</label>
@@ -396,184 +428,184 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                     </div>
                 `;
-                showModal({
-                    title: 'Edit Archived TMs',
-                    bodyHtml: bodyHtml,
-                    confirmText: 'Save',
-                    onConfirm: () => {
-                        const newBenchTM = parseFloat(document.getElementById('history-bench-tm').value) || 0;
-                        const newSquatTM = parseFloat(document.getElementById('history-squat-tm').value) || 0;
+        showModal({
+            title: 'Edit Archived TMs',
+            bodyHtml: bodyHtml,
+            confirmText: 'Save',
+            onConfirm: () => {
+                const newBenchTM = parseFloat(document.getElementById('history-bench-tm').value) || 0;
+                const newSquatTM = parseFloat(document.getElementById('history-squat-tm').value) || 0;
 
-                        state.history[index].benchPressTM = newBenchTM;
-                        state.history[index].squatTM = newSquatTM;
-                        
-                        saveData();
-                        renderHistory();
-                    }
-                });
-            }
+                state.history[index].benchPressTM = newBenchTM;
+                state.history[index].squatTM = newSquatTM;
 
-            function handleWorkoutDataChange(event) {
-                const { historyIdx, weekIdx, dayIdx, prop } = event.target.dataset;
-                let value = event.target.value;
-
-                // Determine the target program to modify
-                const isHistory = historyIdx !== undefined;
-                const program = isHistory ? state.history[historyIdx].program : state.program;
-                const dayData = program[weekIdx].days[dayIdx];
-
-                // Coerce to number if the input type is number
-                if (event.target.type === 'number') {
-                    value = parseFloat(value) || 0;
-                }
-
-                // If the value hasn't actually changed, do nothing.
-                if (dayData[prop] == value) return;
-
-                // Update the property that triggered the event
-                dayData[prop] = value;
-                
-                // If the exercise was changed, we must also update the title
-                if (prop === 'exercise') {
-                    const validTitles = CANONICAL_TITLE_OPTIONS[dayData.exercise] || [];
-                    if (!validTitles.includes(dayData.title)) {
-                        dayData.title = validTitles.length > 0 ? validTitles[0] : '';
-                    }
-                    
-                    saveData();
-                    // Re-render either the main plan or the history view
-                    if (isHistory) {
-                        renderHistory();
-                    } else {
-                        updateWorkoutPlan();
-                    }
-                    return; 
-                }
-                
                 saveData();
+                renderHistory();
             }
-            
-            // --- MODAL LOGIC ---
-            let modalConfirmCallback = null;
+        });
+    }
 
-            function showModal({ title, text, bodyHtml = '', confirmText = 'Confirm', cancelText = 'Cancel', onConfirm }) {
-                document.getElementById('modal-title').textContent = title;
-                const modalText = document.getElementById('modal-text');
-                const modalBody = document.getElementById('modal-body');
+    function handleWorkoutDataChange(event) {
+        const { historyIdx, weekIdx, dayIdx, prop } = event.target.dataset;
+        let value = event.target.value;
 
-                if (bodyHtml) {
-                    modalText.style.display = 'none';
-                    modalBody.innerHTML = bodyHtml;
-                    modalBody.style.display = 'block';
-                } else {
-                    modalText.textContent = text;
-                    modalText.style.display = 'block';
-                    modalBody.innerHTML = '';
-                    modalBody.style.display = 'none';
-                }
+        // Determine the target program to modify
+        const isHistory = historyIdx !== undefined;
+        const program = isHistory ? state.history[historyIdx].program : state.program;
+        const dayData = program[weekIdx].days[dayIdx];
 
-                const confirmBtn = document.getElementById('modal-confirm-btn');
-                const cancelBtn = document.getElementById('modal-cancel-btn');
+        // Coerce to number if the input type is number
+        if (event.target.type === 'number') {
+            value = parseFloat(value) || 0;
+        }
 
-                confirmBtn.textContent = confirmText;
-                cancelBtn.textContent = cancelText;
+        // If the value hasn't actually changed, do nothing.
+        if (dayData[prop] == value) return;
 
-                confirmBtn.style.display = confirmText ? 'inline-block' : 'none';
-                cancelBtn.style.display = cancelText ? 'inline-block' : 'none';
+        // Update the property that triggered the event
+        dayData[prop] = value;
 
-                modalConfirmCallback = onConfirm;
-                document.getElementById('custom-modal').classList.add('visible');
+        // If the exercise was changed, we must also update the title
+        if (prop === 'exercise') {
+            const validTitles = CANONICAL_TITLE_OPTIONS[dayData.exercise] || [];
+            if (!validTitles.includes(dayData.title)) {
+                dayData.title = validTitles.length > 0 ? validTitles[0] : '';
             }
 
-            function hideModal() {
-                document.getElementById('custom-modal').classList.remove('visible');
-                modalConfirmCallback = null;
+            saveData();
+            // Re-render either the main plan or the history view
+            if (isHistory) {
+                renderHistory();
+            } else {
+                updateWorkoutPlan();
             }
+            return;
+        }
 
-            function handleModalConfirm() {
-                if (modalConfirmCallback) {
-                    modalConfirmCallback();
-                }
-                hideModal();
-            }
+        saveData();
+    }
 
-            function archiveAndStartNewCycle() {
+    // --- MODAL LOGIC ---
+    let modalConfirmCallback = null;
+
+    function showModal({ title, text, bodyHtml = '', confirmText = 'Confirm', cancelText = 'Cancel', onConfirm }) {
+        document.getElementById('modal-title').textContent = title;
+        const modalText = document.getElementById('modal-text');
+        const modalBody = document.getElementById('modal-body');
+
+        if (bodyHtml) {
+            modalText.style.display = 'none';
+            modalBody.innerHTML = bodyHtml;
+            modalBody.style.display = 'block';
+        } else {
+            modalText.textContent = text;
+            modalText.style.display = 'block';
+            modalBody.innerHTML = '';
+            modalBody.style.display = 'none';
+        }
+
+        const confirmBtn = document.getElementById('modal-confirm-btn');
+        const cancelBtn = document.getElementById('modal-cancel-btn');
+
+        confirmBtn.textContent = confirmText;
+        cancelBtn.textContent = cancelText;
+
+        confirmBtn.style.display = confirmText ? 'inline-block' : 'none';
+        cancelBtn.style.display = cancelText ? 'inline-block' : 'none';
+
+        modalConfirmCallback = onConfirm;
+        document.getElementById('custom-modal').classList.add('visible');
+    }
+
+    function hideModal() {
+        document.getElementById('custom-modal').classList.remove('visible');
+        modalConfirmCallback = null;
+    }
+
+    function handleModalConfirm() {
+        if (modalConfirmCallback) {
+            modalConfirmCallback();
+        }
+        hideModal();
+    }
+
+    function archiveAndStartNewCycle() {
+        showModal({
+            title: 'Archive Cycle?',
+            text: 'Are you sure? Your current progress will be saved to history.',
+            onConfirm: () => {
+                const archive = {
+                    archivedAt: new Date().toISOString(),
+                    program: JSON.parse(JSON.stringify(state.program)),
+                    progressData: JSON.parse(JSON.stringify(state.progressData)),
+                    benchPressTM: state.benchPressTM,
+                    squatTM: state.squatTM,
+                    editMode: false // Track edit state for the plan
+                };
+                state.history.unshift(archive);
+                state.program = JSON.parse(JSON.stringify(workoutProgram));
+                state.progressData = {};
+                saveData();
+                updateDisplay();
+
                 showModal({
-                    title: 'Archive Cycle?',
-                    text: 'Are you sure? Your current progress will be saved to history.',
-                    onConfirm: () => {
-                        const archive = {
-                            archivedAt: new Date().toISOString(),
-                            program: JSON.parse(JSON.stringify(state.program)),
-                            progressData: JSON.parse(JSON.stringify(state.progressData)),
-                            benchPressTM: state.benchPressTM,
-                            squatTM: state.squatTM,
-                            editMode: false // Track edit state for the plan
-                        };
-                        state.history.unshift(archive);
-                        state.program = JSON.parse(JSON.stringify(workoutProgram));
-                        state.progressData = {};
-                        saveData();
-                        updateDisplay();
-
-                        showModal({
-                            title: 'Success!',
-                            text: 'Cycle archived. A new cycle is ready.',
-                            confirmText: 'OK',
-                            cancelText: null
-                        });
-                    }
+                    title: 'Success!',
+                    text: 'Cycle archived. A new cycle is ready.',
+                    confirmText: 'OK',
+                    cancelText: null
                 });
             }
-
-            function toggleHistoryView() {
-                const mainPlan = document.getElementById('workout-plan');
-                const historyView = document.getElementById('history-view');
-                const tmInputs = document.querySelector('.tm-inputs');
-                const mainHeader = document.querySelector('header h1');
-                const isHistoryVisible = historyView.style.display !== 'none';
-
-                if (isHistoryVisible) {
-                    // Switch back to main view
-                    historyView.style.display = 'none';
-                    mainPlan.style.display = 'grid';
-                    tmInputs.style.display = 'flex';
-                    mainHeader.style.display = 'block';
-                    viewHistoryBtn.textContent = 'View History';
-                } else {
-                    // Switch to history view
-                    historyView.style.display = 'block';
-                    mainPlan.style.display = 'none';
-                    tmInputs.style.display = 'none';
-                    mainHeader.style.display = 'none';
-                    viewHistoryBtn.textContent = 'Back to Current Cycle';
-                }
-            }
-
-            function handleEditModeToggle() {
-                state.editMode = !state.editMode;
-                updateDisplay();
-            }
-            
-            // --- INITIALIZATION ---
-            function init() {
-                loadData();
-                CANONICAL_TITLE_OPTIONS = getTitleOptionsByExercise(workoutProgram);
-                
-                benchTmInput.addEventListener('input', handleTMChange);
-                squatTmInput.addEventListener('input', handleTMChange);
-                                editModeToggle.addEventListener('click', handleEditModeToggle);
-                workoutContainer.addEventListener('click', handleProgressToggle);
-                workoutContainer.addEventListener('change', handleWorkoutDataChange);
-                document.getElementById('history-container').addEventListener('change', handleWorkoutDataChange);
-                archiveBtn.addEventListener('click', archiveAndStartNewCycle);
-                viewHistoryBtn.addEventListener('click', toggleHistoryView);
-                modalConfirmBtn.addEventListener('click', handleModalConfirm);
-                modalCancelBtn.addEventListener('click', hideModal);
-                document.getElementById('history-container').addEventListener('click', handleHistoryClick);
-
-                updateDisplay(); // Initial render
-            }
-
-            init();
         });
+    }
+
+    function toggleHistoryView() {
+        const mainPlan = document.getElementById('workout-plan');
+        const historyView = document.getElementById('history-view');
+        const tmInputs = document.querySelector('.tm-inputs');
+        const mainHeader = document.querySelector('header h1');
+        const isHistoryVisible = historyView.style.display !== 'none';
+
+        if (isHistoryVisible) {
+            // Switch back to main view
+            historyView.style.display = 'none';
+            mainPlan.style.display = 'grid';
+            tmInputs.style.display = 'flex';
+            mainHeader.style.display = 'block';
+            viewHistoryBtn.textContent = 'View History';
+        } else {
+            // Switch to history view
+            historyView.style.display = 'block';
+            mainPlan.style.display = 'none';
+            tmInputs.style.display = 'none';
+            mainHeader.style.display = 'none';
+            viewHistoryBtn.textContent = 'Back to Current Cycle';
+        }
+    }
+
+    function handleEditModeToggle() {
+        state.editMode = !state.editMode;
+        updateDisplay();
+    }
+
+    // --- INITIALIZATION ---
+    function init() {
+        loadData();
+        CANONICAL_TITLE_OPTIONS = getTitleOptionsByExercise(workoutProgram);
+
+        benchTmInput.addEventListener('input', handleTMChange);
+        squatTmInput.addEventListener('input', handleTMChange);
+        editModeToggle.addEventListener('click', handleEditModeToggle);
+        workoutContainer.addEventListener('click', handleProgressToggle);
+        workoutContainer.addEventListener('change', handleWorkoutDataChange);
+        document.getElementById('history-container').addEventListener('change', handleWorkoutDataChange);
+        archiveBtn.addEventListener('click', archiveAndStartNewCycle);
+        viewHistoryBtn.addEventListener('click', toggleHistoryView);
+        modalConfirmBtn.addEventListener('click', handleModalConfirm);
+        modalCancelBtn.addEventListener('click', hideModal);
+        document.getElementById('history-container').addEventListener('click', handleHistoryClick);
+
+        updateDisplay(); // Initial render
+    }
+
+    init();
+});

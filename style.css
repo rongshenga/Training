@@ -1,311 +1,323 @@
-        .archive-cycle {
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 1rem;
-            margin-bottom: 2rem;
-        }
-        #history-view h2 {
-            text-align: center;
-            color: var(--accent-color);
-        }
-        .archived-plan {
-            /* This will make it look like the main view */
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            align-items: start;
-        }
-        .archive-header {
-            cursor: pointer;
-            user-select: none; /* Prevents text selection on double click */
-            position: relative; /* For positioning the delete button */
-            padding-right: 250px; /* Increased padding for more buttons */
-        }
+.archive-cycle {
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 2rem;
+}
 
-        .btn-delete-history {
-            position: absolute;
-            top: 50%;
-            right: 1rem;
-            transform: translateY(-50%);
-            background-color: #c0392b; /* A reddish color for delete */
-            border: none;
-            padding: 5px 10px;
-            border-radius: 4px;
-            font-size: 0.8em;
-            cursor: pointer;
-            color: var(--primary-text);
-        }
+#history-view h2 {
+    text-align: center;
+    color: var(--accent-color);
+}
 
-        .btn-delete-history:hover {
-            background-color: #a93226;
-        }
+.archived-plan {
+    /* This will make it look like the main view */
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    align-items: start;
+}
 
-        .btn-edit-tm-history, .btn-edit-plan-history {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background-color: var(--accent-color);
-            border: none;
-            padding: 5px 10px;
-            border-radius: 4px;
-            font-size: 0.8em;
-            cursor: pointer;
-            color: var(--primary-text);
-        }
+.archive-header {
+    cursor: pointer;
+    user-select: none;
+    /* Prevents text selection on double click */
+    position: relative;
+    /* For positioning the delete button */
+    padding-right: 250px;
+    /* Increased padding for more buttons */
+}
 
-        .btn-edit-tm-history {
-            right: 85px;
-        }
+.btn-delete-history {
+    position: absolute;
+    top: 50%;
+    right: 1rem;
+    transform: translateY(-50%);
+    background-color: #c0392b;
+    /* A reddish color for delete */
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 0.8em;
+    cursor: pointer;
+    color: var(--primary-text);
+}
 
-        .btn-edit-plan-history {
-            right: 170px;
-        }
+.btn-delete-history:hover {
+    background-color: #a93226;
+}
 
-        .btn-edit-tm-history:hover, .btn-edit-plan-history:hover {
-            background-color: var(--accent-hover);
-        }
-        .archive-content.collapsed {
-            display: none;
-        }
-        .header-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 1rem;
-        }
+.btn-edit-tm-history,
+.btn-edit-plan-history {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: var(--accent-color);
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 0.8em;
+    cursor: pointer;
+    color: var(--primary-text);
+}
 
-        /* General Styling and Dark Theme */
-        :root {
-            --primary-bg: #1a1a1a;
-            --secondary-bg: #2d2d2d;
-            --primary-text: #ffffff;
-            --accent-color: #007acc;
-            --accent-hover: #005a9e;
-            --border-color: #444;
-            --success-color: #4CAF50;
-        }
+.btn-edit-tm-history {
+    right: 85px;
+}
 
-        body {
-            background-color: var(--primary-bg);
-            color: var(--primary-text);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            line-height: 1.6;
-        }
+.btn-edit-plan-history {
+    right: 170px;
+}
 
-        .container {
-                        max-width: 1400px;
-            margin: 0 auto;
-        }
+.btn-edit-tm-history:hover,
+.btn-edit-plan-history:hover {
+    background-color: var(--accent-hover);
+}
 
-        /* Header and Inputs */
-        header {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
+.archive-content.collapsed {
+    display: none;
+}
 
-        h1 {
-            color: var(--accent-color);
-        }
+.header-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 1rem;
+}
 
-        .tm-inputs {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            flex-wrap: wrap;
-            margin-bottom: 2rem;
-        }
+/* General Styling and Dark Theme */
+:root {
+    --primary-bg: #1a1a1a;
+    --secondary-bg: #2d2d2d;
+    --primary-text: #ffffff;
+    --accent-color: #007acc;
+    --accent-hover: #005a9e;
+    --border-color: #444;
+    --success-color: #4CAF50;
+}
 
-        .tm-inputs div {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+body {
+    background-color: var(--primary-bg);
+    color: var(--primary-text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    line-height: 1.6;
+}
 
-        label {
-            margin-bottom: 5px;
-            font-size: 0.9em;
-        }
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+}
 
-        input[type="number"] {
-            background-color: var(--secondary-bg);
-            color: var(--primary-text);
-            border: 1px solid var(--border-color);
-            padding: 8px;
-            border-radius: 4px;
-            width: 100px;
-            text-align: center;
-            font-size: 1em;
-        }
-        
-        /* Week Headers */
-        .week-header {
-            font-size: 1.5em;
-            font-weight: bold;
-            text-align: center;
-            margin-top: 2rem;
-            margin-bottom: 1rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 2px solid var(--border-color);
-        }
+/* Header and Inputs */
+header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
 
-        .week-header:first-of-type {
-            margin-top: 1rem;
-        }
+h1 {
+    color: var(--accent-color);
+}
 
-        /* Workout Day Cards */
-        .card {
-            background-color: var(--secondary-bg);
-            border-radius: 8px;
-            padding: 15px;
-            margin: 15px 0;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-        }
+.tm-inputs {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+}
 
-        .card h3 {
-            margin-top: 0;
-            color: var(--accent-color);
-        }
-        
-        .card p {
-            margin: 0.5rem 0;
-            font-size: 1.1em;
-        }
+.tm-inputs div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 
-        .progress-container {
-            margin-top: 15px;
-        }
+label {
+    margin-bottom: 5px;
+    font-size: 0.9em;
+}
 
-        .progress-box {
-            display: inline-block;
-            width: 24px;
-            height: 24px;
-            border: 2px solid var(--border-color);
-            margin-right: 5px;
-            margin-bottom: 5px;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.2s, border-color 0.2s;
-        }
+input[type="number"] {
+    background-color: var(--secondary-bg);
+    color: var(--primary-text);
+    border: 1px solid var(--border-color);
+    padding: 8px;
+    border-radius: 4px;
+    width: 100px;
+    text-align: center;
+    font-size: 1em;
+}
 
-                .progress-box.completed {
-            background-color: var(--success-color);
-            border-color: var(--success-color);
-        }
+/* Week Headers */
+.week-header {
+    font-size: 1.5em;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--border-color);
+}
 
-        /* Buttons */
-        .btn {
-            background-color: var(--accent-color);
-            color: var(--primary-text);
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1em;
-            transition: background-color 0.2s, transform 0.1s;
-            text-align: center;
-        }
+.week-header:first-of-type {
+    margin-top: 1rem;
+}
 
-        .btn:hover {
-            background-color: var(--accent-hover);
-        }
+/* Workout Day Cards */
+.card {
+    background-color: var(--secondary-bg);
+    border-radius: 8px;
+    padding: 15px;
+    margin: 15px 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
 
-        .btn:active {
-            transform: translateY(1px);
-        }
+.card h3 {
+    margin-top: 0;
+    color: var(--accent-color);
+}
 
-        .btn-secondary {
-            background-color: var(--secondary-bg);
-            border: 1px solid var(--border-color);
-        }
-        
-        .btn-secondary:hover {
-            background-color: #3e3e3e;
-        }
+.card p {
+    margin: 0.5rem 0;
+    font-size: 1.1em;
+}
 
-        /* Custom Modal */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s, visibility 0.3s;
-        }
+.progress-container {
+    margin-top: 15px;
+}
 
-        .modal-overlay.visible {
-            opacity: 1;
-            visibility: visible;
-        }
+.progress-box {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    border: 2px solid var(--border-color);
+    margin-right: 5px;
+    margin-bottom: 5px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s;
+}
 
-        .modal-content {
-            background-color: var(--secondary-bg);
-            padding: 2rem;
-            border-radius: 8px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-            text-align: center;
-            max-width: 400px;
-            width: 90%;
-            transform: scale(0.9);
-            transition: transform 0.3s;
-        }
-        
-        .modal-overlay.visible .modal-content {
-            transform: scale(1);
-        }
+.progress-box.completed {
+    background-color: var(--success-color);
+    border-color: var(--success-color);
+}
 
-        .modal-content h2 {
-            margin-top: 0;
-            color: var(--accent-color);
-        }
+/* Buttons */
+.btn {
+    background-color: var(--accent-color);
+    color: var(--primary-text);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.2s, transform 0.1s;
+    text-align: center;
+}
 
-        .modal-buttons {
-            margin-top: 1.5rem;
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-        }
+.btn:hover {
+    background-color: var(--accent-hover);
+}
 
-        .card.editable div {
-            margin-bottom: 10px;
-        }
+.btn:active {
+    transform: translateY(1px);
+}
 
-        .card.editable input,
-        .card.editable select {
-            width: calc(100% - 20px);
-            padding: 8px;
-            background-color: var(--primary-bg);
-            color: var(--primary-text);
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-        }
+.btn-secondary {
+    background-color: var(--secondary-bg);
+    border: 1px solid var(--border-color);
+}
 
-        /* Responsive Grid Layout for Workout Plan */
-        @media (min-width: 768px) {
-            #workout-plan {
-                display: grid;
-                grid-template-columns: repeat(2, 1fr);
-                gap: 20px; /* Adjust gap between columns */
-                align-items: start;
-            }
+.btn-secondary:hover {
+    background-color: #3e3e3e;
+}
 
-            .week-container {
-                /* This is a good practice for grid/column layouts */
-                break-inside: avoid;
-            }
-        }
+/* Custom Modal */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s, visibility 0.3s;
+}
 
-        /* Wider screens - 4 column layout */
-        @media (min-width: 1200px) {
-            #workout-plan {
-                grid-template-columns: repeat(4, 1fr);
-            }
-        }
+.modal-overlay.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-content {
+    background-color: var(--secondary-bg);
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+    transform: scale(0.9);
+    transition: transform 0.3s;
+}
+
+.modal-overlay.visible .modal-content {
+    transform: scale(1);
+}
+
+.modal-content h2 {
+    margin-top: 0;
+    color: var(--accent-color);
+}
+
+.modal-buttons {
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.card.editable div {
+    margin-bottom: 10px;
+}
+
+.card.editable input,
+.card.editable select {
+    width: calc(100% - 20px);
+    padding: 8px;
+    background-color: var(--primary-bg);
+    color: var(--primary-text);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+}
+
+/* Responsive Grid Layout for Workout Plan */
+@media (min-width: 768px) {
+    #workout-plan {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+        /* Adjust gap between columns */
+        align-items: start;
+    }
+
+    .week-container {
+        /* This is a good practice for grid/column layouts */
+        break-inside: avoid;
+    }
+}
+
+/* Wider screens - 4 column layout */
+@media (min-width: 1200px) {
+    #workout-plan {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
