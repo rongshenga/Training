@@ -22,6 +22,13 @@
             gap: 20px;
             align-items: start;
         }
+        .archive-header {
+            cursor: pointer;
+            user-select: none; /* Prevents text selection on double click */
+        }
+        .archive-content.collapsed {
+            display: none;
+        }
         .header-buttons {
             display: flex;
             justify-content: center;
@@ -502,13 +509,18 @@
                     archiveWrapper.className = 'archive-cycle';
                     
                     const archiveHeader = document.createElement('h3');
+                    archiveHeader.className = 'archive-header'; // Make it clickable
                     const archiveDate = new Date(archive.archivedAt).toLocaleString();
                     archiveHeader.textContent = `Cycle Archived on ${archiveDate} (TMs: Bench ${archive.benchPressTM}kg, Squat ${archive.squatTM}kg)`;
                     archiveWrapper.appendChild(archiveHeader);
 
+                    const contentWrapper = document.createElement('div');
+                    contentWrapper.className = 'archive-content collapsed'; // Default to collapsed
+                    archiveWrapper.appendChild(contentWrapper);
+
                     const planContainer = document.createElement('div');
                     planContainer.className = 'archived-plan'; // For styling
-                    archiveWrapper.appendChild(planContainer);
+                    contentWrapper.appendChild(planContainer);
                     
                     archive.program.forEach(weekData => {
                         const weekContainer = document.createElement('div');
@@ -655,6 +667,16 @@
                 }
             }
 
+            function handleHistoryToggle(event) {
+                const header = event.target.closest('.archive-header');
+                if (!header) return;
+
+                const content = header.nextElementSibling;
+                if (content && content.classList.contains('archive-content')) {
+                    content.classList.toggle('collapsed');
+                }
+            }
+
             function handleWorkoutDataChange(event) {
                 const { weekIdx, dayIdx, prop } = event.target.dataset;
                 let value = event.target.value;
@@ -788,6 +810,7 @@
                 viewHistoryBtn.addEventListener('click', toggleHistoryView);
                 modalConfirmBtn.addEventListener('click', handleModalConfirm);
                 modalCancelBtn.addEventListener('click', hideModal);
+                document.getElementById('history-container').addEventListener('click', handleHistoryToggle);
 
                 updateDisplay(); // Initial render
             }
