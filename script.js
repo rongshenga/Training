@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     // --- DATA ---
-    const workoutProgram = [
+    const programData = [
         {
             week: 1, phase: 'Accumulation', days: [
                 { day: 'Sunday', title: 'Volume Bench', exercise: 'Bench Press', sets: 4, reps: 8, intensity: 0.65 },
@@ -58,6 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
             ]
         }
     ];
+    const workoutProgram = JSON.parse(JSON.stringify(programData));
 
     let CANONICAL_TITLE_OPTIONS = {};
 
@@ -68,64 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
         progressData: {},
         editMode: false,
         history: [],
-        program: [
-            {
-                week: 1, phase: 'Accumulation', days: [
-                    { day: 'Sunday', title: 'Volume Bench', exercise: 'Bench Press', sets: 4, reps: 8, intensity: 0.65 },
-                    { day: 'Thursday', title: 'Strength Bench', exercise: 'Bench Press', sets: 5, reps: 5, intensity: 0.775 },
-                    { day: 'Friday', title: 'Strength Squat', exercise: 'Squat', sets: 5, reps: 5, intensity: 0.75 }
-                ]
-            },
-            {
-                week: 2, phase: 'Accumulation', days: [
-                    { day: 'Sunday', title: 'Volume Bench', exercise: 'Bench Press', sets: 4, reps: 8, intensity: 0.675 },
-                    { day: 'Thursday', title: 'Strength Bench', exercise: 'Bench Press', sets: 5, reps: 5, intensity: 0.80 },
-                    { day: 'Friday', title: 'Strength Squat', exercise: 'Squat', sets: 5, reps: 5, intensity: 0.775 }
-                ]
-            },
-            {
-                week: 3, phase: 'Accumulation', days: [
-                    { day: 'Sunday', title: 'Volume Bench', exercise: 'Bench Press', sets: 4, reps: 8, intensity: 0.70 },
-                    { day: 'Thursday', title: 'Strength Bench', exercise: 'Bench Press', sets: 5, reps: 5, intensity: 0.825 },
-                    { day: 'Friday', title: 'Strength Squat', exercise: 'Squat', sets: 5, reps: 5, intensity: 0.80 }
-                ]
-            },
-            {
-                week: 4, phase: 'Deload', days: [
-                    { day: 'Sunday', title: 'Technical Bench', exercise: 'Bench Press', sets: 3, reps: 5, intensity: 0.60 },
-                    { day: 'Thursday', title: 'Technical Bench', exercise: 'Bench Press', sets: 3, reps: 5, intensity: 0.60 },
-                    { day: 'Friday', title: 'Technical Squat', exercise: 'Squat', sets: 3, reps: 5, intensity: 0.60 }
-                ]
-            },
-            {
-                week: 5, phase: 'Intensification', days: [
-                    { day: 'Sunday', title: 'Technical Bench', exercise: 'Bench Press', sets: 4, reps: 5, intensity: 0.70 },
-                    { day: 'Thursday', title: 'Intensity Bench', exercise: 'Bench Press', sets: 4, reps: 3, intensity: 0.875 },
-                    { day: 'Friday', title: 'Intensity Squat', exercise: 'Squat', sets: 5, reps: 3, intensity: 0.85 }
-                ]
-            },
-            {
-                week: 6, phase: 'Intensification', days: [
-                    { day: 'Sunday', title: 'Technical Bench', exercise: 'Bench Press', sets: 4, reps: 5, intensity: 0.725 },
-                    { day: 'Thursday', 'title': 'Intensity Bench', exercise: 'Bench Press', sets: 3, reps: 3, intensity: 0.90 },
-                    { day: 'Friday', title: 'Intensity Squat', exercise: 'Squat', sets: 4, reps: 3, intensity: 0.875 }
-                ]
-            },
-            {
-                week: 7, phase: 'Intensification', days: [
-                    { day: 'Sunday', title: 'Activation Bench', exercise: 'Bench Press', sets: 5, reps: 3, intensity: 0.75 },
-                    { day: 'Thursday', title: 'Peak Bench', exercise: 'Bench Press', sets: 3, reps: 2, intensity: 0.925 },
-                    { day: 'Friday', title: 'Peak Squat', exercise: 'Squat', sets: 3, reps: 3, intensity: 0.90 }
-                ]
-            },
-            // Week 8: Peak & Test
-            {
-                week: 8, phase: 'Peak & Test', days: [
-                    { day: 'Thursday', title: 'Peak Test', exercise: 'Bench Press', sets: 3, reps: 1, intensity: 0.95 },
-                    { day: 'Friday', title: 'Peak Test', exercise: 'Squat', sets: 3, reps: 1, intensity: 0.95 }
-                ]
-            }
-        ]
+        program: JSON.parse(JSON.stringify(programData))
     };
 
     // --- DOM ELEMENTS ---
