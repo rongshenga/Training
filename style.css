@@ -191,6 +191,14 @@ body.single-week-view .week-container {
     margin: 0 auto;
 }
 
+body.single-week-view .card h3 {
+    text-align: center;
+}
+
+body.single-week-view .progress-container {
+    text-align: center;
+}
+
 .card h3 {
     margin-top: 0;
     color: var(--accent-color);
@@ -203,6 +211,19 @@ body.single-week-view .week-container {
 .card p {
     margin: 0.5rem 0;
     font-size: 1.1em;
+}
+
+.exercise-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin: 1rem 0;
+}
+
+.exercise-info p {
+    margin: 0;
 }
 
 .progress-container {
