@@ -145,7 +145,8 @@
             margin-bottom: 10px;
         }
 
-        .card.editable input {
+        .card.editable input,
+        .card.editable select {
             width: calc(100% - 20px);
             padding: 8px;
             background-color: var(--primary-bg);
@@ -318,6 +319,23 @@
             }
 
             // --- UTILITY FUNCTIONS ---
+            function getUniqueOptions(program, key) {
+                const allValues = program.flatMap(week => week.days.map(day => day[key]));
+                return [...new Set(allValues)];
+            }
+
+            function createSelectHTML(options, selectedValue, dataAttributes) {
+                let attrs = '';
+                for (const key in dataAttributes) {
+                    attrs += `data-${key}="${dataAttributes[key]}" `;
+                }
+
+                let optionsHTML = options.map(option =>
+                    `<option value="${option}" ${option === selectedValue ? 'selected' : ''}>${option}</option>`
+                ).join('');
+
+                return `<select ${attrs}>${optionsHTML}</select>`;
+            }
             function calculateWeight(tm, intensity) {
                 if (tm <= 0) return 0;
                 const weight = tm * intensity;
@@ -342,6 +360,10 @@
 
             // Renders the entire 8-week program to the page.
             function updateWorkoutPlan() {
+                const uniqueDays = getUniqueOptions(state.program, 'day');
+                const uniqueTitles = getUniqueOptions(state.program, 'title');
+                const uniqueExercises = getUniqueOptions(state.program, 'exercise');
+
                 workoutContainer.innerHTML = ''; // Clear previous content
 
                 state.program.forEach(weekData => {
@@ -366,10 +388,14 @@
                         if (state.editMode) {
                             // Using weekData.week - 1 because week numbers are 1-based, but array is 0-indexed
                             const weekIdx = weekData.week - 1;
+                            const daySelectHTML = createSelectHTML(uniqueDays, day.day, { 'week-idx': weekIdx, 'day-idx': dayIndex, prop: 'day' });
+                            const titleSelectHTML = createSelectHTML(uniqueTitles, day.title, { 'week-idx': weekIdx, 'day-idx': dayIndex, prop: 'title' });
+                            const exerciseSelectHTML = createSelectHTML(uniqueExercises, day.exercise, { 'week-idx': weekIdx, 'day-idx': dayIndex, prop: 'exercise' });
+
                             dayCard.innerHTML = `
-                                <div>Day: <input type="text" value="${day.day}" data-week-idx="${weekIdx}" data-day-idx="${dayIndex}" data-prop="day"></div>
-                                <div>Title: <input type="text" value="${day.title}" data-week-idx="${weekIdx}" data-day-idx="${dayIndex}" data-prop="title"></div>
-                                <div>Exercise: <input type="text" value="${day.exercise}" data-week-idx="${weekIdx}" data-day-idx="${dayIndex}" data-prop="exercise"></div>
+                                <div>Day: ${daySelectHTML}</div>
+                                <div>Title: ${titleSelectHTML}</div>
+                                <div>Exercise: ${exerciseSelectHTML}</div>
                                 <div>Sets: <input type="number" value="${day.sets}" data-week-idx="${weekIdx}" data-day-idx="${dayIndex}" data-prop="sets"></div>
                                 <div>Reps: <input type="number" value="${day.reps}" data-week-idx="${weekIdx}" data-day-idx="${dayIndex}" data-prop="reps"></div>
                                 <div>Intensity: <input type="number" step="0.001" value="${day.intensity}" data-week-idx="${weekIdx}" data-day-idx="${dayIndex}" data-prop="intensity"></div>
