@@ -25,6 +25,26 @@
         .archive-header {
             cursor: pointer;
             user-select: none; /* Prevents text selection on double click */
+            position: relative; /* For positioning the delete button */
+            padding-right: 80px; /* Make space for the button */
+        }
+
+        .btn-delete-history {
+            position: absolute;
+            top: 50%;
+            right: 1rem;
+            transform: translateY(-50%);
+            background-color: #c0392b; /* A reddish color for delete */
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            cursor: pointer;
+            color: var(--primary-text);
+        }
+
+        .btn-delete-history:hover {
+            background-color: #a93226;
         }
         .archive-content.collapsed {
             display: none;
@@ -511,7 +531,10 @@
                     const archiveHeader = document.createElement('h3');
                     archiveHeader.className = 'archive-header'; // Make it clickable
                     const archiveDate = new Date(archive.archivedAt).toLocaleString();
-                    archiveHeader.textContent = `Cycle Archived on ${archiveDate} (TMs: Bench ${archive.benchPressTM}kg, Squat ${archive.squatTM}kg)`;
+                    archiveHeader.innerHTML = `
+                        <span>Cycle Archived on ${archiveDate} (TMs: Bench ${archive.benchPressTM}kg, Squat ${archive.squatTM}kg)</span>
+                        <button class="btn-delete-history" data-history-index="${index}">Delete</button>
+                    `;
                     archiveWrapper.appendChild(archiveHeader);
 
                     const contentWrapper = document.createElement('div');
@@ -667,13 +690,29 @@
                 }
             }
 
-            function handleHistoryToggle(event) {
-                const header = event.target.closest('.archive-header');
-                if (!header) return;
+            function handleHistoryClick(event) {
+                const deleteBtn = event.target.closest('.btn-delete-history');
+                if (deleteBtn) {
+                    const historyIndex = parseInt(deleteBtn.dataset.historyIndex, 10);
+                    showModal({
+                        title: 'Delete History?',
+                        text: 'Are you sure you want to permanently delete this archived cycle?',
+                        confirmText: 'Delete',
+                        onConfirm: () => {
+                            state.history.splice(historyIndex, 1);
+                            saveData();
+                            renderHistory(); // Re-render the history view
+                        }
+                    });
+                    return;
+                }
 
-                const content = header.nextElementSibling;
-                if (content && content.classList.contains('archive-content')) {
-                    content.classList.toggle('collapsed');
+                const header = event.target.closest('.archive-header');
+                if (header) {
+                    const content = header.nextElementSibling;
+                    if (content && content.classList.contains('archive-content')) {
+                        content.classList.toggle('collapsed');
+                    }
                 }
             }
 
@@ -810,7 +849,7 @@
                 viewHistoryBtn.addEventListener('click', toggleHistoryView);
                 modalConfirmBtn.addEventListener('click', handleModalConfirm);
                 modalCancelBtn.addEventListener('click', hideModal);
-                document.getElementById('history-container').addEventListener('click', handleHistoryToggle);
+                document.getElementById('history-container').addEventListener('click', handleHistoryClick);
 
                 updateDisplay(); // Initial render
             }
