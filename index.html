@@ -337,13 +337,6 @@
                 
                 // Convert sets to arrays
                 for (const exercise in mapping) {
-                    // "Peak Test" is a special case that can apply to multiple exercises
-                    if (mapping[exercise].has('Peak Test')) {
-                        Object.values(mapping).forEach(titles => titles.add('Peak Test'));
-                    }
-                }
-                
-                for (const exercise in mapping) {
                     mapping[exercise] = [...mapping[exercise]];
                 }
                 
@@ -501,7 +494,9 @@
                 // If the exercise was changed, we must also update the title
                 if (prop === 'exercise') {
                     const validTitles = getTitleOptionsByExercise(state.program)[dayData.exercise] || [];
-                    dayData.title = validTitles.length > 0 ? validTitles[0] : '';
+                    if (!validTitles.includes(dayData.title)) {
+                        dayData.title = validTitles.length > 0 ? validTitles[0] : '';
+                    }
                     
                     saveData();
                     updateWorkoutPlan();
@@ -524,7 +519,7 @@
                 squatTmInput.addEventListener('input', handleTMChange);
                                 editModeToggle.addEventListener('click', handleEditModeToggle);
                 workoutContainer.addEventListener('click', handleProgressToggle);
-                workoutContainer.addEventListener('input', handleWorkoutDataChange);
+                workoutContainer.addEventListener('change', handleWorkoutDataChange);
 
                 updateDisplay(); // Initial render
             }
