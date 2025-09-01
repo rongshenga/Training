@@ -120,9 +120,38 @@
             transition: background-color 0.2s, border-color 0.2s;
         }
 
-        .progress-box.completed {
+                .progress-box.completed {
             background-color: var(--success-color);
             border-color: var(--success-color);
+        }
+
+        #edit-mode-toggle {
+            background-color: var(--accent-color);
+            color: var(--primary-text);
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9em;
+            margin-top: 10px;
+            transition: background-color 0.2s;
+        }
+
+        #edit-mode-toggle:hover {
+            background-color: var(--accent-hover);
+        }
+
+        .card.editable div {
+            margin-bottom: 10px;
+        }
+
+        .card.editable input {
+            width: calc(100% - 20px);
+            padding: 8px;
+            background-color: var(--primary-bg);
+            color: var(--primary-text);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
         }
 
         /* Responsive Grid Layout for Workout Plan */
@@ -152,7 +181,8 @@
 
     <div class="container">
         <header>
-            <h1>8-Week Strength Program</h1>
+                        <h1>8-Week Strength Program</h1>
+            <button id="edit-mode-toggle">Enable Edit Mode</button>
         </header>
 
         <section class="tm-inputs">
@@ -218,16 +248,60 @@
             ];
 
             // --- APPLICATION STATE ---
-            let state = {
+                        let state = {
                 benchPressTM: 0,
                 squatTM: 0,
-                progressData: {}
+                progressData: {},
+                editMode: false,
+                program: [
+                  { week: 1, phase: 'Accumulation', days: [
+                    { day: 'Sunday', title: 'Volume Bench', exercise: 'Bench Press', sets: 4, reps: 8, intensity: 0.65 },
+                    { day: 'Thursday', title: 'Strength Bench', exercise: 'Bench Press', sets: 5, reps: 5, intensity: 0.775 },
+                    { day: 'Friday', title: 'Strength Squat', exercise: 'Squat', sets: 5, reps: 5, intensity: 0.75 }
+                  ]},
+                  { week: 2, phase: 'Accumulation', days: [
+                    { day: 'Sunday', title: 'Volume Bench', exercise: 'Bench Press', sets: 4, reps: 8, intensity: 0.675 },
+                    { day: 'Thursday', title: 'Strength Bench', exercise: 'Bench Press', sets: 5, reps: 5, intensity: 0.80 },
+                    { day: 'Friday', title: 'Strength Squat', exercise: 'Squat', sets: 5, reps: 5, intensity: 0.775 }
+                  ]},
+                  { week: 3, phase: 'Accumulation', days: [
+                    { day: 'Sunday', title: 'Volume Bench', exercise: 'Bench Press', sets: 4, reps: 8, intensity: 0.70 },
+                    { day: 'Thursday', title: 'Strength Bench', exercise: 'Bench Press', sets: 5, reps: 5, intensity: 0.825 },
+                    { day: 'Friday', title: 'Strength Squat', exercise: 'Squat', sets: 5, reps: 5, intensity: 0.80 }
+                  ]},
+                  { week: 4, phase: 'Deload', days: [
+                                    { day: 'Sunday', title: 'Technical Bench', exercise: 'Bench Press', sets: 3, reps: 5, intensity: 0.60 },
+                    { day: 'Thursday', title: 'Technical Bench', exercise: 'Bench Press', sets: 3, reps: 5, intensity: 0.60 },
+                    { day: 'Friday', title: 'Technical Squat', exercise: 'Squat', sets: 3, reps: 5, intensity: 0.60 }
+                  ]},
+                  { week: 5, phase: 'Intensification', days: [
+                    { day: 'Sunday', title: 'Technical Bench', exercise: 'Bench Press', sets: 4, reps: 5, intensity: 0.70 },
+                    { day: 'Thursday', title: 'Intensity Bench', exercise: 'Bench Press', sets: 4, reps: 3, intensity: 0.875 },
+                    { day: 'Friday', title: 'Intensity Squat', exercise: 'Squat', sets: 5, reps: 3, intensity: 0.85 }
+                  ]},
+                  { week: 6, phase: 'Intensification', days: [
+                    { day: 'Sunday', title: 'Technical Bench', exercise: 'Bench Press', sets: 4, reps: 5, intensity: 0.725 },
+                    { day: 'Thursday', 'title': 'Intensity Bench', exercise: 'Bench Press', sets: 3, reps: 3, intensity: 0.90 },
+                    { day: 'Friday', title: 'Intensity Squat', exercise: 'Squat', sets: 4, reps: 3, intensity: 0.875 }
+                  ]},
+                  { week: 7, phase: 'Intensification', days: [
+                    { day: 'Sunday', title: 'Activation Bench', exercise: 'Bench Press', sets: 5, reps: 3, intensity: 0.75 },
+                    { day: 'Thursday', title: 'Peak Bench', exercise: 'Bench Press', sets: 3, reps: 2, intensity: 0.925 },
+                    { day: 'Friday', title: 'Peak Squat', exercise: 'Squat', sets: 3, reps: 3, intensity: 0.90 }
+                  ]},
+                  // Week 8: Peak & Test
+                  { week: 8, phase: 'Peak & Test', days: [
+                    { day: 'Thursday', title: 'Peak Test', exercise: 'Bench Press', sets: 3, reps: 1, intensity: 0.95 },
+                    { day: 'Friday', title: 'Peak Test', exercise: 'Squat', sets: 3, reps: 1, intensity: 0.95 }
+                  ]}
+                ]
             };
 
             // --- DOM ELEMENTS ---
             const benchTmInput = document.getElementById('bench-tm');
-            const squatTmInput = document.getElementById('squat-tm');
+                        const squatTmInput = document.getElementById('squat-tm');
             const workoutContainer = document.getElementById('workout-plan');
+            const editModeToggle = document.getElementById('edit-mode-toggle');
 
             // --- LOCALSTORAGE LOGIC ---
             function saveData() {
@@ -237,7 +311,9 @@
             function loadData() {
                 const savedData = localStorage.getItem('workoutLogData');
                 if (savedData) {
-                    state = JSON.parse(savedData);
+                    const parsedData = JSON.parse(savedData);
+                    // Merge saved data with default state to ensure new properties are not lost
+                    state = { ...state, ...parsedData };
                 }
             }
 
@@ -249,21 +325,26 @@
             }
 
             // --- RENDER/DISPLAY FUNCTIONS ---
-            function updateDisplay() {
+                        function updateDisplay() {
                 updateWorkoutPlan();
                 updateTMInputs();
+                updateEditModeButton();
             }
             
-            function updateTMInputs() {
+                        function updateTMInputs() {
                 benchTmInput.value = state.benchPressTM > 0 ? state.benchPressTM : '';
                 squatTmInput.value = state.squatTM > 0 ? state.squatTM : '';
+            }
+
+            function updateEditModeButton() {
+                editModeToggle.textContent = state.editMode ? 'Disable Edit Mode' : 'Enable Edit Mode';
             }
 
             // Renders the entire 8-week program to the page.
             function updateWorkoutPlan() {
                 workoutContainer.innerHTML = ''; // Clear previous content
 
-                workoutProgram.forEach(weekData => {
+                state.program.forEach(weekData => {
                     // Create a container for the entire week
                     const weekContainer = document.createElement('div');
                     weekContainer.className = 'week-container';
@@ -278,28 +359,43 @@
                     weekData.days.forEach((day, dayIndex) => {
                         const dayCard = document.createElement('div');
                         dayCard.className = 'card';
-
-                        let content = `<h3>${day.day} - ${day.title}</h3>`;
-
-                        if (day.test) {
-                            content += `<p>Test your 1 Rep Max for ${day.exercise}!</p>`;
-                        } else {
-                            const tm = day.exercise === 'Bench Press' ? state.benchPressTM : state.squatTM;
-                            const weight = calculateWeight(tm, day.intensity);
-                            content += `<p>${day.exercise}: <strong>${weight}kg</strong> (${day.intensity * 100}%) - ${day.sets} sets of ${day.reps} reps</p>`;
-                            
-                            let progressHTML = '<div class="progress-container">';
-                            for (let i = 0; i < day.sets; i++) {
-                                // Unique ID for each progress box across all weeks
-                                const progressId = `w${weekData.week}d${dayIndex}s${i}`;
-                                const isCompleted = state.progressData[progressId] ? 'completed' : '';
-                                progressHTML += `<div class="progress-box ${isCompleted}" data-progress-id="${progressId}"></div>`;
-                            }
-                            progressHTML += '</div>';
-                            content += progressHTML;
+                        if (state.editMode) {
+                            dayCard.classList.add('editable');
                         }
 
-                        dayCard.innerHTML = content;
+                        if (state.editMode) {
+                            // Using weekData.week - 1 because week numbers are 1-based, but array is 0-indexed
+                            const weekIdx = weekData.week - 1;
+                            dayCard.innerHTML = `
+                                <div>Day: <input type="text" value="${day.day}" data-week-idx="${weekIdx}" data-day-idx="${dayIndex}" data-prop="day"></div>
+                                <div>Title: <input type="text" value="${day.title}" data-week-idx="${weekIdx}" data-day-idx="${dayIndex}" data-prop="title"></div>
+                                <div>Exercise: <input type="text" value="${day.exercise}" data-week-idx="${weekIdx}" data-day-idx="${dayIndex}" data-prop="exercise"></div>
+                                <div>Sets: <input type="number" value="${day.sets}" data-week-idx="${weekIdx}" data-day-idx="${dayIndex}" data-prop="sets"></div>
+                                <div>Reps: <input type="number" value="${day.reps}" data-week-idx="${weekIdx}" data-day-idx="${dayIndex}" data-prop="reps"></div>
+                                <div>Intensity: <input type="number" step="0.001" value="${day.intensity}" data-week-idx="${weekIdx}" data-day-idx="${dayIndex}" data-prop="intensity"></div>
+                            `;
+                        } else {
+                            let content = `<h3>${day.day} - ${day.title}</h3>`;
+
+                            if (day.test) {
+                                content += `<p>Test your 1 Rep Max for ${day.exercise}!</p>`;
+                            } else {
+                                const tm = day.exercise === 'Bench Press' ? state.benchPressTM : state.squatTM;
+                                const weight = calculateWeight(tm, day.intensity);
+                                content += `<p>${day.exercise}: <strong>${weight}kg</strong> (${day.intensity * 100}%) - ${day.sets} sets of ${day.reps} reps</p>`;
+                                
+                                let progressHTML = '<div class="progress-container">';
+                                for (let i = 0; i < day.sets; i++) {
+                                    // Unique ID for each progress box across all weeks
+                                    const progressId = `w${weekData.week}d${dayIndex}s${i}`;
+                                    const isCompleted = state.progressData[progressId] ? 'completed' : '';
+                                    progressHTML += `<div class="progress-box ${isCompleted}" data-progress-id="${progressId}"></div>`;
+                                }
+                                progressHTML += '</div>';
+                                content += progressHTML;
+                            }
+                            dayCard.innerHTML = content;
+                        }
                         weekContainer.appendChild(dayCard);
                     });
                     workoutContainer.appendChild(weekContainer);
@@ -321,7 +417,7 @@
                 updateWorkoutPlan(); // Re-render the entire plan with new weights
             }
 
-            function handleProgressToggle(event) {
+                        function handleProgressToggle(event) {
                 const target = event.target;
                 if (target.classList.contains('progress-box')) {
                     const progressId = target.dataset.progressId;
@@ -330,6 +426,23 @@
                     saveData();
                 }
             }
+
+            function handleWorkoutDataChange(event) {
+                const { weekIdx, dayIdx, prop } = event.target.dataset;
+                let { value } = event.target;
+
+                if (event.target.type === 'number') {
+                    value = parseFloat(value) || 0;
+                }
+
+                state.program[weekIdx].days[dayIdx][prop] = value;
+                saveData();
+            }
+
+            function handleEditModeToggle() {
+                state.editMode = !state.editMode;
+                updateDisplay();
+            }
             
             // --- INITIALIZATION ---
             function init() {
@@ -337,7 +450,9 @@
                 
                 benchTmInput.addEventListener('input', handleTMChange);
                 squatTmInput.addEventListener('input', handleTMChange);
+                                editModeToggle.addEventListener('click', handleEditModeToggle);
                 workoutContainer.addEventListener('click', handleProgressToggle);
+                workoutContainer.addEventListener('input', handleWorkoutDataChange);
 
                 updateDisplay(); // Initial render
             }
