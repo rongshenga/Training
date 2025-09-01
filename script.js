@@ -98,7 +98,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- UTILITY FUNCTIONS ---
-    function getUniqueOptions(program, key) {
+     function getExerciseIcon(exercise) {
+        const icons = {
+            'Bench Press': '🏋️', // 使用卧推的 emoji
+            'Squat': '🦵',       // 使用深蹲的 emoji
+        };
+        return icons[exercise] ? `<span class="exercise-icon">${icons[exercise]}</span>` : '';
+    }
+
+   function getUniqueOptions(program, key) {
         const allValues = program.flatMap(week => week.days.map(day => day[key]));
         return [...new Set(allValues)];
     }
@@ -261,7 +269,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     let content = `<h3>${day.day} - ${day.title}</h3>`;
                     const tm = day.exercise === 'Bench Press' ? tmData.benchPressTM : tmData.squatTM;
                     const weight = calculateWeight(tm, day.intensity);
-                    content += `<p>${day.exercise}: <strong>${weight}kg</strong> (${day.intensity * 100}%) - ${day.sets} sets of ${day.reps} reps</p>`;
+                    const icon = getExerciseIcon(day.exercise);
+                    content += `<p>${icon} ${day.exercise}: <strong>${weight}kg</strong> (${day.intensity * 100}%) - ${day.sets} sets of ${day.reps} reps</p>`;
 
                     let progressHTML = '<div class="progress-container">';
                     for (let i = 0; i < day.sets; i++) {

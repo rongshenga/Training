@@ -321,3 +321,9 @@ input[type="number"] {
         grid-template-columns: repeat(4, 1fr);
     }
 }
+
+.exercise-icon {
+    margin-right: 8px;
+    display: inline-block;
+    vertical-align: middle;
+}
