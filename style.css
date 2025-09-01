@@ -184,7 +184,8 @@ input[type="number"] {
 
 /* Single Week View - Center the single week container */
 body.single-week-view #workout-plan {
-    display: block; /* Override the grid layout */
+    display: flex;
+    justify-content: center;
 }
 body.single-week-view .week-container {
     max-width: 800px;

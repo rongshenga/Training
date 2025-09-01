@@ -255,7 +255,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         containerElement.innerHTML = ''; // Clear previous content
 
-        const weeksToRender = state.viewMode === 'single'
+        const weeksToRender = state.viewMode === 'single' && !isHistory
             ? programData.filter(week => week.week === state.currentWeek)
             : programData;
 
@@ -579,7 +579,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (isHistoryVisible) {
             // Switch back to main view
             historyView.style.display = 'none';
-            mainPlan.style.display = 'grid';
+            mainPlan.style.display = '';
             tmInputs.style.display = 'flex';
             mainHeader.style.display = 'block';
             editModeToggle.style.display = 'inline-block'; // Show
