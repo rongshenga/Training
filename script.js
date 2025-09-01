@@ -231,6 +231,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updateViewControls() {
         if (state.viewMode === 'single') {
+            document.body.classList.add('single-week-view');
             viewToggleBtn.textContent = 'Switch to All Weeks View';
             prevWeekBtn.style.display = 'inline-block';
             nextWeekBtn.style.display = 'inline-block';
@@ -240,6 +241,7 @@ document.addEventListener('DOMContentLoaded', () => {
             nextWeekBtn.disabled = state.currentWeek >= state.program.length;
 
         } else { // 'all' view
+            document.body.classList.remove('single-week-view');
             viewToggleBtn.textContent = 'Switch to Single Week View';
             prevWeekBtn.style.display = 'none';
             nextWeekBtn.style.display = 'none';
