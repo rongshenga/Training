@@ -149,20 +149,84 @@
             border-color: var(--success-color);
         }
 
-        #edit-mode-toggle {
+        /* Buttons */
+        .btn {
             background-color: var(--accent-color);
             color: var(--primary-text);
             border: none;
-            padding: 10px 15px;
-            border-radius: 4px;
+            padding: 10px 20px;
+            border-radius: 5px;
             cursor: pointer;
-            font-size: 0.9em;
-            margin-top: 10px;
-            transition: background-color 0.2s;
+            font-size: 1em;
+            transition: background-color 0.2s, transform 0.1s;
+            text-align: center;
         }
 
-        #edit-mode-toggle:hover {
+        .btn:hover {
             background-color: var(--accent-hover);
+        }
+
+        .btn:active {
+            transform: translateY(1px);
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary-bg);
+            border: 1px solid var(--border-color);
+        }
+        
+        .btn-secondary:hover {
+            background-color: #3e3e3e;
+        }
+
+        /* Custom Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+
+        .modal-overlay.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background-color: var(--secondary-bg);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            transform: scale(0.9);
+            transition: transform 0.3s;
+        }
+        
+        .modal-overlay.visible .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-content h2 {
+            margin-top: 0;
+            color: var(--accent-color);
+        }
+
+        .modal-buttons {
+            margin-top: 1.5rem;
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
         }
 
         .card.editable div {
@@ -208,9 +272,9 @@
         <header>
                         <h1>8-Week Strength Program</h1>
             <div class="header-buttons">
-                <button id="edit-mode-toggle">Enable Edit Mode</button>
-                <button id="archive-cycle-btn">Archive & Start New Cycle</button>
-                <button id="view-history-btn">View History</button>
+                <button id="edit-mode-toggle" class="btn">Enable Edit Mode</button>
+                <button id="archive-cycle-btn" class="btn">Archive & Start New Cycle</button>
+                <button id="view-history-btn" class="btn">View History</button>
             </div>
         </header>
 
@@ -232,6 +296,17 @@
             <h2>Archived Cycles</h2>
             <div id="history-container"></div>
         </section>
+    </div>
+
+    <div id="custom-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h2 id="modal-title">Modal Title</h2>
+            <p id="modal-text">Modal message goes here.</p>
+            <div class="modal-buttons">
+                <button id="modal-confirm-btn" class="btn">Confirm</button>
+                <button id="modal-cancel-btn" class="btn btn-secondary">Cancel</button>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -335,11 +410,13 @@
 
             // --- DOM ELEMENTS ---
             const benchTmInput = document.getElementById('bench-tm');
-                        const squatTmInput = document.getElementById('squat-tm');
+            const squatTmInput = document.getElementById('squat-tm');
             const workoutContainer = document.getElementById('workout-plan');
             const editModeToggle = document.getElementById('edit-mode-toggle');
             const archiveBtn = document.getElementById('archive-cycle-btn');
             const viewHistoryBtn = document.getElementById('view-history-btn');
+            const modalConfirmBtn = document.getElementById('modal-confirm-btn');
+            const modalCancelBtn = document.getElementById('modal-cancel-btn');
 
             // --- LOCALSTORAGE LOGIC ---
             function saveData() {
@@ -609,47 +686,86 @@
                 saveData();
             }
             
-            function archiveAndStartNewCycle() {
-                if (!confirm('Are you sure you want to archive this cycle and start a new one? Your current progress will be saved to history.')) {
-                    return;
+            // --- MODAL LOGIC ---
+            let modalConfirmCallback = null;
+
+            function showModal({ title, text, confirmText = 'Confirm', cancelText = 'Cancel', onConfirm }) {
+                document.getElementById('modal-title').textContent = title;
+                document.getElementById('modal-text').textContent = text;
+                const confirmBtn = document.getElementById('modal-confirm-btn');
+                const cancelBtn = document.getElementById('modal-cancel-btn');
+
+                confirmBtn.textContent = confirmText;
+                cancelBtn.textContent = cancelText;
+
+                confirmBtn.style.display = confirmText ? 'inline-block' : 'none';
+                cancelBtn.style.display = cancelText ? 'inline-block' : 'none';
+
+                modalConfirmCallback = onConfirm;
+                document.getElementById('custom-modal').classList.add('visible');
+            }
+
+            function hideModal() {
+                document.getElementById('custom-modal').classList.remove('visible');
+                modalConfirmCallback = null;
+            }
+
+            function handleModalConfirm() {
+                if (modalConfirmCallback) {
+                    modalConfirmCallback();
                 }
-                const archive = {
-                    archivedAt: new Date().toISOString(),
-                    program: JSON.parse(JSON.stringify(state.program)), // Deep copy
-                    progressData: JSON.parse(JSON.stringify(state.progressData)),
-                    benchPressTM: state.benchPressTM,
-                    squatTM: state.squatTM
-                };
-                state.history.unshift(archive); // Add to the beginning of the history array
-                state.program = JSON.parse(JSON.stringify(workoutProgram)); // Reset program to original
-                state.progressData = {}; // Reset progress
-                
-                saveData();
-                updateDisplay();
-                alert('Cycle archived successfully! A new cycle is ready.');
+                hideModal();
+            }
+
+            function archiveAndStartNewCycle() {
+                showModal({
+                    title: 'Archive Cycle?',
+                    text: 'Are you sure? Your current progress will be saved to history.',
+                    onConfirm: () => {
+                        const archive = {
+                            archivedAt: new Date().toISOString(),
+                            program: JSON.parse(JSON.stringify(state.program)),
+                            progressData: JSON.parse(JSON.stringify(state.progressData)),
+                            benchPressTM: state.benchPressTM,
+                            squatTM: state.squatTM
+                        };
+                        state.history.unshift(archive);
+                        state.program = JSON.parse(JSON.stringify(workoutProgram));
+                        state.progressData = {};
+                        saveData();
+                        updateDisplay();
+
+                        showModal({
+                            title: 'Success!',
+                            text: 'Cycle archived. A new cycle is ready.',
+                            confirmText: 'OK',
+                            cancelText: null
+                        });
+                    }
+                });
             }
 
             function toggleHistoryView() {
                 const mainPlan = document.getElementById('workout-plan');
                 const historyView = document.getElementById('history-view');
                 const tmInputs = document.querySelector('.tm-inputs');
-                const header = document.querySelector('header');
+                const mainHeader = document.querySelector('header h1');
+                const isHistoryVisible = historyView.style.display !== 'none';
 
-
-                if (historyView.style.display === 'none') {
-                    // Show history
-                    mainPlan.style.display = 'none';
-                    tmInputs.style.display = 'none';
-                    header.style.display = 'none';
-                    historyView.style.display = 'block';
-                    viewHistoryBtn.textContent = 'Back to Current Cycle';
-                } else {
-                    // Show main plan
+                if (isHistoryVisible) {
+                    // Switch back to main view
+                    historyView.style.display = 'none';
                     mainPlan.style.display = 'grid';
                     tmInputs.style.display = 'flex';
-                    header.style.display = 'block';
-                    historyView.style.display = 'none';
+                    mainHeader.style.display = 'block';
                     viewHistoryBtn.textContent = 'View History';
+                } else {
+                    // Switch to history view
+                    historyView.style.display = 'block';
+                    mainPlan.style.display = 'none';
+                    tmInputs.style.display = 'none';
+                    mainHeader.style.display = 'none';
+                    viewHistoryBtn.textContent = 'Back to Current Cycle';
                 }
             }
 
@@ -670,6 +786,8 @@
                 workoutContainer.addEventListener('change', handleWorkoutDataChange);
                 archiveBtn.addEventListener('click', archiveAndStartNewCycle);
                 viewHistoryBtn.addEventListener('click', toggleHistoryView);
+                modalConfirmBtn.addEventListener('click', handleModalConfirm);
+                modalCancelBtn.addEventListener('click', hideModal);
 
                 updateDisplay(); // Initial render
             }
