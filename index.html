@@ -5,6 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Workout Log</title>
     <style>
+        .archive-cycle {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 2rem;
+        }
+        #history-view h2 {
+            text-align: center;
+            color: var(--accent-color);
+        }
+        .archived-plan {
+            /* This will make it look like the main view */
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            align-items: start;
+        }
+        .header-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 1rem;
+        }
+
         /* General Styling and Dark Theme */
         :root {
             --primary-bg: #1a1a1a;
@@ -183,7 +207,11 @@
     <div class="container">
         <header>
                         <h1>8-Week Strength Program</h1>
-            <button id="edit-mode-toggle">Enable Edit Mode</button>
+            <div class="header-buttons">
+                <button id="edit-mode-toggle">Enable Edit Mode</button>
+                <button id="archive-cycle-btn">Archive & Start New Cycle</button>
+                <button id="view-history-btn">View History</button>
+            </div>
         </header>
 
         <section class="tm-inputs">
@@ -200,6 +228,10 @@
         <main id="workout-plan">
             <!-- All 8 weeks of the workout plan will be dynamically inserted here -->
         </main>
+        <section id="history-view" style="display: none;">
+            <h2>Archived Cycles</h2>
+            <div id="history-container"></div>
+        </section>
     </div>
 
     <script>
@@ -256,6 +288,7 @@
                 squatTM: 0,
                 progressData: {},
                 editMode: false,
+                history: [],
                 program: [
                   { week: 1, phase: 'Accumulation', days: [
                     { day: 'Sunday', title: 'Volume Bench', exercise: 'Bench Press', sets: 4, reps: 8, intensity: 0.65 },
@@ -305,6 +338,8 @@
                         const squatTmInput = document.getElementById('squat-tm');
             const workoutContainer = document.getElementById('workout-plan');
             const editModeToggle = document.getElementById('edit-mode-toggle');
+            const archiveBtn = document.getElementById('archive-cycle-btn');
+            const viewHistoryBtn = document.getElementById('view-history-btn');
 
             // --- LOCALSTORAGE LOGIC ---
             function saveData() {
@@ -317,6 +352,7 @@
                     const parsedData = JSON.parse(savedData);
                     // Merge saved data with default state to ensure new properties are not lost
                     state = { ...state, ...parsedData };
+                    state.history = parsedData.history || []; // Ensure history is an array
                 }
             }
 
@@ -368,6 +404,71 @@
                 updateWorkoutPlan();
                 updateTMInputs();
                 updateEditModeButton();
+                renderHistory();
+            }
+            
+            function renderHistory() {
+                const historyContainer = document.getElementById('history-container');
+                historyContainer.innerHTML = ''; // Clear existing
+                const h2 = document.querySelector('#history-view h2');
+                
+                if (!state.history || state.history.length === 0) {
+                    h2.textContent = 'No Archived Cycles Found';
+                    historyContainer.innerHTML = '';
+                    return;
+                }
+
+                h2.textContent = 'Archived Cycles';
+
+                state.history.forEach((archive, index) => {
+                    const archiveWrapper = document.createElement('div');
+                    archiveWrapper.className = 'archive-cycle';
+                    
+                    const archiveHeader = document.createElement('h3');
+                    const archiveDate = new Date(archive.archivedAt).toLocaleString();
+                    archiveHeader.textContent = `Cycle Archived on ${archiveDate} (TMs: Bench ${archive.benchPressTM}kg, Squat ${archive.squatTM}kg)`;
+                    archiveWrapper.appendChild(archiveHeader);
+
+                    const planContainer = document.createElement('div');
+                    planContainer.className = 'archived-plan'; // For styling
+                    archiveWrapper.appendChild(planContainer);
+                    
+                    archive.program.forEach(weekData => {
+                        const weekContainer = document.createElement('div');
+                        weekContainer.className = 'week-container';
+                        
+                        const weekHeader = document.createElement('h2');
+                        weekHeader.className = 'week-header';
+                        weekHeader.textContent = `Week ${weekData.week}: ${weekData.phase}`;
+                        weekContainer.appendChild(weekHeader);
+
+                        weekData.days.forEach((day, dayIndex) => {
+                            const dayCard = document.createElement('div');
+                            dayCard.className = 'card';
+                            
+                            const tm = day.exercise === 'Bench Press' ? archive.benchPressTM : archive.squatTM;
+                            const weight = calculateWeight(tm, day.intensity);
+                            
+                            let content = `<h3>${day.day} - ${day.title}</h3>`;
+                            content += `<p>${day.exercise}: <strong>${weight}kg</strong> (${day.intensity * 100}%) - ${day.sets} sets of ${day.reps} reps</p>`;
+                            
+                            let progressHTML = '<div class="progress-container">';
+                            for (let i = 0; i < day.sets; i++) {
+                                const progressId = `w${weekData.week}d${dayIndex}s${i}`;
+                                const isCompleted = archive.progressData[progressId] ? 'completed' : '';
+                                progressHTML += `<div class="progress-box ${isCompleted}" style="cursor: default;"></div>`; 
+                            }
+                            progressHTML += '</div>';
+                            content += progressHTML;
+                            
+                            dayCard.innerHTML = content;
+                            weekContainer.appendChild(dayCard);
+                        });
+                        planContainer.appendChild(weekContainer);
+                    });
+
+                    historyContainer.appendChild(archiveWrapper);
+                });
             }
             
                         function updateTMInputs() {
@@ -507,6 +608,50 @@
                 
                 saveData();
             }
+            
+            function archiveAndStartNewCycle() {
+                if (!confirm('Are you sure you want to archive this cycle and start a new one? Your current progress will be saved to history.')) {
+                    return;
+                }
+                const archive = {
+                    archivedAt: new Date().toISOString(),
+                    program: JSON.parse(JSON.stringify(state.program)), // Deep copy
+                    progressData: JSON.parse(JSON.stringify(state.progressData)),
+                    benchPressTM: state.benchPressTM,
+                    squatTM: state.squatTM
+                };
+                state.history.unshift(archive); // Add to the beginning of the history array
+                state.program = JSON.parse(JSON.stringify(workoutProgram)); // Reset program to original
+                state.progressData = {}; // Reset progress
+                
+                saveData();
+                updateDisplay();
+                alert('Cycle archived successfully! A new cycle is ready.');
+            }
+
+            function toggleHistoryView() {
+                const mainPlan = document.getElementById('workout-plan');
+                const historyView = document.getElementById('history-view');
+                const tmInputs = document.querySelector('.tm-inputs');
+                const header = document.querySelector('header');
+
+
+                if (historyView.style.display === 'none') {
+                    // Show history
+                    mainPlan.style.display = 'none';
+                    tmInputs.style.display = 'none';
+                    header.style.display = 'none';
+                    historyView.style.display = 'block';
+                    viewHistoryBtn.textContent = 'Back to Current Cycle';
+                } else {
+                    // Show main plan
+                    mainPlan.style.display = 'grid';
+                    tmInputs.style.display = 'flex';
+                    header.style.display = 'block';
+                    historyView.style.display = 'none';
+                    viewHistoryBtn.textContent = 'View History';
+                }
+            }
 
             function handleEditModeToggle() {
                 state.editMode = !state.editMode;
@@ -523,6 +668,8 @@
                                 editModeToggle.addEventListener('click', handleEditModeToggle);
                 workoutContainer.addEventListener('click', handleProgressToggle);
                 workoutContainer.addEventListener('change', handleWorkoutDataChange);
+                archiveBtn.addEventListener('click', archiveAndStartNewCycle);
+                viewHistoryBtn.addEventListener('click', toggleHistoryView);
 
                 updateDisplay(); // Initial render
             }
