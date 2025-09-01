@@ -297,18 +297,35 @@ document.addEventListener('DOMContentLoaded', () => {
                     const titleSelectHTML = createSelectHTML(relevantTitles, day.title, createDataAttrs('title'));
                     const exerciseSelectHTML = createSelectHTML(uniqueExercises, day.exercise, createDataAttrs('exercise'));
 
-                    const createInput = (type, value, prop) =>
-                        `<input type="${type}" value="${value}" ${type === 'number' ? 'step="0.001"' : ''} ` +
-                        Object.entries(createDataAttrs(prop)).map(([key, val]) => `data-${key}="${val}"`).join(' ') +
-                        '>';
+                    const createInput = (type, value, prop) => {
+                        let stepAttr = '';
+                        if (type === 'number') {
+                            stepAttr = (prop === 'intensity') ? 'step="0.01"' : 'step="1" min="0"';
+                        }
+                        return `<input type="${type}" value="${value}" ${stepAttr} ` +
+                            Object.entries(createDataAttrs(prop)).map(([key, val]) => `data-${key}="${val}"`).join(' ') +
+                            '>';
+                    }
+
 
                     dayCard.innerHTML = `
                                 <div>Day: ${daySelectHTML}</div>
                                 <div>Exercise: ${exerciseSelectHTML}</div>
                                 <div>Title: ${titleSelectHTML}</div>
-                                <div>Sets: ${createInput('number', day.sets, 'sets')}</div>
-                                <div>Reps: ${createInput('number', day.reps, 'reps')}</div>
-                                <div>Intensity: ${createInput('number', day.intensity, 'intensity')}</div>
+                                <div class="numeric-inputs-wrapper">
+                                    <div class="numeric-input-item">
+                                        <label>Sets</label>
+                                        ${createInput('number', day.sets, 'sets')}
+                                    </div>
+                                    <div class="numeric-input-item">
+                                        <label>Reps</label>
+                                        ${createInput('number', day.reps, 'reps')}
+                                    </div>
+                                    <div class="numeric-input-item">
+                                        <label>Intensity</label>
+                                        ${createInput('number', day.intensity, 'intensity')}
+                                    </div>
+                                </div>
                             `;
                 } else {
                     let content = `<h3>${day.day} - ${day.title}</h3>`;
