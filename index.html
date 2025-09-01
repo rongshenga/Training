@@ -248,6 +248,8 @@
               ]}
             ];
 
+            let CANONICAL_TITLE_OPTIONS = {};
+
             // --- APPLICATION STATE ---
                         let state = {
                 benchPressTM: 0,
@@ -381,7 +383,7 @@
             function updateWorkoutPlan() {
                 const uniqueDays = getUniqueOptions(state.program, 'day');
                 const uniqueExercises = getUniqueOptions(state.program, 'exercise');
-                const titleOptionsByExercise = getTitleOptionsByExercise(state.program);
+                const titleOptionsByExercise = CANONICAL_TITLE_OPTIONS;
 
                 workoutContainer.innerHTML = ''; // Clear previous content
 
@@ -493,7 +495,7 @@
                 
                 // If the exercise was changed, we must also update the title
                 if (prop === 'exercise') {
-                    const validTitles = getTitleOptionsByExercise(state.program)[dayData.exercise] || [];
+                    const validTitles = CANONICAL_TITLE_OPTIONS[dayData.exercise] || [];
                     if (!validTitles.includes(dayData.title)) {
                         dayData.title = validTitles.length > 0 ? validTitles[0] : '';
                     }
@@ -514,6 +516,7 @@
             // --- INITIALIZATION ---
             function init() {
                 loadData();
+                CANONICAL_TITLE_OPTIONS = getTitleOptionsByExercise(workoutProgram);
                 
                 benchTmInput.addEventListener('input', handleTMChange);
                 squatTmInput.addEventListener('input', handleTMChange);
