@@ -182,6 +182,12 @@ input[type="number"] {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
+/* Single Week View - Center the single week container */
+body.single-week-view .week-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
 .card h3 {
     margin-top: 0;
     color: var(--accent-color);

@@ -154,6 +154,18 @@ document.addEventListener('DOMContentLoaded', () => {
         return Math.round(weight / 2.5) * 2.5;
     }
 
+    function isDayCompleted(weekData, day, dayIndex, progressData, isHistory, historyIndex) {
+        for (let i = 0; i < day.sets; i++) {
+            const progressId = isHistory
+                ? `h${historyIndex}w${weekData.week}d${dayIndex}s${i}`
+                : `w${weekData.week}d${dayIndex}s${i}`;
+            if (!progressData[progressId]) {
+                return false; // If any set is not completed, the day is not completed
+            }
+        }
+        return day.sets > 0; // Return true only if there are sets to complete.
+    }
+
     // --- RENDER/DISPLAY FUNCTIONS ---
     function updateDisplay() {
         updateWorkoutPlan();
@@ -257,6 +269,9 @@ document.addEventListener('DOMContentLoaded', () => {
             weekData.days.forEach((day, dayIndex) => {
                 const dayCard = document.createElement('div');
                 dayCard.className = 'card';
+                if (!isEditable && isDayCompleted(weekData, day, dayIndex, progressData, isHistory, historyIndex)) {
+                    dayCard.classList.add('day-completed');
+                }
                 if (isEditable) {
                     dayCard.classList.add('editable');
                 }
@@ -298,7 +313,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const tm = day.exercise === 'Bench Press' ? tmData.benchPressTM : tmData.squatTM;
                     const weight = calculateWeight(tm, day.intensity);
                     const icon = getExerciseIcon(day.exercise);
-                    content += `<p>${icon} ${day.exercise}: <strong>${weight}kg</strong> (${day.intensity * 100}%) - ${day.sets} sets of ${day.reps} reps</p>`;
+                    content += `<div class="exercise-info"><p>${icon} ${day.exercise}</p><p class="weight-details"><strong>${weight}kg</strong> (${day.intensity * 100}%)</p><p>${day.sets} sets of ${day.reps} reps</p></div>`;
 
                     let progressHTML = '<div class="progress-container">';
                     for (let i = 0; i < day.sets; i++) {
@@ -346,9 +361,22 @@ document.addEventListener('DOMContentLoaded', () => {
         const target = event.target;
         if (target.classList.contains('progress-box')) {
             const progressId = target.dataset.progressId;
+            if (!progressId) return; // Ignore clicks on history progress boxes
+
             state.progressData[progressId] = !state.progressData[progressId];
             target.classList.toggle('completed');
             saveData();
+
+            // Check if the whole day is complete now and update card style
+            const dayCard = target.closest('.card');
+            const allBoxes = dayCard.querySelectorAll('.progress-box');
+            const allCompleted = [...allBoxes].every(box => box.classList.contains('completed'));
+
+            if (allCompleted) {
+                dayCard.classList.add('day-completed');
+            } else {
+                dayCard.classList.remove('day-completed');
+            }
         }
     }
 
