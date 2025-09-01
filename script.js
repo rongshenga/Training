@@ -69,7 +69,9 @@ document.addEventListener('DOMContentLoaded', () => {
         progressData: {},
         editMode: false,
         history: [],
-        program: JSON.parse(JSON.stringify(programData))
+        program: JSON.parse(JSON.stringify(programData)),
+        viewMode: 'all', // 'all' or 'single'
+        currentWeek: 1   // 1-based index of the current week being viewed
     };
 
     // --- DOM ELEMENTS ---
@@ -79,6 +81,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const editModeToggle = document.getElementById('edit-mode-toggle');
     const archiveBtn = document.getElementById('archive-cycle-btn');
     const viewHistoryBtn = document.getElementById('view-history-btn');
+    const prevWeekBtn = document.getElementById('prev-week-btn');
+    const nextWeekBtn = document.getElementById('next-week-btn');
+    const viewToggleBtn = document.getElementById('view-toggle-btn');
+    const viewControls = document.querySelector('.view-controls');
     const modalConfirmBtn = document.getElementById('modal-confirm-btn');
     const modalCancelBtn = document.getElementById('modal-cancel-btn');
 
@@ -154,6 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
         updateTMInputs();
         updateEditModeButton();
         renderHistory();
+        updateViewControls();
     }
 
     function renderHistory() {
@@ -210,6 +217,23 @@ document.addEventListener('DOMContentLoaded', () => {
         editModeToggle.textContent = state.editMode ? 'Disable Edit Mode' : 'Enable Edit Mode';
     }
 
+    function updateViewControls() {
+        if (state.viewMode === 'single') {
+            viewToggleBtn.textContent = 'Switch to All Weeks View';
+            prevWeekBtn.style.display = 'inline-block';
+            nextWeekBtn.style.display = 'inline-block';
+
+            // Disable buttons at boundaries
+            prevWeekBtn.disabled = state.currentWeek <= 1;
+            nextWeekBtn.disabled = state.currentWeek >= state.program.length;
+
+        } else { // 'all' view
+            viewToggleBtn.textContent = 'Switch to Single Week View';
+            prevWeekBtn.style.display = 'none';
+            nextWeekBtn.style.display = 'none';
+        }
+    }
+
     function renderPlan(containerElement, programData, tmData, progressData, isEditable, isHistory, historyIndex = -1) {
         const uniqueDays = getUniqueOptions(programData, 'day');
         const uniqueExercises = getUniqueOptions(programData, 'exercise');
@@ -217,7 +241,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         containerElement.innerHTML = ''; // Clear previous content
 
-        programData.forEach(weekData => {
+        const weeksToRender = state.viewMode === 'single'
+            ? programData.filter(week => week.week === state.currentWeek)
+            : programData;
+
+        weeksToRender.forEach(weekData => {
             const weekContainer = document.createElement('div');
             weekContainer.className = 'week-container';
 
@@ -524,6 +552,9 @@ document.addEventListener('DOMContentLoaded', () => {
             mainPlan.style.display = 'grid';
             tmInputs.style.display = 'flex';
             mainHeader.style.display = 'block';
+            editModeToggle.style.display = 'inline-block'; // Show
+            archiveBtn.style.display = 'inline-block';     // Show
+            viewControls.style.display = 'flex';     // Show
             viewHistoryBtn.textContent = 'View History';
         } else {
             // Switch to history view
@@ -531,6 +562,9 @@ document.addEventListener('DOMContentLoaded', () => {
             mainPlan.style.display = 'none';
             tmInputs.style.display = 'none';
             mainHeader.style.display = 'none';
+            editModeToggle.style.display = 'none'; // Hide
+            archiveBtn.style.display = 'none';     // Hide
+            viewControls.style.display = 'none';   // Hide
             viewHistoryBtn.textContent = 'Back to Current Cycle';
         }
     }
@@ -538,6 +572,25 @@ document.addEventListener('DOMContentLoaded', () => {
     function handleEditModeToggle() {
         state.editMode = !state.editMode;
         updateDisplay();
+    }
+
+    function handleViewToggle() {
+        state.viewMode = state.viewMode === 'all' ? 'single' : 'all';
+        updateDisplay();
+    }
+
+    function handlePrevWeek() {
+        if (state.currentWeek > 1) {
+            state.currentWeek--;
+            updateDisplay();
+        }
+    }
+
+    function handleNextWeek() {
+        if (state.currentWeek < state.program.length) {
+            state.currentWeek++;
+            updateDisplay();
+        }
     }
 
     // --- INITIALIZATION ---
@@ -553,6 +606,9 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('history-container').addEventListener('change', handleWorkoutDataChange);
         archiveBtn.addEventListener('click', archiveAndStartNewCycle);
         viewHistoryBtn.addEventListener('click', toggleHistoryView);
+        prevWeekBtn.addEventListener('click', handlePrevWeek);
+        nextWeekBtn.addEventListener('click', handleNextWeek);
+        viewToggleBtn.addEventListener('click', handleViewToggle);
         modalConfirmBtn.addEventListener('click', handleModalConfirm);
         modalCancelBtn.addEventListener('click', hideModal);
         document.getElementById('history-container').addEventListener('click', handleHistoryClick);

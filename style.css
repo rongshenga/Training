@@ -128,6 +128,14 @@ h1 {
     margin-bottom: 2rem;
 }
 
+.view-controls {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 1rem;
+    align-items: center;
+}
+
 .tm-inputs div {
     display: flex;
     flex-direction: column;
@@ -224,6 +232,12 @@ input[type="number"] {
 
 .btn:active {
     transform: translateY(1px);
+}
+
+.btn:disabled {
+    background-color: var(--border-color);
+    cursor: not-allowed;
+    opacity: 0.6;
 }
 
 .btn-secondary {
