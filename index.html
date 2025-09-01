@@ -423,8 +423,8 @@
 
                             dayCard.innerHTML = `
                                 <div>Day: ${daySelectHTML}</div>
-                                <div>Title: ${titleSelectHTML}</div>
                                 <div>Exercise: ${exerciseSelectHTML}</div>
+                                <div>Title: ${titleSelectHTML}</div>
                                 <div>Sets: <input type="number" value="${day.sets}" data-week-idx="${weekIdx}" data-day-idx="${dayIndex}" data-prop="sets"></div>
                                 <div>Reps: <input type="number" value="${day.reps}" data-week-idx="${weekIdx}" data-day-idx="${dayIndex}" data-prop="reps"></div>
                                 <div>Intensity: <input type="number" step="0.001" value="${day.intensity}" data-week-idx="${weekIdx}" data-day-idx="${dayIndex}" data-prop="intensity"></div>
@@ -484,21 +484,28 @@
 
             function handleWorkoutDataChange(event) {
                 const { weekIdx, dayIdx, prop } = event.target.dataset;
-                let { value } = event.target;
+                let value = event.target.value;
+                const dayData = state.program[weekIdx].days[dayIdx];
 
+                // Coerce to number if the input type is number
                 if (event.target.type === 'number') {
                     value = parseFloat(value) || 0;
                 }
 
-                state.program[weekIdx].days[dayIdx][prop] = value;
+                // If the value hasn't actually changed, do nothing.
+                if (dayData[prop] == value) return;
 
-                // If the exercise changed, we need to update the title to a valid option and re-render
+                // Update the property that triggered the event
+                dayData[prop] = value;
+                
+                // If the exercise was changed, we must also update the title
                 if (prop === 'exercise') {
-                    const titleOptions = getTitleOptionsByExercise(state.program)[value] || [];
-                    if (titleOptions.length > 0) {
-                        state.program[weekIdx].days[dayIdx]['title'] = titleOptions[0];
-                    }
-                    updateWorkoutPlan(); // Re-render to update the title dropdown
+                    const validTitles = getTitleOptionsByExercise(state.program)[dayData.exercise] || [];
+                    dayData.title = validTitles.length > 0 ? validTitles[0] : '';
+                    
+                    saveData();
+                    updateWorkoutPlan();
+                    return; 
                 }
                 
                 saveData();
