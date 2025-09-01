@@ -26,7 +26,7 @@
             cursor: pointer;
             user-select: none; /* Prevents text selection on double click */
             position: relative; /* For positioning the delete button */
-            padding-right: 80px; /* Make space for the button */
+            padding-right: 160px; /* Make space for the buttons */
         }
 
         .btn-delete-history {
@@ -45,6 +45,24 @@
 
         .btn-delete-history:hover {
             background-color: #a93226;
+        }
+
+        .btn-edit-history {
+            position: absolute;
+            top: 50%;
+            right: 85px; /* Position next to delete */
+            transform: translateY(-50%);
+            background-color: var(--accent-color);
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            cursor: pointer;
+            color: var(--primary-text);
+        }
+
+        .btn-edit-history:hover {
+            background-color: var(--accent-hover);
         }
         .archive-content.collapsed {
             display: none;
@@ -329,6 +347,7 @@
         <div class="modal-content">
             <h2 id="modal-title">Modal Title</h2>
             <p id="modal-text">Modal message goes here.</p>
+            <div id="modal-body"></div> <!-- For custom content -->
             <div class="modal-buttons">
                 <button id="modal-confirm-btn" class="btn">Confirm</button>
                 <button id="modal-cancel-btn" class="btn btn-secondary">Cancel</button>
@@ -533,6 +552,7 @@
                     const archiveDate = new Date(archive.archivedAt).toLocaleString();
                     archiveHeader.innerHTML = `
                         <span>Cycle Archived on ${archiveDate} (TMs: Bench ${archive.benchPressTM}kg, Squat ${archive.squatTM}kg)</span>
+                        <button class="btn-edit-history" data-history-index="${index}">Edit</button>
                         <button class="btn-delete-history" data-history-index="${index}">Delete</button>
                     `;
                     archiveWrapper.appendChild(archiveHeader);
@@ -707,6 +727,13 @@
                     return;
                 }
 
+                const editBtn = event.target.closest('.btn-edit-history');
+                if (editBtn) {
+                    const historyIndex = parseInt(editBtn.dataset.historyIndex, 10);
+                    showEditHistoryModal(historyIndex);
+                    return;
+                }
+
                 const header = event.target.closest('.archive-header');
                 if (header) {
                     const content = header.nextElementSibling;
@@ -714,6 +741,37 @@
                         content.classList.toggle('collapsed');
                     }
                 }
+            }
+
+            function showEditHistoryModal(index) {
+                const historyItem = state.history[index];
+                const bodyHtml = `
+                    <div class="tm-inputs" style="flex-direction: column; gap: 1rem; margin-bottom: 0;">
+                        <div>
+                            <label for="history-bench-tm">Bench Press TM (kg)</label>
+                            <input type="number" id="history-bench-tm" value="${historyItem.benchPressTM}">
+                        </div>
+                        <div>
+                            <label for="history-squat-tm">Squat TM (kg)</label>
+                            <input type="number" id="history-squat-tm" value="${historyItem.squatTM}">
+                        </div>
+                    </div>
+                `;
+                showModal({
+                    title: 'Edit Archived TMs',
+                    bodyHtml: bodyHtml,
+                    confirmText: 'Save',
+                    onConfirm: () => {
+                        const newBenchTM = parseFloat(document.getElementById('history-bench-tm').value) || 0;
+                        const newSquatTM = parseFloat(document.getElementById('history-squat-tm').value) || 0;
+
+                        state.history[index].benchPressTM = newBenchTM;
+                        state.history[index].squatTM = newSquatTM;
+                        
+                        saveData();
+                        renderHistory();
+                    }
+                });
             }
 
             function handleWorkoutDataChange(event) {
@@ -750,9 +808,22 @@
             // --- MODAL LOGIC ---
             let modalConfirmCallback = null;
 
-            function showModal({ title, text, confirmText = 'Confirm', cancelText = 'Cancel', onConfirm }) {
+            function showModal({ title, text, bodyHtml = '', confirmText = 'Confirm', cancelText = 'Cancel', onConfirm }) {
                 document.getElementById('modal-title').textContent = title;
-                document.getElementById('modal-text').textContent = text;
+                const modalText = document.getElementById('modal-text');
+                const modalBody = document.getElementById('modal-body');
+
+                if (bodyHtml) {
+                    modalText.style.display = 'none';
+                    modalBody.innerHTML = bodyHtml;
+                    modalBody.style.display = 'block';
+                } else {
+                    modalText.textContent = text;
+                    modalText.style.display = 'block';
+                    modalBody.innerHTML = '';
+                    modalBody.style.display = 'none';
+                }
+
                 const confirmBtn = document.getElementById('modal-confirm-btn');
                 const cancelBtn = document.getElementById('modal-cancel-btn');
 
