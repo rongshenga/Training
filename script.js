@@ -243,7 +243,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderPlan(containerElement, programData, tmData, progressData, isEditable, isHistory, historyIndex = -1) {
         const uniqueDays = getUniqueOptions(programData, 'day');
         const uniqueExercises = getUniqueOptions(programData, 'exercise');
-        const titleOptionsByExercise = CANONICAL_TITLE_OPTIONS;
 
         containerElement.innerHTML = ''; // Clear previous content
 
