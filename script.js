@@ -586,10 +586,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const isHistoryVisible = historyView.style.display !== 'none';
 
         if (isHistoryVisible) {
-            // When leaving history view, reset all edit modes
-            state.history.forEach(archive => archive.editMode = false);
-            saveData();
-
             // Switch back to main view
             historyView.style.display = 'none';
             mainPlan.style.display = '';
@@ -600,6 +596,14 @@ document.addEventListener('DOMContentLoaded', () => {
             viewControls.style.display = 'flex';     // Show
             viewHistoryBtn.textContent = 'View History';
         } else {
+            // When entering history view, reset all states to default
+            state.history.forEach(archive => {
+                archive.editMode = false;
+                archive.isCollapsed = true;
+            });
+            saveData();
+            renderHistory(); // Re-render with reset states before showing
+
             // Switch to history view
             historyView.style.display = 'block';
             mainPlan.style.display = 'none';
