@@ -266,6 +266,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updateHeaderButtons() {
+        editModeToggle.textContent = state.editMode ? 'Done' : 'Edit';
         editModeToggle.classList.toggle('btn-secondary', !state.editMode);
         archiveBtn.classList.add('btn-secondary');
     }
@@ -273,7 +274,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateViewControls() {
         if (state.viewMode === 'single') {
             document.body.classList.add('single-week-view');
-            viewToggleBtn.textContent = 'Switch to All Weeks View';
+            viewToggleBtn.textContent = 'All Weeks View';
             prevWeekBtn.style.display = 'inline-block';
             nextWeekBtn.style.display = 'inline-block';
 
@@ -283,7 +284,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         } else { // 'all' view
             document.body.classList.remove('single-week-view');
-            viewToggleBtn.textContent = 'Switch to Single Week View';
+            viewToggleBtn.textContent = 'Single Week View';
             prevWeekBtn.style.display = 'none';
             nextWeekBtn.style.display = 'none';
         }
@@ -497,7 +498,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (isEditable) {
                 const addDayBtn = document.createElement('button');
                 addDayBtn.className = 'btn btn-add-day';
-                addDayBtn.textContent = '+ Add Training Day';
+                addDayBtn.textContent = '+ Add Day';
                 const weekIdx = weekData.week - 1;
                 addDayBtn.dataset.weekIdx = weekIdx;
                 if (isHistory) {
@@ -821,7 +822,7 @@ document.addEventListener('DOMContentLoaded', () => {
             editModeToggle.style.display = 'inline-block'; // Show
             archiveBtn.style.display = 'inline-block';     // Show
             viewControls.style.display = 'flex';     // Show
-            viewHistoryBtn.textContent = 'View History';
+            viewHistoryBtn.textContent = 'History';
         } else {
             // When entering history view, reset all states to default
             state.history.forEach(archive => {
@@ -839,7 +840,7 @@ document.addEventListener('DOMContentLoaded', () => {
             editModeToggle.style.display = 'none'; // Hide
             archiveBtn.style.display = 'none';     // Hide
             viewControls.style.display = 'none';   // Hide
-            viewHistoryBtn.textContent = 'Back to Current Cycle';
+            viewHistoryBtn.textContent = 'Back to Cycle';
         }
     }
 
