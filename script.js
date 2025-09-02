@@ -431,8 +431,8 @@ document.addEventListener('DOMContentLoaded', () => {
                                 </div>
                                 ${editorContent}
                                 <div class="card-actions">
-                                     <button class="btn-toggle-style" data-week-idx="${weekIdx}" data-day-idx="${dayIndex}" ${isHistory ? `data-history-idx="${historyIndex}"` : ''}>
-                                        ${day.displayStyle === 'group' ? 'Traditional' : 'Group'} View
+                                     <button class="btn-toggle-style" title="Toggle view style" data-week-idx="${weekIdx}" data-day-idx="${dayIndex}" ${isHistory ? `data-history-idx="${historyIndex}"` : ''}>
+                                        ⇄
                                     </button>
                                     <button class="btn-delete-day" data-week-idx="${weekIdx}" data-day-idx="${dayIndex}" ${isHistory ? `data-history-idx="${historyIndex}"` : ''}>&times;</button>
                                 </div>

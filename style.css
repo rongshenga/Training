@@ -442,6 +442,23 @@ body.single-week-view .progress-container {
     top: 5px;
     right: 5px;
     z-index: 10;
+    display: flex;
+    gap: 5px;
+}
+
+.btn-toggle-style {
+    background-color: transparent;
+    color: var(--primary-text);
+    border: none;
+    border-radius: 4px;
+    width: 28px;
+    height: 28px;
+    font-size: 16px; /* Restored font size for icon */
+    line-height: 28px;
+    text-align: center;
+    cursor: pointer;
+    padding: 0;
+    transition: background-color 0.2s;
 }
 
 .btn-delete-day {
@@ -458,6 +475,11 @@ body.single-week-view .progress-container {
     padding: 0;
     transition: background-color 0.2s;
 }
+
+.btn-toggle-style:hover {
+    background-color: var(--accent-hover);
+}
+
 
 .btn-delete-day:hover {
     background-color: #c0392b;
