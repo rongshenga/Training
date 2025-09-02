@@ -447,23 +447,22 @@ body.single-week-view .progress-container {
 }
 
 .btn-delete-day {
-    background-color: #c0392b;
-    /* Reddish color */
+    background-color: transparent;
     color: var(--primary-text);
     border: none;
-    border-radius: 50%;
-    /* Make it a circle */
-    width: 24px;
-    height: 24px;
-    font-size: 14px;
-    line-height: 24px;
+    border-radius: 4px;
+    width: 28px;
+    height: 28px;
+    font-size: 20px;
+    line-height: 28px;
     text-align: center;
     cursor: pointer;
     padding: 0;
+    transition: background-color 0.2s;
 }
 
 .btn-delete-day:hover {
-    background-color: #a93226;
+    background-color: #c0392b;
 }
 
 .btn-add-day {
