@@ -19,13 +19,13 @@
 }
 
 .archive-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
     cursor: pointer;
     user-select: none;
-    /* Prevents text selection on double click */
-    position: relative;
-    /* For positioning the delete button */
-    padding-right: 250px;
-    /* Increased padding for more buttons */
 }
 
 .btn-delete-history {
@@ -47,11 +47,43 @@
     background-color: #a93226;
 }
 
-.btn-edit-tm-history,
-.btn-edit-plan-history {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
+.archive-tms {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.tm-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.tm-item label {
+    font-size: 0.9em;
+    margin-bottom: 0;
+}
+
+.archive-header input[type="number"] {
+    width: 60px; /* Compact width */
+    padding: 4px;
+    font-size: 0.9em;
+}
+
+.archive-header input[type="number"]:disabled {
+    background-color: transparent;
+    border-color: transparent;
+    color: var(--primary-text);
+    text-align: left;
+    -moz-appearance: textfield; /* Firefox */
+}
+.archive-header input[type="number"]:disabled::-webkit-inner-spin-button,
+.archive-header input[type="number"]:disabled::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.btn-edit-archive {
     background-color: var(--accent-color);
     border: none;
     padding: 5px 10px;
@@ -59,19 +91,16 @@
     font-size: 0.8em;
     cursor: pointer;
     color: var(--primary-text);
+    margin-left: auto; /* Pushes the buttons to the right */
 }
 
-.btn-edit-tm-history {
-    right: 85px;
-}
-
-.btn-edit-plan-history {
-    right: 170px;
-}
-
-.btn-edit-tm-history:hover,
-.btn-edit-plan-history:hover {
+.btn-edit-archive:hover {
     background-color: var(--accent-hover);
+}
+
+.btn-edit-archive + .btn-delete-history {
+    position: static;
+    transform: none;
 }
 
 .archive-content.collapsed {

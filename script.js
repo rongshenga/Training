@@ -197,9 +197,18 @@ document.addEventListener('DOMContentLoaded', () => {
             const archiveDate = new Date(archive.archivedAt).toLocaleString();
             const isEditing = archive.editMode || false;
             archiveHeader.innerHTML = `
-                        <span>Cycle Archived on ${archiveDate} (TMs: Bench ${archive.benchPressTM}kg, Squat ${archive.squatTM}kg)</span>
-                        <button class="btn-edit-plan-history" data-history-index="${index}">${isEditing ? 'Save Plan' : 'Edit Plan'}</button>
-                        <button class="btn-edit-tm-history" data-history-index="${index}">Edit TMs</button>
+                        <span>Cycle Archived on ${archiveDate}</span>
+                        <div class="archive-tms">
+                            <div class="tm-item">
+                                <label>Bench TM:</label>
+                                <input type="number" value="${archive.benchPressTM}" data-history-index="${index}" data-tm-type="bench" ${!isEditing ? 'disabled' : ''}>
+                            </div>
+                            <div class="tm-item">
+                                <label>Squat TM:</label>
+                                <input type="number" value="${archive.squatTM}" data-history-index="${index}" data-tm-type="squat" ${!isEditing ? 'disabled' : ''}>
+                            </div>
+                        </div>
+                        <button class="btn-edit-archive" data-history-index="${index}">${isEditing ? 'Save' : 'Edit'}</button>
                         <button class="btn-delete-history" data-history-index="${index}">Delete</button>
                     `;
             archiveWrapper.appendChild(archiveHeader);
@@ -416,29 +425,37 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        const editTmBtn = event.target.closest('.btn-edit-tm-history');
-        if (editTmBtn) {
-            const historyIndex = parseInt(editTmBtn.dataset.historyIndex, 10);
-            showEditHistoryModal(historyIndex);
-            return;
-        }
-
-        const editPlanBtn = event.target.closest('.btn-edit-plan-history');
-        if (editPlanBtn) {
-            const historyIndex = parseInt(editPlanBtn.dataset.historyIndex, 10);
-            // Toggle edit mode for the specific history item
+        const editArchiveBtn = event.target.closest('.btn-edit-archive');
+        if (editArchiveBtn) {
+            event.stopPropagation();
+            const historyIndex = parseInt(editArchiveBtn.dataset.historyIndex, 10);
             state.history[historyIndex].editMode = !state.history[historyIndex].editMode;
             saveData();
             renderHistory();
-            return; // Stop further processing
+            return;
         }
 
         const header = event.target.closest('.archive-header');
-        if (header) {
+        if (header && !event.target.closest('input')) { // Do not toggle if clicking on an input
             const content = header.nextElementSibling;
             if (content && content.classList.contains('archive-content')) {
                 content.classList.toggle('collapsed');
             }
+        }
+    }
+
+    function handleHistoryTMChange(event) {
+        if (event.target.matches('[data-tm-type]')) {
+            const historyIndex = parseInt(event.target.dataset.historyIndex, 10);
+            const tmType = event.target.dataset.tmType;
+            const newValue = parseFloat(event.target.value) || 0;
+
+            if (tmType === 'bench') {
+                state.history[historyIndex].benchPressTM = newValue;
+            } else if (tmType === 'squat') {
+                state.history[historyIndex].squatTM = newValue;
+            }
+            // Changes are saved when the user clicks 'Save'
         }
     }
 
@@ -659,6 +676,7 @@ document.addEventListener('DOMContentLoaded', () => {
         modalConfirmBtn.addEventListener('click', handleModalConfirm);
         modalCancelBtn.addEventListener('click', hideModal);
         document.getElementById('history-container').addEventListener('click', handleHistoryClick);
+        document.getElementById('history-container').addEventListener('input', handleHistoryTMChange);
 
         updateDisplay(); // Initial render
     }
