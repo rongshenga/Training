@@ -126,6 +126,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const nextWeekBtn = document.getElementById('next-week-btn');
     const viewToggleBtn = document.getElementById('view-toggle-btn');
     const viewControls = document.querySelector('.view-controls');
+    const exportBtn = document.getElementById('export-btn');
+    const importBtn = document.getElementById('import-btn');
+    const importFileInput = document.getElementById('import-file');
     const modalConfirmBtn = document.getElementById('modal-confirm-btn');
     const modalCancelBtn = document.getElementById('modal-cancel-btn');
 
@@ -864,6 +867,80 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    function exportPlan() {
+        const dataToExport = {
+            benchPressTM: state.benchPressTM,
+            squatTM: state.squatTM,
+            progressData: state.progressData,
+            program: state.program,
+        };
+
+        const dataStr = JSON.stringify(dataToExport, null, 2);
+        const blob = new Blob([dataStr], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'workout-plan.json';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
+    function importPlan() {
+        importFileInput.click();
+    }
+
+    function handleFileSelect(event) {
+        const file = event.target.files[0];
+        if (!file) {
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            try {
+                const importedData = JSON.parse(e.target.result);
+                
+                // Validate imported data structure
+                if (
+                    typeof importedData.benchPressTM === 'number' &&
+                    typeof importedData.squatTM === 'number' &&
+                    typeof importedData.progressData === 'object' &&
+                    Array.isArray(importedData.program)
+                ) {
+                    state.benchPressTM = importedData.benchPressTM;
+                    state.squatTM = importedData.squatTM;
+                    state.progressData = importedData.progressData;
+                    state.program = importedData.program;
+
+                    saveData();
+                    updateDisplay();
+
+                     showModal({
+                        title: 'Success!',
+                        text: 'Plan imported successfully.',
+                        confirmText: 'OK',
+                        cancelText: null
+                    });
+                } else {
+                    throw new Error('Invalid file format.');
+                }
+            } catch (error) {
+                 showModal({
+                    title: 'Import Error',
+                    text: `Failed to import plan: ${error.message}`,
+                    confirmText: 'OK',
+                    cancelText: null
+                });
+            } finally {
+                // Reset file input to allow re-selection of the same file
+                importFileInput.value = '';
+            }
+        };
+        reader.readAsText(file);
+    }
+
     // --- INITIALIZATION ---
     function init() {
         loadData();
@@ -880,6 +957,9 @@ document.addEventListener('DOMContentLoaded', () => {
         prevWeekBtn.addEventListener('click', handlePrevWeek);
         nextWeekBtn.addEventListener('click', handleNextWeek);
         viewToggleBtn.addEventListener('click', handleViewToggle);
+        exportBtn.addEventListener('click', exportPlan);
+        importBtn.addEventListener('click', importPlan);
+        importFileInput.addEventListener('change', handleFileSelect);
         modalConfirmBtn.addEventListener('click', handleModalConfirm);
         modalCancelBtn.addEventListener('click', hideModal);
         document.getElementById('history-container').addEventListener('click', handleHistoryClick);
