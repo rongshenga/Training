@@ -317,7 +317,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                     </div>
                                 </div>
                                 <div class="card-actions">
-                                    <button class="btn-delete-day" data-week-idx="${weekIdx}" data-day-idx="${dayIndex}" ${isHistory ? `data-history-idx="${historyIndex}"` : ''}>Delete</button>
+                                    <button class="btn-delete-day" data-week-idx="${weekIdx}" data-day-idx="${dayIndex}" ${isHistory ? `data-history-idx="${historyIndex}"` : ''}>&times;</button>
                                 </div>
                             `;
                 } else {
@@ -487,26 +487,41 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function handleCardActions(event) {
         const addBtn = event.target.closest('.btn-add-day');
-        const deleteBtn = event.target.closest('.btn-delete-day');
-
-        if (!addBtn && !deleteBtn) return; // Exit if not an action button
-
-        const { historyIdx, weekIdx, dayIdx } = event.target.dataset;
-
-        // Determine the target program to modify
-        const isHistory = historyIdx !== undefined;
-        const program = isHistory ? state.history[historyIdx].program : state.program;
-
         if (addBtn) {
+            const { historyIdx, weekIdx } = addBtn.dataset;
+            const isHistory = historyIdx !== undefined;
+            const program = isHistory ? state.history[parseInt(historyIdx, 10)].program : state.program;
+            const weekIndex = parseInt(weekIdx, 10);
+
             const newDay = { day: 'Sunday', exercise: 'Bench Press', sets: 3, reps: 5, intensity: 0.7 };
-            program[weekIdx].days.push(newDay);
-        } else if (deleteBtn) {
-            program[weekIdx].days.splice(dayIdx, 1);
+            program[weekIndex].days.push(newDay);
+
+            saveData();
+            isHistory ? renderHistory() : updateWorkoutPlan();
+            return; // Action handled, exit early.
         }
 
-        saveData();
-        // Re-render the correct view
-        isHistory ? renderHistory() : updateWorkoutPlan();
+        const deleteBtn = event.target.closest('.btn-delete-day');
+        if (deleteBtn) {
+            const { historyIdx, weekIdx, dayIdx } = deleteBtn.dataset;
+
+            showModal({
+                title: 'Delete Training Day?',
+                text: 'Are you sure you want to permanently delete this day?',
+                confirmText: 'Delete',
+                onConfirm: () => {
+                    const isHistory = historyIdx !== undefined;
+                    const program = isHistory ? state.history[parseInt(historyIdx, 10)].program : state.program;
+                    const weekIndex = parseInt(weekIdx, 10);
+                    const dayIndex = parseInt(dayIdx, 10);
+
+                    program[weekIndex].days.splice(dayIndex, 1);
+
+                    saveData();
+                    isHistory ? renderHistory() : updateWorkoutPlan();
+                }
+            });
+        }
     }
 
     function showModal({ title, text, bodyHtml = '', confirmText = 'Confirm', cancelText = 'Cancel', onConfirm }) {
