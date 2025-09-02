@@ -821,6 +821,8 @@ document.addEventListener('DOMContentLoaded', () => {
             mainHeader.style.display = 'block';
             editModeToggle.style.display = 'inline-block'; // Show
             archiveBtn.style.display = 'inline-block';     // Show
+            exportBtn.style.display = 'inline-block';
+            importBtn.style.display = 'inline-block';
             viewControls.style.display = 'flex';     // Show
             viewHistoryBtn.textContent = 'History';
         } else {
@@ -839,6 +841,8 @@ document.addEventListener('DOMContentLoaded', () => {
             mainHeader.style.display = 'none';
             editModeToggle.style.display = 'none'; // Hide
             archiveBtn.style.display = 'none';     // Hide
+            exportBtn.style.display = 'none';
+            importBtn.style.display = 'none';
             viewControls.style.display = 'none';   // Hide
             viewHistoryBtn.textContent = 'Back to Cycle';
         }
