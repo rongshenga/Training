@@ -347,7 +347,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (isEditable) {
                 const addDayBtn = document.createElement('button');
-                addDayBtn.className = 'btn-add-day btn-secondary';
+                addDayBtn.className = 'btn btn-add-day';
                 addDayBtn.textContent = '+ Add Training Day';
                 const weekIdx = weekData.week - 1;
                 addDayBtn.dataset.weekIdx = weekIdx;
