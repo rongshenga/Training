@@ -431,3 +431,43 @@ body.single-week-view .progress-container {
     padding: 8px;
     box-sizing: border-box;
 }
+
+/* Custom Card Actions (Add/Delete) */
+.card.editable {
+    position: relative;
+    /* Needed for absolute positioning of the delete button */
+    padding-top: 30px;
+    /* Add padding to prevent content from overlapping with the delete button */
+}
+
+.card-actions {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+}
+
+.btn-delete-day {
+    background-color: #c0392b;
+    /* Reddish color */
+    color: var(--primary-text);
+    border: none;
+    border-radius: 50%;
+    /* Make it a circle */
+    width: 24px;
+    height: 24px;
+    font-size: 14px;
+    line-height: 24px;
+    text-align: center;
+    cursor: pointer;
+    padding: 0;
+}
+
+.btn-delete-day:hover {
+    background-color: #a93226;
+}
+
+.btn-add-day {
+    width: 100%;
+    margin-top: 10px;
+    padding: 10px;
+}

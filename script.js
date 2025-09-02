@@ -316,6 +316,9 @@ document.addEventListener('DOMContentLoaded', () => {
                                         ${createInput('number', day.intensity, 'intensity')}
                                     </div>
                                 </div>
+                                <div class="card-actions">
+                                    <button class="btn-delete-day" data-week-idx="${weekIdx}" data-day-idx="${dayIndex}" ${isHistory ? `data-history-idx="${historyIndex}"` : ''}>Delete</button>
+                                </div>
                             `;
                 } else {
                     let content = `<h3>${day.day}</h3>`;
@@ -341,6 +344,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 weekContainer.appendChild(dayCard);
             });
+
+            if (isEditable) {
+                const addDayBtn = document.createElement('button');
+                addDayBtn.className = 'btn-add-day btn-secondary';
+                addDayBtn.textContent = '+ Add Training Day';
+                const weekIdx = weekData.week - 1;
+                addDayBtn.dataset.weekIdx = weekIdx;
+                if (isHistory) {
+                    addDayBtn.dataset.historyIdx = historyIndex;
+                }
+                weekContainer.appendChild(addDayBtn);
+            }
             containerElement.appendChild(weekContainer);
         });
     }
@@ -469,6 +484,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- MODAL LOGIC ---
     let modalConfirmCallback = null;
+
+    function handleCardActions(event) {
+        const addBtn = event.target.closest('.btn-add-day');
+        const deleteBtn = event.target.closest('.btn-delete-day');
+
+        if (!addBtn && !deleteBtn) return; // Exit if not an action button
+
+        const { historyIdx, weekIdx, dayIdx } = event.target.dataset;
+
+        // Determine the target program to modify
+        const isHistory = historyIdx !== undefined;
+        const program = isHistory ? state.history[historyIdx].program : state.program;
+
+        if (addBtn) {
+            const newDay = { day: 'Sunday', exercise: 'Bench Press', sets: 3, reps: 5, intensity: 0.7 };
+            program[weekIdx].days.push(newDay);
+        } else if (deleteBtn) {
+            program[weekIdx].days.splice(dayIdx, 1);
+        }
+
+        saveData();
+        // Re-render the correct view
+        isHistory ? renderHistory() : updateWorkoutPlan();
+    }
 
     function showModal({ title, text, bodyHtml = '', confirmText = 'Confirm', cancelText = 'Cancel', onConfirm }) {
         document.getElementById('modal-title').textContent = title;
@@ -611,6 +650,7 @@ document.addEventListener('DOMContentLoaded', () => {
         squatTmInput.addEventListener('input', handleTMChange);
         editModeToggle.addEventListener('click', handleEditModeToggle);
         workoutContainer.addEventListener('click', handleProgressToggle);
+        workoutContainer.addEventListener('click', handleCardActions);
         workoutContainer.addEventListener('change', handleWorkoutDataChange);
         document.getElementById('history-container').addEventListener('change', handleWorkoutDataChange);
         archiveBtn.addEventListener('click', archiveAndStartNewCycle);
@@ -621,6 +661,7 @@ document.addEventListener('DOMContentLoaded', () => {
         modalConfirmBtn.addEventListener('click', handleModalConfirm);
         modalCancelBtn.addEventListener('click', hideModal);
         document.getElementById('history-container').addEventListener('click', handleHistoryClick);
+        document.getElementById('history-container').addEventListener('click', handleCardActions);
         document.getElementById('history-container').addEventListener('input', handleHistoryTMChange);
 
         updateDisplay(); // Initial render
