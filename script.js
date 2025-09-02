@@ -194,6 +194,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const archiveHeader = document.createElement('h3');
             archiveHeader.className = 'archive-header'; // Make it clickable
+            archiveHeader.dataset.historyIndex = index; // Add index for click handling
             const archiveDate = new Date(archive.archivedAt).toLocaleString();
             const isEditing = archive.editMode || false;
             archiveHeader.innerHTML = `
@@ -214,7 +215,8 @@ document.addEventListener('DOMContentLoaded', () => {
             archiveWrapper.appendChild(archiveHeader);
 
             const contentWrapper = document.createElement('div');
-            contentWrapper.className = 'archive-content collapsed'; // Default to collapsed
+            const isCollapsed = archive.isCollapsed !== false; // Default to true
+            contentWrapper.className = `archive-content ${isCollapsed ? 'collapsed' : ''}`;
             archiveWrapper.appendChild(contentWrapper);
 
             const planContainer = document.createElement('div');
@@ -427,7 +429,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const editArchiveBtn = event.target.closest('.btn-edit-archive');
         if (editArchiveBtn) {
-            event.stopPropagation();
             const historyIndex = parseInt(editArchiveBtn.dataset.historyIndex, 10);
             state.history[historyIndex].editMode = !state.history[historyIndex].editMode;
             saveData();
@@ -436,10 +437,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const header = event.target.closest('.archive-header');
-        if (header && !event.target.closest('input')) { // Do not toggle if clicking on an input
-            const content = header.nextElementSibling;
-            if (content && content.classList.contains('archive-content')) {
-                content.classList.toggle('collapsed');
+        if (header && !event.target.closest('button, input')) {
+            const historyIndex = parseInt(header.dataset.historyIndex, 10);
+            if (!isNaN(historyIndex)) {
+                const isCollapsed = state.history[historyIndex].isCollapsed !== false;
+                state.history[historyIndex].isCollapsed = !isCollapsed;
+                saveData();
+                renderHistory();
             }
         }
     }
@@ -459,36 +463,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function showEditHistoryModal(index) {
-        const historyItem = state.history[index];
-        const bodyHtml = `
-                    <div class="tm-inputs" style="flex-direction: column; gap: 1rem; margin-bottom: 0;">
-                        <div>
-                            <label for="history-bench-tm">Bench Press TM (kg)</label>
-                            <input type="number" id="history-bench-tm" value="${historyItem.benchPressTM}">
-                        </div>
-                        <div>
-                            <label for="history-squat-tm">Squat TM (kg)</label>
-                            <input type="number" id="history-squat-tm" value="${historyItem.squatTM}">
-                        </div>
-                    </div>
-                `;
-        showModal({
-            title: 'Edit Archived TMs',
-            bodyHtml: bodyHtml,
-            confirmText: 'Save',
-            onConfirm: () => {
-                const newBenchTM = parseFloat(document.getElementById('history-bench-tm').value) || 0;
-                const newSquatTM = parseFloat(document.getElementById('history-squat-tm').value) || 0;
-
-                state.history[index].benchPressTM = newBenchTM;
-                state.history[index].squatTM = newSquatTM;
-
-                saveData();
-                renderHistory();
-            }
-        });
-    }
 
     function handleWorkoutDataChange(event) {
         const { historyIdx, weekIdx, dayIdx, prop } = event.target.dataset;
@@ -585,7 +559,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     progressData: JSON.parse(JSON.stringify(state.progressData)),
                     benchPressTM: state.benchPressTM,
                     squatTM: state.squatTM,
-                    editMode: false // Track edit state for the plan
+                    editMode: false, // Track edit state for the plan
+                    isCollapsed: true
                 };
                 state.history.unshift(archive);
                 state.program = JSON.parse(JSON.stringify(workoutProgram));
@@ -611,6 +586,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const isHistoryVisible = historyView.style.display !== 'none';
 
         if (isHistoryVisible) {
+            // When leaving history view, reset all edit modes
+            state.history.forEach(archive => archive.editMode = false);
+            saveData();
+
             // Switch back to main view
             historyView.style.display = 'none';
             mainPlan.style.display = '';
