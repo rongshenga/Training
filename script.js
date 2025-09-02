@@ -3,9 +3,47 @@ document.addEventListener('DOMContentLoaded', () => {
     const programData = [
         {
             week: 1, phase: 'Accumulation', days: [
-                { day: 'Sunday', exercise: 'Bench Press', sets: 4, reps: 8, intensity: 0.65 },
-                { day: 'Thursday', exercise: 'Bench Press', sets: 5, reps: 5, intensity: 0.775 },
-                { day: 'Friday', exercise: 'Squat', sets: 5, reps: 5, intensity: 0.75 }
+                { 
+                    day: 'Sunday', 
+                    exercise: 'Bench Press', 
+                    sets: 4, 
+                    reps: 8, 
+                    intensity: 0.65,
+                    groups: [
+                        { intensity: 0.65, reps: 8 },
+                        { intensity: 0.65, reps: 8 },
+                        { intensity: 0.65, reps: 8 },
+                        { intensity: 0.65, reps: 8 }
+                    ]
+                },
+                { 
+                    day: 'Thursday', 
+                    exercise: 'Bench Press', 
+                    sets: 5, 
+                    reps: 5, 
+                    intensity: 0.775,
+                    groups: [
+                        { intensity: 0.775, reps: 5 },
+                        { intensity: 0.775, reps: 5 },
+                        { intensity: 0.775, reps: 5 },
+                        { intensity: 0.775, reps: 5 },
+                        { intensity: 0.775, reps: 5 }
+                    ]
+                },
+                { 
+                    day: 'Friday', 
+                    exercise: 'Squat', 
+                    sets: 5, 
+                    reps: 5, 
+                    intensity: 0.75,
+                    groups: [
+                        { intensity: 0.75, reps: 5 },
+                        { intensity: 0.75, reps: 5 },
+                        { intensity: 0.75, reps: 5 },
+                        { intensity: 0.75, reps: 5 },
+                        { intensity: 0.75, reps: 5 }
+                    ]
+                }
             ]
         },
         {
@@ -73,7 +111,8 @@ document.addEventListener('DOMContentLoaded', () => {
         history: [],
         program: JSON.parse(JSON.stringify(programData)),
         viewMode: 'all', // 'all' or 'single'
-        currentWeek: 1   // 1-based index of the current week being viewed
+        currentWeek: 1,   // 1-based index of the current week being viewed
+        displayStyle: 'traditional' // 'traditional' or 'group'
     };
 
     // --- DOM ELEMENTS ---
@@ -139,7 +178,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function isDayCompleted(weekData, day, dayIndex, progressData, isHistory, historyIndex) {
-        for (let i = 0; i < day.sets; i++) {
+        const setsCount = (day.groups && day.groups.length > 0) ? day.groups.length : day.sets;
+        if (setsCount === 0) return false;
+
+        for (let i = 0; i < setsCount; i++) {
             const progressId = isHistory
                 ? `h${historyIndex}w${weekData.week}d${dayIndex}s${i}`
                 : `w${weekData.week}d${dayIndex}s${i}`;
@@ -147,7 +189,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return false; // If any set is not completed, the day is not completed
             }
         }
-        return day.sets > 0; // Return true only if there are sets to complete.
+        return true;
     }
 
     // --- RENDER/DISPLAY FUNCTIONS ---
@@ -274,6 +316,14 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             weekData.days.forEach((day, dayIndex) => {
+                // Ensure every day object has a `groups` array for consistency.
+                if (!day.groups || day.groups.length === 0) {
+                    day.groups = Array.from({ length: day.sets }, () => ({
+                        reps: day.reps,
+                        intensity: day.intensity
+                    }));
+                }
+
                 const dayCard = document.createElement('div');
                 dayCard.className = 'card';
                 if (!isEditable && isDayCompleted(weekData, day, dayIndex, progressData, isHistory, historyIndex)) {
@@ -281,7 +331,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 if (isEditable) {
                     dayCard.classList.add('editable');
+                    if (day.displayStyle === 'group') {
+                        dayCard.classList.add('group-display');
+                    }
                 }
+
 
                 if (isEditable) {
                     const weekIdx = weekData.week - 1;
@@ -295,19 +349,72 @@ document.addEventListener('DOMContentLoaded', () => {
                         baseDataAttrs['history-idx'] = historyIndex;
                     }
 
-                    const createDataAttrs = (prop) => ({ ...baseDataAttrs, prop });
+                    const createDataAttrs = (prop, groupIdx) => {
+                        const attrs = { ...baseDataAttrs, prop };
+                        if (groupIdx !== undefined) {
+                            attrs['group-idx'] = groupIdx;
+                        }
+                        return attrs;
+                    };
+
 
                     const daySelectHTML = createSelectHTML(uniqueDays, day.day, createDataAttrs('day'));
                     const exerciseSelectHTML = createSelectHTML(uniqueExercises, day.exercise, createDataAttrs('exercise'));
 
-                    const createInput = (type, value, prop) => {
+                    const createInput = (type, value, prop, groupIdx) => {
                         let stepAttr = '';
                         if (type === 'number') {
                             stepAttr = (prop === 'intensity') ? 'step="0.01"' : 'step="1" min="0"';
                         }
                         return `<input type="${type}" value="${value}" ${stepAttr} ` +
-                            Object.entries(createDataAttrs(prop)).map(([key, val]) => `data-${key}="${val}"`).join(' ') +
+                            Object.entries(createDataAttrs(prop, groupIdx)).map(([key, val]) => `data-${key}="${val}"`).join(' ') +
                             '>';
+                    }
+
+
+                    let editorContent = '';
+                    if (day.displayStyle === 'group') {
+                        let groupsHTML = day.groups.map((group, groupIdx) => `
+                            <div class="group-edit-row">
+                                <div class="group-edit-inputs">
+                                    <div class="form-item">
+                                        <label>Reps</label>
+                                        ${createInput('number', group.reps, 'reps', groupIdx)}
+                                    </div>
+                                    <div class="form-item">
+                                        <label>Intensity</label>
+                                        ${createInput('number', group.intensity, 'intensity', groupIdx)}
+                                    </div>
+                                </div>
+                                <div class="group-edit-actions">
+                                     <button class="btn-delete-group" data-week-idx="${weekIdx}" data-day-idx="${dayIndex}" data-group-idx="${groupIdx}" ${isHistory ? `data-history-idx="${historyIndex}"` : ''}>&times;</button>
+                                </div>
+                            </div>
+                        `).join('');
+
+                        editorContent = `
+                            <div class="group-editor-container">
+                                ${groupsHTML}
+                                <button class="btn-add-group" data-week-idx="${weekIdx}" data-day-idx="${dayIndex}" ${isHistory ? `data-history-idx="${historyIndex}"` : ''}>+ Add Group</button>
+                            </div>
+                        `;
+                    } else {
+                        editorContent = `
+                            <div class="form-row">
+                                <div class="form-item">
+                                    <label>Sets</label>
+                                    ${createInput('number', day.sets, 'sets')}
+                                </div>
+                                <div class="form-item">
+                                    <label>Reps</label>
+                                    ${createInput('number', day.reps, 'reps')}
+                                </div>
+                                <div class="form-item">
+                                    <label>Intensity</label>
+                                    ${createInput('number', day.intensity, 'intensity')}
+                                </div>
+                            </div>
+                        `;
                     }
 
 
@@ -322,44 +429,63 @@ document.addEventListener('DOMContentLoaded', () => {
                                         ${exerciseSelectHTML}
                                     </div>
                                 </div>
-                                <div class="form-row">
-                                    <div class="form-item">
-                                        <label>Sets</label>
-                                        ${createInput('number', day.sets, 'sets')}
-                                    </div>
-                                    <div class="form-item">
-                                        <label>Reps</label>
-                                        ${createInput('number', day.reps, 'reps')}
-                                    </div>
-                                    <div class="form-item">
-                                        <label>Intensity</label>
-                                        ${createInput('number', day.intensity, 'intensity')}
-                                    </div>
-                                </div>
+                                ${editorContent}
                                 <div class="card-actions">
+                                     <button class="btn-toggle-style" data-week-idx="${weekIdx}" data-day-idx="${dayIndex}" ${isHistory ? `data-history-idx="${historyIndex}"` : ''}>
+                                        ${day.displayStyle === 'group' ? 'Traditional' : 'Group'} View
+                                    </button>
                                     <button class="btn-delete-day" data-week-idx="${weekIdx}" data-day-idx="${dayIndex}" ${isHistory ? `data-history-idx="${historyIndex}"` : ''}>&times;</button>
                                 </div>
                             `;
                 } else {
                     let content = `<h3>${day.day}</h3>`;
                     const tm = day.exercise === 'Bench Press' ? tmData.benchPressTM : tmData.squatTM;
-                    const weight = calculateWeight(tm, day.intensity);
                     const icon = getExerciseIcon(day.exercise);
-                    content += `<div class="exercise-info"><p>${icon} ${day.exercise}</p><p class="weight-details"><strong>${weight}kg</strong> (${day.intensity * 100}%)</p><p>${day.sets} sets of ${day.reps} reps</p></div>`;
 
-                    let progressHTML = '<div class="progress-container">';
-                    for (let i = 0; i < day.sets; i++) {
-                        const progressId = isHistory
-                            ? `h${historyIndex}w${weekData.week}d${dayIndex}s${i}`
-                            : `w${weekData.week}d${dayIndex}s${i}`;
-                        const isCompleted = progressData[progressId] ? 'completed' : '';
-                        const progressBoxAttrs = isHistory
-                            ? 'style="cursor: default;"'
-                            : `data-progress-id="${progressId}"`;
-                        progressHTML += `<div class="progress-box ${isCompleted}" ${progressBoxAttrs}></div>`;
+                    if (day.displayStyle === 'group') {
+                        content += `<div class="exercise-info"><p>${icon} ${day.exercise}</p></div>`;
+                        let progressHTML = '<div class="group-progress-container">';
+                        day.groups.forEach((group, i) => {
+                            const weight = calculateWeight(tm, group.intensity);
+                            const progressId = isHistory
+                                ? `h${historyIndex}w${weekData.week}d${dayIndex}s${i}`
+                                : `w${weekData.week}d${dayIndex}s${i}`;
+                            const isCompleted = progressData[progressId] ? 'completed' : '';
+                             const progressBoxAttrs = isHistory
+                                ? 'style="cursor: default;"'
+                                : `data-progress-id="${progressId}"`;
+
+                            progressHTML += `
+                                <div class="group-row">
+                                    <div class="group-details">
+                                        ${i + 1}: <strong>${weight}kg</strong> (${(group.intensity * 100).toFixed(1)}%) for ${group.reps} reps
+                                    </div>
+                                    <div class="group-completion">
+                                        <div class="progress-box ${isCompleted}" ${progressBoxAttrs}></div>
+                                    </div>
+                                </div>
+                            `;
+                        });
+                        progressHTML += '</div>';
+                        content += progressHTML;
+                    } else {
+                        const weight = calculateWeight(tm, day.intensity);
+                        content += `<div class="exercise-info"><p>${icon} ${day.exercise}</p><p class="weight-details"><strong>${weight}kg</strong> (${day.intensity * 100}%)</p><p>${day.sets} sets of ${day.reps} reps</p></div>`;
+
+                        let progressHTML = '<div class="progress-container">';
+                        for (let i = 0; i < day.sets; i++) {
+                            const progressId = isHistory
+                                ? `h${historyIndex}w${weekData.week}d${dayIndex}s${i}`
+                                : `w${weekData.week}d${dayIndex}s${i}`;
+                            const isCompleted = progressData[progressId] ? 'completed' : '';
+                            const progressBoxAttrs = isHistory
+                                ? 'style="cursor: default;"'
+                                : `data-progress-id="${progressId}"`;
+                            progressHTML += `<div class="progress-box ${isCompleted}" ${progressBoxAttrs}></div>`;
+                        }
+                        progressHTML += '</div>';
+                        content += progressHTML;
                     }
-                    progressHTML += '</div>';
-                    content += progressHTML;
                     dayCard.innerHTML = content;
                 }
                 weekContainer.appendChild(dayCard);
@@ -479,7 +605,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     function handleWorkoutDataChange(event) {
-        const { historyIdx, weekIdx, dayIdx, prop } = event.target.dataset;
+        const { historyIdx, weekIdx, dayIdx, groupIdx, prop } = event.target.dataset;
         let value = event.target.value;
 
         // Determine the target program to modify
@@ -492,11 +618,26 @@ document.addEventListener('DOMContentLoaded', () => {
             value = parseFloat(value) || 0;
         }
 
-        // If the value hasn't actually changed, do nothing.
-        if (dayData[prop] == value) return;
+        if (groupIdx !== undefined) {
+            // Editing a specific group
+            const groupData = dayData.groups[groupIdx];
+            if (groupData[prop] == value) return;
+            groupData[prop] = value;
 
-        // Update the property that triggered the event
-        dayData[prop] = value;
+        } else {
+            // Editing a top-level day property
+            if (dayData[prop] == value) return;
+            dayData[prop] = value;
+        }
+
+
+        // If a core property is changed in traditional edit mode, regenerate the groups to match
+        if (['sets', 'reps', 'intensity'].includes(prop) && groupIdx === undefined) {
+            dayData.groups = Array.from({ length: dayData.sets }, () => ({
+                reps: dayData.reps,
+                intensity: dayData.intensity
+            }));
+        }
 
 
         saveData();
@@ -506,6 +647,52 @@ document.addEventListener('DOMContentLoaded', () => {
     let modalConfirmCallback = null;
 
     function handleCardActions(event) {
+        const toggleBtn = event.target.closest('.btn-toggle-style');
+        if (toggleBtn) {
+            const { historyIdx, weekIdx, dayIdx } = toggleBtn.dataset;
+            const isHistory = historyIdx !== undefined;
+            const program = isHistory ? state.history[parseInt(historyIdx, 10)].program : state.program;
+            const dayData = program[parseInt(weekIdx, 10)].days[parseInt(dayIdx, 10)];
+
+            // Toggle the display style
+            dayData.displayStyle = dayData.displayStyle === 'group' ? 'traditional' : 'group';
+
+            saveData();
+            isHistory ? renderHistory() : updateWorkoutPlan();
+            return;
+        }
+
+        const addGroupBtn = event.target.closest('.btn-add-group');
+        if (addGroupBtn) {
+            const { historyIdx, weekIdx, dayIdx } = addGroupBtn.dataset;
+            const isHistory = historyIdx !== undefined;
+            const program = isHistory ? state.history[parseInt(historyIdx, 10)].program : state.program;
+            const dayData = program[parseInt(weekIdx, 10)].days[parseInt(dayIdx, 10)];
+            
+            const lastGroup = dayData.groups[dayData.groups.length - 1] || { reps: 5, intensity: 0.75 };
+            dayData.groups.push({ ...lastGroup });
+            dayData.sets = dayData.groups.length; // Sync sets count
+
+            saveData();
+            isHistory ? renderHistory() : updateWorkoutPlan();
+            return;
+        }
+
+        const deleteGroupBtn = event.target.closest('.btn-delete-group');
+        if (deleteGroupBtn) {
+            const { historyIdx, weekIdx, dayIdx, groupIdx } = deleteGroupBtn.dataset;
+            const isHistory = historyIdx !== undefined;
+            const program = isHistory ? state.history[parseInt(historyIdx, 10)].program : state.program;
+            const dayData = program[parseInt(weekIdx, 10)].days[parseInt(dayIdx, 10)];
+
+            dayData.groups.splice(parseInt(groupIdx, 10), 1);
+            dayData.sets = dayData.groups.length; // Sync sets count
+
+            saveData();
+            isHistory ? renderHistory() : updateWorkoutPlan();
+            return;
+        }
+
         const addBtn = event.target.closest('.btn-add-day');
         if (addBtn) {
             const { historyIdx, weekIdx } = addBtn.dataset;

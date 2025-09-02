@@ -481,3 +481,78 @@ body.single-week-view .progress-container {
     border-color: var(--accent-color);
     opacity: 1;
 }
+
+/* Group Display Styles */
+.group-progress-container {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px; /* Space between each group row */
+}
+
+.group-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgba(0,0,0,0.1); /* Subtle background for each row */
+    padding: 8px;
+    border-radius: 4px;
+}
+
+.group-details {
+    font-size: 0.9em;
+    flex-grow: 1;
+}
+
+.group-completion {
+    display: flex;
+    gap: 5px; /* Space between checkbox and label if any */
+}
+
+/* Group Editor Styles */
+.group-editor-container {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.group-edit-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.group-edit-inputs {
+    display: flex;
+    flex-grow: 1;
+    gap: 10px;
+}
+
+.group-edit-actions button {
+    background: #c0392b;
+    border: none;
+    color: white;
+    width: 28px;
+    height: 28px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    line-height: 28px;
+}
+
+.btn-add-group {
+    margin-top: 10px;
+    padding: 8px;
+    width: 100%;
+    background-color: transparent;
+    border: 2px dashed var(--border-color);
+    color: var(--primary-text);
+    cursor: pointer;
+    opacity: 0.7;
+}
+
+.btn-add-group:hover {
+    opacity: 1;
+    border-color: var(--accent-color);
+}
