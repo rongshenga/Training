@@ -53,6 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Week 8: Peak & Test
         {
             week: 8, phase: 'Peak & Test', days: [
+                { day: 'Sunday', exercise: 'Bench Press', sets: 5, reps: 5, intensity: 0.70 },
                 { day: 'Thursday', exercise: 'Bench Press', sets: 3, reps: 1, intensity: 0.95 },
                 { day: 'Friday', exercise: 'Squat', sets: 3, reps: 1, intensity: 0.95 }
             ]
