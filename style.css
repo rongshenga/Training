@@ -433,7 +433,7 @@ body.single-week-view .progress-container {
 .card.editable {
     position: relative;
     /* Needed for absolute positioning of the delete button */
-    padding-top: 30px;
+    /* padding-top: 30px; */
     /* Add padding to prevent content from overlapping with the delete button */
 }
 
@@ -441,6 +441,7 @@ body.single-week-view .progress-container {
     position: absolute;
     top: 5px;
     right: 5px;
+    z-index: 10;
 }
 
 .btn-delete-day {
