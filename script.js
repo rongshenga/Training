@@ -99,6 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Merge saved data with default state to ensure new properties are not lost
             state = { ...state, ...parsedData };
             state.history = parsedData.history || []; // Ensure history is an array
+            state.editMode = false;
         }
     }
 
