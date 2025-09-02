@@ -300,18 +300,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
                     dayCard.innerHTML = `
-                                <div>Day: ${daySelectHTML}</div>
-                                <div>Exercise: ${exerciseSelectHTML}</div>
-                                <div class="numeric-inputs-wrapper">
-                                    <div class="numeric-input-item">
+                                <div class="form-row">
+                                    <div class="form-item">
+                                        <label>Day</label>
+                                        ${daySelectHTML}
+                                    </div>
+                                    <div class="form-item">
+                                        <label>Exercise</label>
+                                        ${exerciseSelectHTML}
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-item">
                                         <label>Sets</label>
                                         ${createInput('number', day.sets, 'sets')}
                                     </div>
-                                    <div class="numeric-input-item">
+                                    <div class="form-item">
                                         <label>Reps</label>
                                         ${createInput('number', day.reps, 'reps')}
                                     </div>
-                                    <div class="numeric-input-item">
+                                    <div class="form-item">
                                         <label>Intensity</label>
                                         ${createInput('number', day.intensity, 'intensity')}
                                     </div>

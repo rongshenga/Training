@@ -363,9 +363,6 @@ body.single-week-view .progress-container {
     gap: 1rem;
 }
 
-.card.editable div {
-    margin-bottom: 10px;
-}
 
 .card.editable input,
 .card.editable select {
@@ -407,26 +404,26 @@ body.single-week-view .progress-container {
 }
 
 /* Styles for the compact numeric inputs in edit mode */
-.numeric-inputs-wrapper {
+.form-row {
     display: flex;
     gap: 10px;
-    align-items: flex-end;
+    margin-bottom: 15px;
 }
 
-.numeric-input-item {
+.form-item {
     display: flex;
     flex-direction: column;
     flex: 1; /* Distribute space evenly */
 }
 
-.numeric-input-item label {
+.form-item label {
     font-size: 0.8em;
     margin-bottom: 4px;
     color: #ccc;
     text-align: left;
 }
 
-.card.editable .numeric-input-item input {
+.card.editable .form-item input {
     width: 100%;
     padding: 8px;
     box-sizing: border-box;
