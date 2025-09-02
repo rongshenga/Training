@@ -170,7 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateDisplay() {
         updateWorkoutPlan();
         updateTMInputs();
-        updateEditModeButton();
+        updateHeaderButtons();
         renderHistory();
         updateViewControls();
     }
@@ -236,8 +236,9 @@ document.addEventListener('DOMContentLoaded', () => {
         squatTmInput.value = state.squatTM > 0 ? state.squatTM : '';
     }
 
-    function updateEditModeButton() {
-        editModeToggle.textContent = state.editMode ? 'Disable Edit Mode' : 'Enable Edit Mode';
+    function updateHeaderButtons() {
+        editModeToggle.classList.toggle('btn-secondary', !state.editMode);
+        archiveBtn.classList.add('btn-secondary');
     }
 
     function updateViewControls() {
