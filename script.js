@@ -60,6 +60,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     ];
     const workoutProgram = JSON.parse(JSON.stringify(programData));
+    const dayOrder = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
 
 
     // --- APPLICATION STATE ---
@@ -243,7 +245,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function renderPlan(containerElement, programData, tmData, progressData, isEditable, isHistory, historyIndex = -1) {
-        const uniqueDays = getUniqueOptions(programData, 'day');
+        const uniqueDays = dayOrder;
         const uniqueExercises = getUniqueOptions(programData, 'exercise');
 
         containerElement.innerHTML = ''; // Clear previous content
@@ -260,6 +262,16 @@ document.addEventListener('DOMContentLoaded', () => {
             weekHeader.className = 'week-header';
             weekHeader.textContent = `Week ${weekData.week}: ${weekData.phase}`;
             weekContainer.appendChild(weekHeader);
+
+            // Sort days to ensure consistent order (Sunday -> Saturday)
+            weekData.days.sort((a, b) => {
+                const dayA_index = dayOrder.indexOf(a.day);
+                const dayB_index = dayOrder.indexOf(b.day);
+                // Handle cases where a day might not be in the order array
+                if (dayA_index === -1) return 1;
+                if (dayB_index === -1) return -1;
+                return dayA_index - dayB_index;
+            });
 
             weekData.days.forEach((day, dayIndex) => {
                 const dayCard = document.createElement('div');
