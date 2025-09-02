@@ -3,64 +3,63 @@ document.addEventListener('DOMContentLoaded', () => {
     const programData = [
         {
             week: 1, phase: 'Accumulation', days: [
-                { day: 'Sunday', title: 'Volume Bench', exercise: 'Bench Press', sets: 4, reps: 8, intensity: 0.65 },
-                { day: 'Thursday', title: 'Strength Bench', exercise: 'Bench Press', sets: 5, reps: 5, intensity: 0.775 },
-                { day: 'Friday', title: 'Strength Squat', exercise: 'Squat', sets: 5, reps: 5, intensity: 0.75 }
+                { day: 'Sunday', exercise: 'Bench Press', sets: 4, reps: 8, intensity: 0.65 },
+                { day: 'Thursday', exercise: 'Bench Press', sets: 5, reps: 5, intensity: 0.775 },
+                { day: 'Friday', exercise: 'Squat', sets: 5, reps: 5, intensity: 0.75 }
             ]
         },
         {
             week: 2, phase: 'Accumulation', days: [
-                { day: 'Sunday', title: 'Volume Bench', exercise: 'Bench Press', sets: 4, reps: 8, intensity: 0.675 },
-                { day: 'Thursday', title: 'Strength Bench', exercise: 'Bench Press', sets: 5, reps: 5, intensity: 0.80 },
-                { day: 'Friday', title: 'Strength Squat', exercise: 'Squat', sets: 5, reps: 5, intensity: 0.775 }
+                { day: 'Sunday', exercise: 'Bench Press', sets: 4, reps: 8, intensity: 0.675 },
+                { day: 'Thursday', exercise: 'Bench Press', sets: 5, reps: 5, intensity: 0.80 },
+                { day: 'Friday', exercise: 'Squat', sets: 5, reps: 5, intensity: 0.775 }
             ]
         },
         {
             week: 3, phase: 'Accumulation', days: [
-                { day: 'Sunday', title: 'Volume Bench', exercise: 'Bench Press', sets: 4, reps: 8, intensity: 0.70 },
-                { day: 'Thursday', title: 'Strength Bench', exercise: 'Bench Press', sets: 5, reps: 5, intensity: 0.825 },
-                { day: 'Friday', title: 'Strength Squat', exercise: 'Squat', sets: 5, reps: 5, intensity: 0.80 }
+                { day: 'Sunday', exercise: 'Bench Press', sets: 4, reps: 8, intensity: 0.70 },
+                { day: 'Thursday', exercise: 'Bench Press', sets: 5, reps: 5, intensity: 0.825 },
+                { day: 'Friday', exercise: 'Squat', sets: 5, reps: 5, intensity: 0.80 }
             ]
         },
         {
             week: 4, phase: 'Deload', days: [
-                { day: 'Sunday', title: 'Technical Bench', exercise: 'Bench Press', sets: 3, reps: 5, intensity: 0.60 },
-                { day: 'Thursday', title: 'Technical Bench', exercise: 'Bench Press', sets: 3, reps: 5, intensity: 0.60 },
-                { day: 'Friday', title: 'Technical Squat', exercise: 'Squat', sets: 3, reps: 5, intensity: 0.60 }
+                { day: 'Sunday', exercise: 'Bench Press', sets: 3, reps: 5, intensity: 0.60 },
+                { day: 'Thursday', exercise: 'Bench Press', sets: 3, reps: 5, intensity: 0.60 },
+                { day: 'Friday', exercise: 'Squat', sets: 3, reps: 5, intensity: 0.60 }
             ]
         },
         {
             week: 5, phase: 'Intensification', days: [
-                { day: 'Sunday', title: 'Technical Bench', exercise: 'Bench Press', sets: 4, reps: 5, intensity: 0.70 },
-                { day: 'Thursday', title: 'Intensity Bench', exercise: 'Bench Press', sets: 4, reps: 3, intensity: 0.875 },
-                { day: 'Friday', title: 'Intensity Squat', exercise: 'Squat', sets: 5, reps: 3, intensity: 0.85 }
+                { day: 'Sunday', exercise: 'Bench Press', sets: 4, reps: 5, intensity: 0.70 },
+                { day: 'Thursday', exercise: 'Bench Press', sets: 4, reps: 3, intensity: 0.875 },
+                { day: 'Friday', exercise: 'Squat', sets: 5, reps: 3, intensity: 0.85 }
             ]
         },
         {
             week: 6, phase: 'Intensification', days: [
-                { day: 'Sunday', title: 'Technical Bench', exercise: 'Bench Press', sets: 4, reps: 5, intensity: 0.725 },
-                { day: 'Thursday', 'title': 'Intensity Bench', exercise: 'Bench Press', sets: 3, reps: 3, intensity: 0.90 },
-                { day: 'Friday', title: 'Intensity Squat', exercise: 'Squat', sets: 4, reps: 3, intensity: 0.875 }
+                { day: 'Sunday', exercise: 'Bench Press', sets: 4, reps: 5, intensity: 0.725 },
+                { day: 'Thursday', exercise: 'Bench Press', sets: 3, reps: 3, intensity: 0.90 },
+                { day: 'Friday', exercise: 'Squat', sets: 4, reps: 3, intensity: 0.875 }
             ]
         },
         {
             week: 7, phase: 'Intensification', days: [
-                { day: 'Sunday', title: 'Activation Bench', exercise: 'Bench Press', sets: 5, reps: 3, intensity: 0.75 },
-                { day: 'Thursday', title: 'Peak Bench', exercise: 'Bench Press', sets: 3, reps: 2, intensity: 0.925 },
-                { day: 'Friday', title: 'Peak Squat', exercise: 'Squat', sets: 3, reps: 3, intensity: 0.90 }
+                { day: 'Sunday', exercise: 'Bench Press', sets: 5, reps: 3, intensity: 0.75 },
+                { day: 'Thursday', exercise: 'Bench Press', sets: 3, reps: 2, intensity: 0.925 },
+                { day: 'Friday', exercise: 'Squat', sets: 3, reps: 3, intensity: 0.90 }
             ]
         },
         // Week 8: Peak & Test
         {
             week: 8, phase: 'Peak & Test', days: [
-                { day: 'Thursday', title: 'Peak Test', exercise: 'Bench Press', sets: 3, reps: 1, intensity: 0.95 },
-                { day: 'Friday', title: 'Peak Test', exercise: 'Squat', sets: 3, reps: 1, intensity: 0.95 }
+                { day: 'Thursday', exercise: 'Bench Press', sets: 3, reps: 1, intensity: 0.95 },
+                { day: 'Friday', exercise: 'Squat', sets: 3, reps: 1, intensity: 0.95 }
             ]
         }
     ];
     const workoutProgram = JSON.parse(JSON.stringify(programData));
 
-    let CANONICAL_TITLE_OPTIONS = {};
 
     // --- APPLICATION STATE ---
     let state = {
@@ -115,25 +114,6 @@ document.addEventListener('DOMContentLoaded', () => {
    function getUniqueOptions(program, key) {
         const allValues = program.flatMap(week => week.days.map(day => day[key]));
         return [...new Set(allValues)];
-    }
-
-    function getTitleOptionsByExercise(program) {
-        const mapping = {};
-        program.forEach(week => {
-            week.days.forEach(day => {
-                if (!mapping[day.exercise]) {
-                    mapping[day.exercise] = new Set();
-                }
-                mapping[day.exercise].add(day.title);
-            });
-        });
-
-        // Convert sets to arrays
-        for (const exercise in mapping) {
-            mapping[exercise] = [...mapping[exercise]];
-        }
-
-        return mapping;
     }
 
     function createSelectHTML(options, selectedValue, dataAttributes) {
@@ -305,8 +285,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     const createDataAttrs = (prop) => ({ ...baseDataAttrs, prop });
 
                     const daySelectHTML = createSelectHTML(uniqueDays, day.day, createDataAttrs('day'));
-                    const relevantTitles = titleOptionsByExercise[day.exercise] || [];
-                    const titleSelectHTML = createSelectHTML(relevantTitles, day.title, createDataAttrs('title'));
                     const exerciseSelectHTML = createSelectHTML(uniqueExercises, day.exercise, createDataAttrs('exercise'));
 
                     const createInput = (type, value, prop) => {
@@ -323,7 +301,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     dayCard.innerHTML = `
                                 <div>Day: ${daySelectHTML}</div>
                                 <div>Exercise: ${exerciseSelectHTML}</div>
-                                <div>Title: ${titleSelectHTML}</div>
                                 <div class="numeric-inputs-wrapper">
                                     <div class="numeric-input-item">
                                         <label>Sets</label>
@@ -340,7 +317,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 </div>
                             `;
                 } else {
-                    let content = `<h3>${day.day} - ${day.title}</h3>`;
+                    let content = `<h3>${day.day}</h3>`;
                     const tm = day.exercise === 'Bench Press' ? tmData.benchPressTM : tmData.squatTM;
                     const weight = calculateWeight(tm, day.intensity);
                     const icon = getExerciseIcon(day.exercise);
@@ -485,22 +462,6 @@ document.addEventListener('DOMContentLoaded', () => {
         // Update the property that triggered the event
         dayData[prop] = value;
 
-        // If the exercise was changed, we must also update the title
-        if (prop === 'exercise') {
-            const validTitles = CANONICAL_TITLE_OPTIONS[dayData.exercise] || [];
-            if (!validTitles.includes(dayData.title)) {
-                dayData.title = validTitles.length > 0 ? validTitles[0] : '';
-            }
-
-            saveData();
-            // Re-render either the main plan or the history view
-            if (isHistory) {
-                renderHistory();
-            } else {
-                updateWorkoutPlan();
-            }
-            return;
-        }
 
         saveData();
     }
@@ -644,7 +605,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- INITIALIZATION ---
     function init() {
         loadData();
-        CANONICAL_TITLE_OPTIONS = getTitleOptionsByExercise(workoutProgram);
 
         benchTmInput.addEventListener('input', handleTMChange);
         squatTmInput.addEventListener('input', handleTMChange);
