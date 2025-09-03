@@ -38,21 +38,50 @@ router.post('/plan', (req, res) => {
   }
 
   const stateJson = JSON.stringify(state);
-  // 使用 INSERT OR REPLACE (UPSERT) 逻辑
-  // 这里简化处理：假定每个用户只有一个训练计划记录，我们不断更新它
-  // 更完善的设计是记录多条历史，但这超出了当前 TODO 的范围
-  const sql = `
-    INSERT INTO training_plans (user_id, state) 
-    VALUES (?, ?)
-    ON CONFLICT(user_id) DO UPDATE SET 
-    state=excluded.state, 
-    updated_at=CURRENT_TIMESTAMP`;
+  const sql = `INSERT INTO training_plans (user_id, state) VALUES (?, ?)`;
 
   db.run(sql, [userId, stateJson], function(err) {
     if (err) {
       return res.status(500).json({ error: '数据库操作失败' });
     }
-    res.status(200).json({ message: '训练计划已保存' });
+    res.status(201).json({ message: '训练计划已保存', planId: this.lastID });
+  });
+});
+
+// 获取所有历史记录
+router.get('/history', (req, res) => {
+  const userId = req.user.id;
+  const sql = `
+    SELECT state FROM training_plans 
+    WHERE user_id = ? 
+    ORDER BY created_at DESC`;
+
+  db.all(sql, [userId], (err, rows) => {
+    if (err) {
+      return res.status(500).json({ error: '数据库查询失败' });
+    }
+    const history = rows.map(row => JSON.parse(row.state));
+    res.json(history);
+  });
+});
+
+// 归档训练计划（与保存逻辑相同）
+router.post('/history', (req, res) => {
+  const userId = req.user.id;
+  const { state } = req.body;
+
+  if (!state) {
+    return res.status(400).json({ error: '请求体中缺少state数据' });
+  }
+
+  const stateJson = JSON.stringify(state);
+  const sql = `INSERT INTO training_plans (user_id, state) VALUES (?, ?)`;
+
+  db.run(sql, [userId, stateJson], function(err) {
+    if (err) {
+      return res.status(500).json({ error: '数据库操作失败' });
+    }
+    res.status(201).json({ message: '训练历史已归档', planId: this.lastID });
   });
 });
 

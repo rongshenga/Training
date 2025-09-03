@@ -18,10 +18,10 @@
 - [x] **用户认证 (Authentication)**:
   - [x] 实现用户注册 API (`POST /auth/register`)。
   - [x] 实现用户登录 API (`POST /auth/login`)，成功后返回 JWT Token。
-- [ ] **核心 API 开发 (Core API)**:
+- [x] **核心 API 开发 (Core API)**:
   - [x] 创建身份验证中间件，用于保护需要登录的接口。
   - [x] 实现训练计划 API (`GET /api/plan`, `POST /api/plan`)。
-  - [ ] 实现历史记录 API (`GET /api/history`, `POST /api/history`)。
+  - [x] 实现历史记录 API (`GET /api/history`, `POST /api/history`)。
 
 ## 3. 前端改造 (Frontend Refactoring)
 - [ ] **API 服务模块**: 在 `public/script.js` 中创建一个模块或一组函数，用于封装所有对后端 API 的 `fetch` 调用。
