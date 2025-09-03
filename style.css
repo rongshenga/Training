@@ -1,121 +1,6 @@
-.archive-cycle {
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    padding: 1rem;
-    margin-bottom: 2rem;
-}
-
-#history-view h2 {
-    text-align: center;
-    color: var(--accent-color);
-}
-
-.archived-plan {
-    /* This will make it look like the main view */
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 20px;
-    align-items: start;
-}
-
-.archive-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 1rem;
-    cursor: pointer;
-    user-select: none;
-}
-
-.btn-delete-history {
-    position: absolute;
-    top: 50%;
-    right: 1rem;
-    transform: translateY(-50%);
-    background-color: #c0392b;
-    /* A reddish color for delete */
-    border: none;
-    padding: 5px 10px;
-    border-radius: 4px;
-    font-size: 0.8em;
-    cursor: pointer;
-    color: var(--primary-text);
-}
-
-.btn-delete-history:hover {
-    background-color: #a93226;
-}
-
-.archive-tms {
-    display: flex;
-    gap: 1rem;
-    align-items: center;
-}
-
-.tm-item {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.tm-item label {
-    font-size: 0.9em;
-    margin-bottom: 0;
-}
-
-.archive-header input[type="number"] {
-    width: 60px; /* Compact width */
-    padding: 4px;
-    font-size: 0.9em;
-}
-
-.archive-header input[type="number"]:disabled {
-    background-color: transparent;
-    border-color: transparent;
-    color: var(--primary-text);
-    text-align: left;
-    -moz-appearance: textfield; /* Firefox */
-    appearance: textfield;
-}
-.archive-header input[type="number"]:disabled::-webkit-inner-spin-button,
-.archive-header input[type="number"]:disabled::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-.btn-edit-archive {
-    background-color: var(--accent-color);
-    border: none;
-    padding: 5px 10px;
-    border-radius: 4px;
-    font-size: 0.8em;
-    cursor: pointer;
-    color: var(--primary-text);
-    margin-left: auto; /* Pushes the buttons to the right */
-}
-
-.btn-edit-archive:hover {
-    background-color: var(--accent-hover);
-}
-
-.btn-edit-archive + .btn-delete-history {
-    position: static;
-    transform: none;
-}
-
-.archive-content.collapsed {
-    display: none;
-}
-
-.header-buttons {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-bottom: 1rem;
-}
-
-/* General Styling and Dark Theme */
+/* ==========================================================================
+   1. VARIABLES & THEME
+   ========================================================================== */
 :root {
     --primary-bg: #1a1a1a;
     --secondary-bg: #2d2d2d;
@@ -124,8 +9,13 @@
     --accent-hover: #005a9e;
     --border-color: #444;
     --success-color: #4CAF50;
+    --danger-color: #c0392b;
+    --danger-hover-color: #a93226;
 }
 
+/* ==========================================================================
+   2. BASE & GENERAL STYLES
+   ========================================================================== */
 body {
     background-color: var(--primary-bg);
     color: var(--primary-text);
@@ -135,41 +25,8 @@ body {
     line-height: 1.6;
 }
 
-.container {
-    max-width: 1400px;
-    margin: 0 auto;
-}
-
-/* Header and Inputs */
-header {
-    text-align: center;
-    margin-bottom: 2rem;
-}
-
 h1 {
     color: var(--accent-color);
-}
-
-.tm-inputs {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    flex-wrap: wrap;
-    margin-bottom: 2rem;
-}
-
-.view-controls {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-bottom: 1rem;
-    align-items: center;
-}
-
-.tm-inputs div {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
 }
 
 label {
@@ -183,12 +40,74 @@ input[type="number"] {
     border: 1px solid var(--border-color);
     padding: 8px;
     border-radius: 4px;
-    width: 100px;
     text-align: center;
     font-size: 1em;
 }
 
-/* Week Headers */
+/* Remove arrows from number inputs */
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+
+/* ==========================================================================
+   3. LAYOUT
+   ========================================================================== */
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+#workout-plan {
+    display: grid;
+    gap: 20px;
+    align-items: start;
+}
+
+.week-container {
+    break-inside: avoid;
+}
+
+/* ==========================================================================
+   4. HEADER & CONTROLS
+   ========================================================================== */
+header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.header-buttons,
+.view-controls {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 1rem;
+    align-items: center;
+}
+
+.tm-inputs {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+}
+
+.tm-inputs div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.tm-inputs input[type="number"] {
+    width: 100px;
+}
+
 .week-header {
     font-size: 1.5em;
     font-weight: bold;
@@ -203,31 +122,20 @@ input[type="number"] {
     margin-top: 1rem;
 }
 
-/* Workout Day Cards */
+/* ==========================================================================
+   5. WORKOUT PLAN & CARDS
+   ========================================================================== */
 .card {
     background-color: var(--secondary-bg);
     border-radius: 8px;
     padding: 15px;
     margin: 15px 0;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    position: relative; /* For action buttons */
 }
 
-/* Single Week View - Center the single week container */
-body.single-week-view #workout-plan {
-    display: flex;
-    justify-content: center;
-}
-body.single-week-view .week-container {
-    max-width: 800px;
-    margin: 0 auto;
-}
-
-body.single-week-view .card h3 {
-    text-align: center;
-}
-
-body.single-week-view .progress-container {
-    text-align: center;
+.card.day-completed {
+    border: 2px solid var(--success-color);
 }
 
 .card h3 {
@@ -235,15 +143,9 @@ body.single-week-view .progress-container {
     color: var(--accent-color);
 }
 
-.day-completed {
-    border: 2px solid var(--success-color);
-}
-
-.card p {
-    margin: 0.5rem 0;
-    font-size: 1.1em;
-}
-
+/* ==========================================================================
+   6. CARD CONTENT (DISPLAY MODE)
+   ========================================================================== */
 .exercise-info {
     display: flex;
     justify-content: space-between;
@@ -255,6 +157,12 @@ body.single-week-view .progress-container {
 
 .exercise-info p {
     margin: 0;
+}
+
+.exercise-icon {
+    margin-right: 8px;
+    display: inline-block;
+    vertical-align: middle;
 }
 
 .progress-container {
@@ -278,7 +186,122 @@ body.single-week-view .progress-container {
     border-color: var(--success-color);
 }
 
-/* Buttons */
+.group-progress-container {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.group-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgba(0,0,0,0.1);
+    padding: 8px;
+    border-radius: 4px;
+}
+
+.group-details {
+    font-size: 0.9em;
+    flex-grow: 1;
+}
+
+.group-completion {
+    display: flex;
+    gap: 5px;
+}
+
+/* ==========================================================================
+   7. CARD CONTENT (EDIT MODE)
+   ========================================================================== */
+.card.editable input,
+.card.editable select {
+    width: 100%;
+    padding: 8px;
+    background-color: var(--primary-bg);
+    color: var(--primary-text);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.form-row {
+    display: grid;
+    gap: 10px;
+    margin-bottom: 15px;
+    align-items: end;
+}
+
+.form-row-select {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.form-row-numeric {
+    grid-template-columns: 0.6fr 0.6fr 1fr 1fr;
+}
+
+.form-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-item label {
+    font-size: 0.8em;
+    margin-bottom: 4px;
+    color: #ccc;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.card-actions {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    z-index: 10;
+    display: flex;
+    gap: 5px;
+}
+
+.group-editor-container {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.group-edit-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.group-edit-inputs {
+    display: grid;
+    grid-template-columns: 0.6fr 1fr 1fr;
+    gap: 10px;
+    flex-grow: 1;
+    align-items: end;
+}
+
+.group-edit-actions button {
+    background: var(--danger-color);
+    border: none;
+    color: white;
+    width: 28px;
+    height: 28px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    line-height: 28px;
+}
+.group-edit-actions button:hover {
+    background-color: var(--danger-hover-color);
+}
+
+/* ==========================================================================
+   8. BUTTONS
+   ========================================================================== */
 .btn {
     background-color: var(--accent-color);
     color: var(--primary-text);
@@ -314,7 +337,57 @@ body.single-week-view .progress-container {
     background-color: #3e3e3e;
 }
 
-/* Custom Modal */
+.btn-add-day, .btn-add-group {
+    width: 100%;
+    margin-top: 10px;
+    padding: 8px;
+    font-size: 0.9em;
+    background-color: transparent;
+    border: 2px dashed var(--border-color);
+    color: var(--primary-text);
+    opacity: 0.7;
+    transition: background-color 0.2s, border-color 0.2s, opacity 0.2s;
+}
+
+.btn-add-day:hover, .btn-add-group:hover {
+    background-color: rgba(0, 122, 204, 0.1);
+    border-color: var(--accent-color);
+    opacity: 1;
+}
+
+.btn-toggle-style, .btn-delete-day {
+    background-color: transparent;
+    color: var(--primary-text);
+    border: none;
+    border-radius: 4px;
+    width: 28px;
+    height: 28px;
+    line-height: 28px;
+    text-align: center;
+    cursor: pointer;
+    padding: 0;
+    transition: background-color 0.2s;
+}
+
+.btn-toggle-style {
+    font-size: 16px;
+}
+.btn-delete-day {
+    font-size: 20px;
+}
+
+.btn-toggle-style:hover {
+    background-color: var(--accent-hover);
+}
+
+.btn-delete-day:hover {
+    background-color: var(--danger-color);
+}
+
+
+/* ==========================================================================
+   9. MODAL
+   ========================================================================== */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -364,229 +437,125 @@ body.single-week-view .progress-container {
     gap: 1rem;
 }
 
-
-.card.editable input,
-.card.editable select {
-    width: calc(100% - 20px);
-    padding: 8px;
-    background-color: var(--primary-bg);
-    color: var(--primary-text);
-    border: 1px solid var(--border-color);
-    border-radius: 4px;
+/* ==========================================================================
+   10. HISTORY VIEW
+   ========================================================================== */
+#history-view h2 {
+    text-align: center;
+    color: var(--accent-color);
 }
 
-/* Responsive Grid Layout for Workout Plan */
+.archive-cycle {
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 2rem;
+}
+
+.archive-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+    cursor: pointer;
+    user-select: none;
+}
+
+.archive-content.collapsed {
+    display: none;
+}
+
+.archived-plan {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    align-items: start;
+}
+
+.archive-tms {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.tm-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.tm-item label {
+    font-size: 0.9em;
+    margin-bottom: 0;
+}
+
+.archive-header input[type="number"] {
+    width: 60px;
+    padding: 4px;
+    font-size: 0.9em;
+}
+
+.archive-header input[type="number"]:disabled {
+    background-color: transparent;
+    border-color: transparent;
+    color: var(--primary-text);
+    text-align: left;
+}
+
+.btn-edit-archive {
+    background-color: var(--accent-color);
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 0.8em;
+    cursor: pointer;
+    color: var(--primary-text);
+    margin-left: auto;
+}
+.btn-edit-archive:hover {
+    background-color: var(--accent-hover);
+}
+
+.btn-delete-history {
+    background-color: var(--danger-color);
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 0.8em;
+    cursor: pointer;
+    color: var(--primary-text);
+}
+.btn-delete-history:hover {
+    background-color: var(--danger-hover-color);
+}
+
+
+/* ==========================================================================
+   11. RESPONSIVE MEDIA QUERIES
+   ========================================================================== */
+body.single-week-view #workout-plan {
+    display: flex;
+    justify-content: center;
+}
+body.single-week-view .week-container {
+    max-width: 800px;
+    width: 100%;
+    margin: 0 auto;
+}
+body.single-week-view .card h3,
+body.single-week-view .progress-container {
+    text-align: center;
+}
+
 @media (min-width: 768px) {
     #workout-plan {
-        display: grid;
         grid-template-columns: repeat(2, 1fr);
-        gap: 20px;
-        /* Adjust gap between columns */
-        align-items: start;
-    }
-
-    .week-container {
-        /* This is a good practice for grid/column layouts */
-        break-inside: avoid;
     }
 }
 
-/* Wider screens - 4 column layout */
 @media (min-width: 1200px) {
     #workout-plan {
         grid-template-columns: repeat(4, 1fr);
     }
-}
-
-.exercise-icon {
-    margin-right: 8px;
-    display: inline-block;
-    vertical-align: middle;
-}
-
-/* Styles for the compact numeric inputs in edit mode */
-.form-row {
-    display: grid;
-    gap: 10px;
-    margin-bottom: 15px;
-    align-items: end; /* Align items to the bottom to fix vertical alignment */
-}
-
-.form-row-select {
-    grid-template-columns: repeat(2, 1fr);
-}
-
-.form-row-numeric {
-    grid-template-columns: 0.6fr 0.6fr 1fr 1fr;
-}
-
-.form-item {
-    display: flex;
-    flex-direction: column;
-}
-
-.form-item label {
-    font-size: 0.8em;
-    margin-bottom: 4px;
-    color: #ccc;
-    text-align: left;
-    white-space: nowrap;
-}
-
-.card.editable .form-item input {
-    width: 100%;
-    padding: 8px;
-    box-sizing: border-box;
-}
-
-/* Custom Card Actions (Add/Delete) */
-.card.editable {
-    position: relative;
-    /* Needed for absolute positioning of the delete button */
-    /* padding-top: 30px; */
-    /* Add padding to prevent content from overlapping with the delete button */
-}
-
-.card-actions {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    z-index: 10;
-    display: flex;
-    gap: 5px;
-}
-
-.btn-toggle-style {
-    background-color: transparent;
-    color: var(--primary-text);
-    border: none;
-    border-radius: 4px;
-    width: 28px;
-    height: 28px;
-    font-size: 16px; /* Restored font size for icon */
-    line-height: 28px;
-    text-align: center;
-    cursor: pointer;
-    padding: 0;
-    transition: background-color 0.2s;
-}
-
-.btn-delete-day {
-    background-color: transparent;
-    color: var(--primary-text);
-    border: none;
-    border-radius: 4px;
-    width: 28px;
-    height: 28px;
-    font-size: 20px;
-    line-height: 28px;
-    text-align: center;
-    cursor: pointer;
-    padding: 0;
-    transition: background-color 0.2s;
-}
-
-.btn-toggle-style:hover {
-    background-color: var(--accent-hover);
-}
-
-
-.btn-delete-day:hover {
-    background-color: #c0392b;
-}
-
-.btn-add-day {
-    width: 100%;
-    margin-top: 10px;
-    padding: 8px;
-    font-size: 0.9em;
-    background-color: transparent;
-    border: 2px dashed var(--border-color);
-    color: var(--primary-text);
-    opacity: 0.7;
-    transition: background-color 0.2s, border-color 0.2s, opacity 0.2s;
-}
-
-.btn-add-day:hover {
-    background-color: rgba(0, 122, 204, 0.1);
-    /* A transparent version of accent-color */
-    border-color: var(--accent-color);
-    opacity: 1;
-}
-
-/* Group Display Styles */
-.group-progress-container {
-    margin-top: 15px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px; /* Space between each group row */
-}
-
-.group-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: rgba(0,0,0,0.1); /* Subtle background for each row */
-    padding: 8px;
-    border-radius: 4px;
-}
-
-.group-details {
-    font-size: 0.9em;
-    flex-grow: 1;
-}
-
-.group-completion {
-    display: flex;
-    gap: 5px; /* Space between checkbox and label if any */
-}
-
-/* Group Editor Styles */
-.group-editor-container {
-    margin-top: 15px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.group-edit-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.group-edit-inputs {
-    display: grid;
-    grid-template-columns: 0.6fr 1fr 1fr;
-    gap: 10px;
-    flex-grow: 1;
-    align-items: end;
-}
-
-.group-edit-actions button {
-    background: #c0392b;
-    border: none;
-    color: white;
-    width: 28px;
-    height: 28px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-    line-height: 28px;
-}
-
-.btn-add-group {
-    margin-top: 10px;
-    padding: 8px;
-    width: 100%;
-    background-color: transparent;
-    border: 2px dashed var(--border-color);
-    color: var(--primary-text);
-    cursor: pointer;
-    opacity: 0.7;
-}
-
-.btn-add-group:hover {
-    opacity: 1;
-    border-color: var(--accent-color);
 }
