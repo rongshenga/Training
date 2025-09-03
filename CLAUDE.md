@@ -35,4 +35,4 @@ The application follows a simple, state-driven architecture implemented in vanil
 ## Coding Style and Conventions
 
 - **HTML Content**: All user-visible text in `index.html` must be in English.
-- **Git Commits**: All git commit messages must be written in Chinese.
+- **Git Commits**: Commit messages must follow the conventional commit format (e.g., `fix(scope): message`), but the descriptive part of the message must be in Chinese. For example: `fix(ui): 修复按钮样式`.
