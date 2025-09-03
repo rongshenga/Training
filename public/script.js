@@ -155,10 +155,12 @@ app.utils = {
 // ==========================================================================
 app.storage = {
     save() {
+        // This will be replaced by API calls
         localStorage.setItem('workoutLogData', JSON.stringify(app.state));
     },
 
     load() {
+        // This will be replaced by API calls
         const savedData = localStorage.getItem('workoutLogData');
         const defaultState = {
             benchPressTM: 0, squatTM: 0, progressData: {}, editMode: false, history: [],
@@ -179,6 +181,69 @@ app.storage = {
         }
         app.state = loadedState;
         app.state.editMode = false; // Always start in view mode
+    }
+};
+
+// ==========================================================================
+// 4.5. API SERVICE
+// ==========================================================================
+app.api = {
+    baseUrl: 'http://localhost:3000',
+    token: null,
+
+    async request(endpoint, method = 'GET', body = null) {
+        const headers = { 'Content-Type': 'application/json' };
+        if (this.token) {
+            headers['Authorization'] = `Bearer ${this.token}`;
+        }
+
+        const config = {
+            method,
+            headers,
+        };
+
+        if (body) {
+            config.body = JSON.stringify(body);
+        }
+
+        try {
+            const response = await fetch(`${this.baseUrl}${endpoint}`, config);
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'API request failed');
+            }
+            // For 204 No Content response
+            if (response.status === 204) {
+                return null;
+            }
+            return response.json();
+        } catch (error) {
+            console.error(`API Error on ${method} ${endpoint}:`, error);
+            app.render.showModal({ title: 'API Error', text: error.message, confirmText: 'OK', cancelText: null });
+            throw error;
+        }
+    },
+
+    // Auth endpoints
+    login(username, password) {
+        return this.request('/auth/login', 'POST', { username, password });
+    },
+    register(username, password) {
+        return this.request('/auth/register', 'POST', { username, password });
+    },
+
+    // Data endpoints
+    getPlan() {
+        return this.request('/api/plan');
+    },
+    savePlan(state) {
+        return this.request('/api/plan', 'POST', { state });
+    },
+    getHistory() {
+        return this.request('/api/history');
+    },
+    archiveHistory(state) {
+        return this.request('/api/history', 'POST', { state });
     }
 };
 
