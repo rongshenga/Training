@@ -43,7 +43,7 @@ const app = {
     dom: {},
 
     // 2.3. INITIALIZATION
-    init() {
+    async init() {
         this.dom = {
             benchTmInput: document.getElementById('bench-tm'),
             squatTmInput: document.getElementById('squat-tm'),
@@ -71,12 +71,26 @@ const app = {
         };
 
         // Detect operating mode
-        this.state.operatingMode = window.location.protocol === 'file:' ? 'static' : 'server';
-        console.log(`Operating in ${this.state.operatingMode} mode.`); // For debugging
+        await this.checkHealth();
 
         this.storage.load();
         this.render.updateDisplay();
         this.setupEventListeners();
+    },
+
+    async checkHealth() {
+        try {
+            const response = await fetch('/api/health');
+            if (response.ok) {
+                const data = await response.json();
+                this.state.operatingMode = data.mode || 'server';
+            } else {
+                this.state.operatingMode = 'static';
+            }
+        } catch (error) {
+            this.state.operatingMode = 'static';
+        }
+        console.log(`Operating in ${this.state.operatingMode} mode.`); // For debugging
     },
 
     // 2.4. EVENT LISTENER SETUP
@@ -805,6 +819,6 @@ app.handlers = {
 // ==========================================================================
 // 7. APP INITIALIZATION
 // ==========================================================================
-document.addEventListener('DOMContentLoaded', () => {
-    app.init();
+document.addEventListener('DOMContentLoaded', async () => {
+    await app.init();
 });

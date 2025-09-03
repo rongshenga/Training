@@ -3,6 +3,11 @@ const router = express.Router();
 const authMiddleware = require('../middleware/authMiddleware.js');
 const db = require('../database.js');
 
+// 健康检查端点（无需认证）
+router.get('/health', (req, res) => {
+  res.json({ status: 'ok', mode: 'server' });
+});
+
 // 应用认证中间件于所有 /api 路由
 router.use(authMiddleware);
 
