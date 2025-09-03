@@ -597,7 +597,7 @@ app.handlers = {
     toggleHistoryView() {
         const isHistoryVisible = app.dom.historyView.style.display !== 'none';
         app.dom.historyView.style.display = isHistoryVisible ? 'none' : 'block';
-        app.dom.workoutContainer.style.display = isHistoryVisible ? 'grid' : 'none';
+        app.dom.workoutContainer.style.display = isHistoryVisible ? '' : 'none';
         app.dom.tmInputs.style.display = isHistoryVisible ? 'flex' : 'none';
         app.dom.mainHeader.style.display = isHistoryVisible ? 'block' : 'none';
         app.dom.editModeToggle.style.display = isHistoryVisible ? 'inline-block' : 'none';
