@@ -343,6 +343,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (isEditable) {
                     const weekIdx = weekData.week - 1;
+                    const tm = day.exercise === 'Bench Press' ? tmData.benchPressTM : tmData.squatTM;
 
                     // Data attributes to identify which part of the state to update
                     const baseDataAttrs = {
@@ -368,7 +369,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     const createInput = (type, value, prop, groupIdx) => {
                         let stepAttr = '';
                         if (type === 'number') {
-                            stepAttr = (prop === 'intensity') ? 'step="0.01"' : 'step="1" min="0"';
+                        if (prop === 'intensity') {
+                            stepAttr = 'step="0.01"';
+                        } else if (prop === 'weight') {
+                            stepAttr = 'step="0.5" min="0"';
+                        } else {
+                            stepAttr = 'step="1" min="0"';
+                        }
                         }
                         return `<input type="${type}" value="${value}" ${stepAttr} ` +
                             Object.entries(createDataAttrs(prop, groupIdx)).map(([key, val]) => `data-${key}="${val}"`).join(' ') +
@@ -388,6 +395,10 @@ document.addEventListener('DOMContentLoaded', () => {
                                     <div class="form-item">
                                         <label>Intensity</label>
                                         ${createInput('number', group.intensity, 'intensity', groupIdx)}
+                                    </div>
+                                    <div class="form-item">
+                                        <label>Weight (kg)</label>
+                                        ${createInput('number', calculateWeight(tm, group.intensity), 'weight', groupIdx)}
                                     </div>
                                 </div>
                                 <div class="group-edit-actions">
@@ -416,6 +427,10 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <div class="form-item">
                                     <label>Intensity</label>
                                     ${createInput('number', day.intensity, 'intensity')}
+                                </div>
+                                <div class="form-item">
+                                    <label>Weight (kg)</label>
+                                    ${createInput('number', calculateWeight(tm, day.intensity), 'weight')}
                                 </div>
                             </div>
                         `;
@@ -612,28 +627,31 @@ document.addEventListener('DOMContentLoaded', () => {
         const { historyIdx, weekIdx, dayIdx, groupIdx, prop } = event.target.dataset;
         let value = event.target.value;
 
-        // Determine the target program to modify
         const isHistory = historyIdx !== undefined;
-        const program = isHistory ? state.history[historyIdx].program : state.program;
-        const dayData = program[weekIdx].days[dayIdx];
+        const program = isHistory ? state.history[parseInt(historyIdx, 10)].program : state.program;
+        const dayData = program[parseInt(weekIdx, 10)].days[parseInt(dayIdx, 10)];
+        const tm = dayData.exercise === 'Bench Press'
+            ? (isHistory ? state.history[parseInt(historyIdx, 10)].benchPressTM : state.benchPressTM)
+            : (isHistory ? state.history[parseInt(historyIdx, 10)].squatTM : state.squatTM);
 
-        // Coerce to number if the input type is number
         if (event.target.type === 'number') {
             value = parseFloat(value) || 0;
         }
 
-        if (groupIdx !== undefined) {
-            // Editing a specific group
-            const groupData = dayData.groups[groupIdx];
-            if (groupData[prop] == value) return;
-            groupData[prop] = value;
+        const targetData = groupIdx !== undefined ? dayData.groups[parseInt(groupIdx, 10)] : dayData;
 
+        // --- Update state based on input ---
+        if (prop === 'weight') {
+            if (tm > 0) {
+                targetData.intensity = parseFloat((value / tm).toFixed(2));
+            } else {
+                targetData.intensity = 0;
+            }
         } else {
-            // Editing a top-level day property
-            if (dayData[prop] == value) return;
-            dayData[prop] = value;
+            // This handles 'intensity', 'reps', 'sets', etc.
+            if (targetData[prop] === value) return; // No change
+            targetData[prop] = value;
         }
-
 
         // If a core property is changed in traditional edit mode, regenerate the groups to match
         if (['sets', 'reps', 'intensity'].includes(prop) && groupIdx === undefined) {
@@ -643,8 +661,14 @@ document.addEventListener('DOMContentLoaded', () => {
             }));
         }
 
-
         saveData();
+
+        // Re-render the plan to show updated values
+        if (isHistory) {
+            renderHistory();
+        } else {
+            updateWorkoutPlan();
+        }
     }
 
     // --- MODAL LOGIC ---
