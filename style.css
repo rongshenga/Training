@@ -550,7 +550,7 @@ body.single-week-view #workout-plan {
     display: block;
 }
 body.single-week-view .week-container {
-    max-width: 800px;
+    max-width: 500px;
     margin: 0 auto;
 }
 body.single-week-view .card h3,
