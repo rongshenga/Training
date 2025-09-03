@@ -42,11 +42,8 @@ input[type="number"] {
     border-radius: 4px;
     text-align: center;
     font-size: 1em;
-}
-
-/* Remove arrows from number inputs */
-input[type="number"] {
     -moz-appearance: textfield;
+    appearance: textfield;
 }
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
@@ -536,7 +533,8 @@ header {
    ========================================================================== */
 body.single-week-view #workout-plan {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
 }
 body.single-week-view .week-container {
     max-width: 800px;
