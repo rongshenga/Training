@@ -812,7 +812,7 @@ app.handlers = {
         const isHistoryVisible = app.dom.historyView.style.display !== 'none';
         app.dom.historyView.style.display = isHistoryVisible ? 'none' : 'block';
         app.dom.workoutContainer.style.display = isHistoryVisible ? '' : 'none';
-        app.dom.tmInputs.style.display = isHistoryVisible ? 'flex' : 'none';
+        app.dom.tmInputs.style.display = isHistoryVisible ? '' : 'none';
         
         app.dom.editModeToggle.style.display = isHistoryVisible ? 'inline-block' : 'none';
         app.dom.archiveBtn.style.display = isHistoryVisible ? 'inline-block' : 'none';
