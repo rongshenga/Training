@@ -9,6 +9,37 @@
 <body>
 
     <div class="container">
+        <section id="auth-container" style="display: none;">
+            <div id="auth-forms">
+                <form id="login-form" class="auth-form">
+                    <h2>Login</h2>
+                    <div class="form-group">
+                        <label for="login-username">Username</label>
+                        <input type="text" id="login-username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Password</label>
+                        <input type="password" id="login-password" required>
+                    </div>
+                    <button type="submit" class="btn">Login</button>
+                    <p>Don't have an account? <a href="#" id="show-register">Register</a></p>
+                </form>
+                <form id="register-form" class="auth-form" style="display: none;">
+                    <h2>Register</h2>
+                    <div class="form-group">
+                        <label for="register-username">Username</label>
+                        <input type="text" id="register-username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-password">Password</label>
+                        <input type="password" id="register-password" required>
+                    </div>
+                    <button type="submit" class="btn">Register</button>
+                    <p>Already have an account? <a href="#" id="show-login">Login</a></p>
+                </form>
+            </div>
+        </section>
+
         <header class="main-header">
             <h1>8-Week Strength Program</h1>
             <nav class="header-buttons">
@@ -18,6 +49,7 @@
                 <button id="export-btn" class="btn">Export</button>
                 <button id="import-btn" class="btn">Import</button>
                 <input type="file" id="import-file" accept=".json" class="visually-hidden" />
+                <button id="logout-btn" class="btn btn-secondary" style="display: none;">Logout</button>
             </nav>
         </header>
 

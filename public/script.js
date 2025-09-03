@@ -67,11 +67,24 @@ const app = {
             modalCancelBtn: document.getElementById('modal-cancel-btn'),
             mainHeader: document.querySelector('header h1'),
             historyView: document.getElementById('history-view'),
-            tmInputs: document.querySelector('.tm-inputs')
+            tmInputs: document.querySelector('.tm-inputs'),
+            authContainer: document.getElementById('auth-container'),
+            loginForm: document.getElementById('login-form'),
+            registerForm: document.getElementById('register-form'),
+            showRegisterLink: document.getElementById('show-register'),
+            showLoginLink: document.getElementById('show-login'),
+            mainContent: document.querySelector('main'),
+            mainHeader: document.querySelector('.main-header'),
+            logoutBtn: document.getElementById('logout-btn'),
+
         };
 
         // Detect operating mode
         await this.checkHealth();
+        
+        if (this.state.operatingMode === 'server') {
+            this.api.token = localStorage.getItem('authToken');
+        }
 
         await this.storage.load();
         this.render.updateDisplay();
@@ -95,6 +108,13 @@ const app = {
 
     // 2.4. EVENT LISTENER SETUP
     setupEventListeners() {
+        this.dom.registerForm.addEventListener('submit', this.handlers.handleRegister.bind(this));
+        this.dom.showRegisterLink.addEventListener('click', (e) => { e.preventDefault(); this.render.toggleAuthForm(false); });
+        this.dom.showLoginLink.addEventListener('click', (e) => { e.preventDefault(); this.render.toggleAuthForm(true); });
+        this.dom.loginForm.addEventListener('submit', this.handlers.handleLogin.bind(this));
+        this.dom.logoutBtn.addEventListener('click', this.handlers.handleLogout.bind(this));
+
+
         // Main controls
         this.dom.benchTmInput.addEventListener('input', this.handlers.handleTMChange.bind(this));
         this.dom.squatTmInput.addEventListener('input', this.handlers.handleTMChange.bind(this));
@@ -291,13 +311,40 @@ app.api = {
 // 5. RENDERING & UI
 // ==========================================================================
 app.render = {
+    toggleAuthForm(showLogin) {
+        this.dom.loginForm.style.display = showLogin ? 'block' : 'none';
+        this.dom.registerForm.style.display = showLogin ? 'none' : 'block';
+    },
+    
+    updateAuthView() {
+        if (this.state.operatingMode === 'server' && !app.api.token) {
+            // Server mode, not logged in: show auth
+            this.dom.authContainer.style.display = 'block';
+            this.dom.mainContent.style.display = 'none';
+            this.dom.mainHeader.style.display = 'none';
+            this.dom.logoutBtn.style.display = 'none';
+        } else {
+            // Static mode or logged in: show main app
+            this.dom.authContainer.style.display = 'none';
+            this.dom.mainContent.style.display = 'block';
+            this.dom.mainHeader.style.display = 'block';
+            if (this.state.operatingMode === 'server' && app.api.token) {
+                this.dom.logoutBtn.style.display = 'inline-block';
+            } else {
+                this.dom.logoutBtn.style.display = 'none';
+            }
+        }
+    },
     // Main update function
     updateDisplay() {
+        this.updateAuthView();
+        if (this.state.operatingMode === 'static' || app.api.token) {
         this.updateTMInputs();
         this.updateHeaderButtons();
         this.updateViewControls();
         this.updateWorkoutPlan();
         this.renderHistory();
+        }
     },
 
     // Component updaters
@@ -555,6 +602,57 @@ app.render = {
 // 6. EVENT HANDLERS
 // ==========================================================================
 app.handlers = {
+    async handleLogin(event) {
+        event.preventDefault();
+        const username = app.dom.loginForm.querySelector('#login-username').value;
+        const password = app.dom.loginForm.querySelector('#login-password').value;
+        try {
+            const result = await app.api.login(username, password);
+            app.api.token = result.token;
+            localStorage.setItem('authToken', result.token);
+            await app.storage.load(); // Reload data from server
+            app.render.updateDisplay();
+        } catch (error) {
+            console.error('Login failed:', error);
+            // Error modal is shown by app.api
+        }
+    },
+
+    async handleRegister(event) {
+        event.preventDefault();
+        const username = app.dom.registerForm.querySelector('#register-username').value;
+        const password = app.dom.registerForm.querySelector('#register-password').value;
+        try {
+            await app.api.register(username, password);
+            app.render.showModal({
+                title: 'Registration Successful',
+                text: 'You can now log in with your new account.',
+                confirmText: 'OK',
+                cancelText: null,
+                onConfirm: () => {
+                    this.render.toggleAuthForm(true);
+                }
+            });
+        } catch (error) {
+            console.error('Registration failed:', error);
+        }
+    },
+
+    handleLogout() {
+        app.api.token = null;
+        localStorage.removeItem('authToken');
+        app.state.operatingMode = 'server'; // remain in server mode
+        // Reset state to default, but keep server mode
+        const defaultState = {
+            benchPressTM: 0, squatTM: 0, progressData: {}, editMode: false, history: [],
+            program: app.utils.deepClone(config.programData),
+            viewMode: 'all', currentWeek: 1, displayStyle: 'traditional',
+            operatingMode: 'server'
+        };
+        app.state = defaultState;
+        app.render.updateDisplay();
+    },
+
     // TM inputs
     async handleTMChange(event) {
         const { id, value } = event.target;
