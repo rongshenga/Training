@@ -415,7 +415,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         `;
                     } else {
                         editorContent = `
-                            <div class="form-row">
+                            <div class="form-row form-row-numeric">
                                 <div class="form-item">
                                     <label>Sets</label>
                                     ${createInput('number', day.sets, 'sets')}
@@ -438,7 +438,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
                     dayCard.innerHTML = `
-                                <div class="form-row">
+                                <div class="form-row form-row-select">
                                     <div class="form-item">
                                         <label>Day</label>
                                         ${daySelectHTML}

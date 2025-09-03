@@ -76,6 +76,7 @@
     color: var(--primary-text);
     text-align: left;
     -moz-appearance: textfield; /* Firefox */
+    appearance: textfield;
 }
 .archive-header input[type="number"]:disabled::-webkit-inner-spin-button,
 .archive-header input[type="number"]:disabled::-webkit-outer-spin-button {
@@ -405,15 +406,23 @@ body.single-week-view .progress-container {
 
 /* Styles for the compact numeric inputs in edit mode */
 .form-row {
-    display: flex;
+    display: grid;
     gap: 10px;
     margin-bottom: 15px;
+    align-items: end; /* Align items to the bottom to fix vertical alignment */
+}
+
+.form-row-select {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.form-row-numeric {
+    grid-template-columns: repeat(4, 1fr);
 }
 
 .form-item {
     display: flex;
     flex-direction: column;
-    flex: 1; /* Distribute space evenly */
 }
 
 .form-item label {
@@ -421,6 +430,7 @@ body.single-week-view .progress-container {
     margin-bottom: 4px;
     color: #ccc;
     text-align: left;
+    white-space: nowrap;
 }
 
 .card.editable .form-item input {
@@ -546,9 +556,11 @@ body.single-week-view .progress-container {
 }
 
 .group-edit-inputs {
-    display: flex;
-    flex-grow: 1;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
     gap: 10px;
+    flex-grow: 1;
+    align-items: end;
 }
 
 .group-edit-actions button {
