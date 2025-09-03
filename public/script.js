@@ -73,7 +73,7 @@ const app = {
         // Detect operating mode
         await this.checkHealth();
 
-        this.storage.load();
+        await this.storage.load();
         this.render.updateDisplay();
         this.setupEventListeners();
     },
@@ -170,35 +170,56 @@ app.utils = {
 };
 
 // ==========================================================================
-// 4. LOCALSTORAGE MANAGEMENT
+// 4. DATA PERSISTENCE (Dual Mode)
 // ==========================================================================
 app.storage = {
-    save() {
-        // This will be replaced by API calls
-        localStorage.setItem('workoutLogData', JSON.stringify(app.state));
+    async save() {
+        if (app.state.operatingMode === 'server') {
+            try {
+                await app.api.savePlan(app.state);
+            } catch (error) {
+                console.error('Failed to save plan to server:', error);
+                app.render.showModal({ title: 'Save Error', text: 'Could not save data to the server. Your changes might not be persisted.', confirmText: 'OK', cancelText: null });
+            }
+        } else {
+            localStorage.setItem('workoutLogData', JSON.stringify(app.state));
+        }
     },
 
-    load() {
-        // This will be replaced by API calls
-        const savedData = localStorage.getItem('workoutLogData');
+    async load() {
         const defaultState = {
             benchPressTM: 0, squatTM: 0, progressData: {}, editMode: false, history: [],
             program: app.utils.deepClone(config.programData),
-            viewMode: 'all', currentWeek: 1, displayStyle: 'traditional'
+            viewMode: 'all', currentWeek: 1, displayStyle: 'traditional',
+            operatingMode: app.state.operatingMode
         };
-        
+
         let loadedState = defaultState;
-        if (savedData) {
+
+        if (app.state.operatingMode === 'server') {
             try {
-                const parsedData = JSON.parse(savedData);
-                // Merge to ensure new properties from defaultState are included
-                loadedState = { ...defaultState, ...parsedData };
-                loadedState.history = parsedData.history || [];
-            } catch (e) {
-                console.error("Failed to parse saved data from localStorage.", e);
+                const planData = await app.api.getPlan();
+                if (planData && Object.keys(planData).length > 0) {
+                    // Merge server data with defaults to ensure all keys exist
+                    loadedState = { ...defaultState, ...planData };
+                }
+            } catch (error) {
+                console.error("Failed to load data from server. Using default state.", error);
+            }
+        } else {
+            const savedData = localStorage.getItem('workoutLogData');
+            if (savedData) {
+                try {
+                    const parsedData = JSON.parse(savedData);
+                    loadedState = { ...defaultState, ...parsedData };
+                } catch (e) {
+                    console.error("Failed to parse saved data from localStorage.", e);
+                }
             }
         }
+
         app.state = loadedState;
+        app.state.history = app.state.history || []; // Ensure history is always an array
         app.state.editMode = false; // Always start in view mode
     }
 };
@@ -535,16 +556,16 @@ app.render = {
 // ==========================================================================
 app.handlers = {
     // TM inputs
-    handleTMChange(event) {
+    async handleTMChange(event) {
         const { id, value } = event.target;
         const tmValue = parseFloat(value) || 0;
         app.state[id === 'bench-tm' ? 'benchPressTM' : 'squatTM'] = tmValue;
-        app.storage.save();
+        await app.storage.save();
         app.render.updateWorkoutPlan();
     },
 
     // Progress boxes
-    handleProgressToggle(event) {
+    async handleProgressToggle(event) {
         const target = event.target;
         if (target.classList.contains('progress-box')) {
             const progressId = target.dataset.progressId;
@@ -558,7 +579,7 @@ app.handlers = {
             const allCompleted = [...allBoxes].every(box => box.classList.contains('completed'));
             dayCard.classList.toggle('day-completed', allCompleted);
             
-            app.storage.save();
+            await app.storage.save();
         }
     },
 
@@ -569,7 +590,7 @@ app.handlers = {
     },
 
     // Data changes in edit mode
-    handleWorkoutDataChange(event) {
+    async handleWorkoutDataChange(event) {
         const { historyIdx, weekIdx, dayIdx, groupIdx, prop } = event.target.dataset;
         if (prop === undefined) return;
         
@@ -595,12 +616,12 @@ app.handlers = {
             }));
         }
 
-        app.storage.save();
+        await app.storage.save();
         isHistory ? app.render.renderHistory() : app.render.updateWorkoutPlan();
     },
     
     // Edit/delete buttons on cards, add group/day
-    handleCardActions(event) {
+    async handleCardActions(event) {
         const button = event.target.closest('button');
         if (!button) return;
         const { historyIdx, weekIdx, dayIdx, groupIdx, prop: action } = button.dataset;
@@ -613,7 +634,7 @@ app.handlers = {
         // Action that doesn't need dayData
         if (action === 'add-day') {
             program[weekIdx].days.push({ day: 'Sunday', exercise: 'Bench Press', sets: 3, reps: 5, intensity: 0.7 });
-            app.storage.save();
+            await app.storage.save();
             isHistory ? app.render.renderHistory() : app.render.updateWorkoutPlan();
             return;
         }
@@ -640,16 +661,16 @@ app.handlers = {
                     title: 'Delete Training Day?',
                     text: 'Are you sure you want to permanently delete this day?',
                     confirmText: 'Delete',
-                    onConfirm: () => {
+                    onConfirm: async () => {
                         program[weekIdx].days.splice(dayIdx, 1);
-                        app.storage.save();
+                        await app.storage.save();
                         isHistory ? app.render.renderHistory() : app.render.updateWorkoutPlan();
                     }
                 });
                 return; // Modal handles rerender
         }
         
-        app.storage.save();
+        await app.storage.save();
         isHistory ? app.render.renderHistory() : app.render.updateWorkoutPlan();
     },
 
@@ -658,7 +679,7 @@ app.handlers = {
         app.render.showModal({
             title: 'Archive Cycle?',
             text: 'Are you sure? Your current progress will be saved to history.',
-            onConfirm: () => {
+            onConfirm: async () => {
                 const archive = {
                     archivedAt: new Date().toISOString(),
                     program: app.utils.deepClone(app.state.program),
@@ -671,14 +692,14 @@ app.handlers = {
                 app.state.history.unshift(archive);
                 app.state.program = app.utils.deepClone(config.programData);
                 app.state.progressData = {};
-                app.storage.save();
+                await app.storage.save();
                 app.render.updateDisplay();
                 app.render.showModal({ title: 'Success!', text: 'Cycle archived. A new cycle is ready.', confirmText: 'OK', cancelText: null });
             }
         });
     },
 
-    toggleHistoryView() {
+    async toggleHistoryView() {
         const isHistoryVisible = app.dom.historyView.style.display !== 'none';
         app.dom.historyView.style.display = isHistoryVisible ? 'none' : 'block';
         app.dom.workoutContainer.style.display = isHistoryVisible ? '' : 'none';
@@ -696,13 +717,13 @@ app.handlers = {
                 archive.editMode = false;
                 archive.isCollapsed = true;
             });
-            app.storage.save();
+            await app.storage.save();
             app.render.renderHistory();
         }
     },
     
     // History View specific actions
-    handleHistoryClick(event) {
+    async handleHistoryClick(event) {
         const header = event.target.closest('.archive-header');
         const historyIndex = header?.dataset.historyIndex;
         if (historyIndex === undefined) return;
@@ -714,19 +735,19 @@ app.handlers = {
                 title: 'Delete History?',
                 text: 'Are you sure you want to permanently delete this archived cycle?',
                 confirmText: 'Delete',
-                onConfirm: () => {
+                onConfirm: async () => {
                     app.state.history.splice(historyIndex, 1);
-                    app.storage.save();
+                    await app.storage.save();
                     app.render.renderHistory();
                 }
             });
         } else if (event.target.closest('.btn-edit-archive')) {
             archive.editMode = !archive.editMode;
-            app.storage.save();
+            await app.storage.save();
             app.render.renderHistory();
         } else if (!event.target.closest('button, input')) { // Toggle collapse
             archive.isCollapsed = !archive.isCollapsed;
-            app.storage.save();
+            await app.storage.save();
             app.render.renderHistory();
         }
     },
@@ -785,7 +806,7 @@ app.handlers = {
         if (!file) return;
 
         const reader = new FileReader();
-        reader.onload = (e) => {
+        reader.onload = async (e) => {
             try {
                 const importedData = JSON.parse(e.target.result);
                 if (typeof importedData.benchPressTM !== 'number' || typeof importedData.squatTM !== 'number' || typeof importedData.progressData !== 'object' || !Array.isArray(importedData.program)) {
@@ -795,7 +816,7 @@ app.handlers = {
                 app.state.squatTM = importedData.squatTM;
                 app.state.progressData = importedData.progressData;
                 app.state.program = importedData.program;
-                app.storage.save();
+                await app.storage.save();
                 app.render.updateDisplay();
                 app.render.showModal({ title: 'Success!', text: 'Plan imported successfully.', confirmText: 'OK', cancelText: null });
             } catch (error) {
@@ -808,9 +829,9 @@ app.handlers = {
     },
 
     // Modal confirmation
-    handleModalConfirm() {
+    async handleModalConfirm() {
         if (app.render.modalConfirmCallback) {
-            app.render.modalConfirmCallback();
+            await app.render.modalConfirmCallback();
         }
         app.render.hideModal();
     }
