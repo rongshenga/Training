@@ -1,9 +1,9 @@
 # 服务器数据存储与账号区分开发计划
 
 ## 1. 项目基础结构搭建 (Setup)
-- [ ] **创建目录**: 创建 `server/` 和 `public/` 目录。
-- [ ] **迁移前端文件**: 将 `index.html`, `style.css`, `script.js` 移动到 `public/` 目录下。
-- [ ] **初始化后端项目**: 在项目根目录创建 `package.json`，并安装 `express`, `sqlite3`, `nodemon`, `dotenv`。
+- [x] **创建目录**: 创建 `server/` 和 `public/` 目录。
+- [x] **迁移前端文件**: 将 `index.html`, `style.css`, `script.js` 移动到 `public/` 目录下。
+- [x] **初始化后端项目**: 在项目根目录创建 `package.json`，并安装 `express`, `sqlite3`, `nodemon`, `dotenv`。
 - [ ] **配置开发脚本**: 在 `package.json` 中添加 `start` 和 `dev` 命令，后者使用 `nodemon` 实现服务器热重载。
 - [ ] **创建基础后端服务**: 创建 `server/app.js`，设置一个 Express 服务器，并完成以下配置：
   - 能够托管 `public` 目录下的静态文件。

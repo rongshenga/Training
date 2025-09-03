@@ -43,6 +43,7 @@ The application follows a simple, state-driven architecture implemented in vanil
 - 使用中文回复所有问题和说明
 - 涉及代码的改动，改动完运行正常后都需要提交到git
 - 完成 `TODO.md` 中的任务后，需要更新其状态并提交到 Git
+- 提交代码时，总是使用 `git add .` 命令来确保所有本地改动都被纳入版本控制，避免遗漏。
 
 ## Coding Style and Conventions
 
