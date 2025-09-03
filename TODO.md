@@ -23,6 +23,8 @@
   - [x] 实现训练计划 API (`GET /api/plan`, `POST /api/plan`)。
   - [x] 实现历史记录 API (`GET /api/history`, `POST /api/history`)。
 
+- [x] **文档**: 创建 `README.md`，说明服务器版和静态版的运行方式。
+
 ## 3. 前端改造 (Frontend Refactoring)
 - [ ] **API 服务模块**: 在 `public/script.js` 中创建一个模块或一组函数，用于封装所有对后端 API 的 `fetch` 调用。
 - [ ] **状态管理**: 将原来从 `localStorage` 加载和保存状态的逻辑，替换为调用后端的 API。
