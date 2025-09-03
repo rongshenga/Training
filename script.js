@@ -1,186 +1,142 @@
-document.addEventListener('DOMContentLoaded', () => {
-    // --- DATA ---
-    const programData = [
+// ==========================================================================
+// 1. CONFIGURATION & INITIAL DATA
+// ==========================================================================
+const config = {
+    dayOrder: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+    programData: [
         {
             week: 1, phase: 'Accumulation', days: [
-                { 
-                    day: 'Sunday', 
-                    exercise: 'Bench Press', 
-                    sets: 4, 
-                    reps: 8, 
-                    intensity: 0.65,
-                    groups: [
-                        { intensity: 0.65, reps: 8 },
-                        { intensity: 0.65, reps: 8 },
-                        { intensity: 0.65, reps: 8 },
-                        { intensity: 0.65, reps: 8 }
-                    ]
-                },
-                { 
-                    day: 'Thursday', 
-                    exercise: 'Bench Press', 
-                    sets: 5, 
-                    reps: 5, 
-                    intensity: 0.775,
-                    groups: [
-                        { intensity: 0.775, reps: 5 },
-                        { intensity: 0.775, reps: 5 },
-                        { intensity: 0.775, reps: 5 },
-                        { intensity: 0.775, reps: 5 },
-                        { intensity: 0.775, reps: 5 }
-                    ]
-                },
-                { 
-                    day: 'Friday', 
-                    exercise: 'Squat', 
-                    sets: 5, 
-                    reps: 5, 
-                    intensity: 0.75,
-                    groups: [
-                        { intensity: 0.75, reps: 5 },
-                        { intensity: 0.75, reps: 5 },
-                        { intensity: 0.75, reps: 5 },
-                        { intensity: 0.75, reps: 5 },
-                        { intensity: 0.75, reps: 5 }
-                    ]
-                }
+                { day: 'Sunday', exercise: 'Bench Press', sets: 4, reps: 8, intensity: 0.65, groups: [ { intensity: 0.65, reps: 8 }, { intensity: 0.65, reps: 8 }, { intensity: 0.65, reps: 8 }, { intensity: 0.65, reps: 8 } ] },
+                { day: 'Thursday', exercise: 'Bench Press', sets: 5, reps: 5, intensity: 0.775, groups: [ { intensity: 0.775, reps: 5 }, { intensity: 0.775, reps: 5 }, { intensity: 0.775, reps: 5 }, { intensity: 0.775, reps: 5 }, { intensity: 0.775, reps: 5 } ] },
+                { day: 'Friday', exercise: 'Squat', sets: 5, reps: 5, intensity: 0.75, groups: [ { intensity: 0.75, reps: 5 }, { intensity: 0.75, reps: 5 }, { intensity: 0.75, reps: 5 }, { intensity: 0.75, reps: 5 }, { intensity: 0.75, reps: 5 } ] }
             ]
         },
-        {
-            week: 2, phase: 'Accumulation', days: [
-                { day: 'Sunday', exercise: 'Bench Press', sets: 4, reps: 8, intensity: 0.675 },
-                { day: 'Thursday', exercise: 'Bench Press', sets: 5, reps: 5, intensity: 0.80 },
-                { day: 'Friday', exercise: 'Squat', sets: 5, reps: 5, intensity: 0.775 }
-            ]
-        },
-        {
-            week: 3, phase: 'Accumulation', days: [
-                { day: 'Sunday', exercise: 'Bench Press', sets: 4, reps: 8, intensity: 0.70 },
-                { day: 'Thursday', exercise: 'Bench Press', sets: 5, reps: 5, intensity: 0.825 },
-                { day: 'Friday', exercise: 'Squat', sets: 5, reps: 5, intensity: 0.80 }
-            ]
-        },
-        {
-            week: 4, phase: 'Deload', days: [
-                { day: 'Sunday', exercise: 'Bench Press', sets: 3, reps: 5, intensity: 0.60 },
-                { day: 'Thursday', exercise: 'Bench Press', sets: 3, reps: 5, intensity: 0.60 },
-                { day: 'Friday', exercise: 'Squat', sets: 3, reps: 5, intensity: 0.60 }
-            ]
-        },
-        {
-            week: 5, phase: 'Intensification', days: [
-                { day: 'Sunday', exercise: 'Bench Press', sets: 4, reps: 5, intensity: 0.70 },
-                { day: 'Thursday', exercise: 'Bench Press', sets: 4, reps: 3, intensity: 0.875 },
-                { day: 'Friday', exercise: 'Squat', sets: 5, reps: 3, intensity: 0.85 }
-            ]
-        },
-        {
-            week: 6, phase: 'Intensification', days: [
-                { day: 'Sunday', exercise: 'Bench Press', sets: 4, reps: 5, intensity: 0.725 },
-                { day: 'Thursday', exercise: 'Bench Press', sets: 3, reps: 3, intensity: 0.90 },
-                { day: 'Friday', exercise: 'Squat', sets: 4, reps: 3, intensity: 0.875 }
-            ]
-        },
-        {
-            week: 7, phase: 'Intensification', days: [
-                { day: 'Sunday', exercise: 'Bench Press', sets: 5, reps: 3, intensity: 0.75 },
-                { day: 'Thursday', exercise: 'Bench Press', sets: 3, reps: 2, intensity: 0.925 },
-                { day: 'Friday', exercise: 'Squat', sets: 3, reps: 3, intensity: 0.90 }
-            ]
-        },
-        // Week 8: Peak & Test
-        {
-            week: 8, phase: 'Peak & Test', days: [
-                { day: 'Sunday', exercise: 'Bench Press', sets: 5, reps: 5, intensity: 0.70 },
-                { day: 'Thursday', exercise: 'Bench Press', sets: 3, reps: 1, intensity: 0.95 },
-                { day: 'Friday', exercise: 'Squat', sets: 3, reps: 1, intensity: 0.95 }
-            ]
-        }
-    ];
-    const workoutProgram = JSON.parse(JSON.stringify(programData));
-    const dayOrder = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        { week: 2, phase: 'Accumulation', days: [ { day: 'Sunday', exercise: 'Bench Press', sets: 4, reps: 8, intensity: 0.675 }, { day: 'Thursday', exercise: 'Bench Press', sets: 5, reps: 5, intensity: 0.80 }, { day: 'Friday', exercise: 'Squat', sets: 5, reps: 5, intensity: 0.775 } ] },
+        { week: 3, phase: 'Accumulation', days: [ { day: 'Sunday', exercise: 'Bench Press', sets: 4, reps: 8, intensity: 0.70 }, { day: 'Thursday', exercise: 'Bench Press', sets: 5, reps: 5, intensity: 0.825 }, { day: 'Friday', exercise: 'Squat', sets: 5, reps: 5, intensity: 0.80 } ] },
+        { week: 4, phase: 'Deload', days: [ { day: 'Sunday', exercise: 'Bench Press', sets: 3, reps: 5, intensity: 0.60 }, { day: 'Thursday', exercise: 'Bench Press', sets: 3, reps: 5, intensity: 0.60 }, { day: 'Friday', exercise: 'Squat', sets: 3, reps: 5, intensity: 0.60 } ] },
+        { week: 5, phase: 'Intensification', days: [ { day: 'Sunday', exercise: 'Bench Press', sets: 4, reps: 5, intensity: 0.70 }, { day: 'Thursday', exercise: 'Bench Press', sets: 4, reps: 3, intensity: 0.875 }, { day: 'Friday', exercise: 'Squat', sets: 5, reps: 3, intensity: 0.85 } ] },
+        { week: 6, phase: 'Intensification', days: [ { day: 'Sunday', exercise: 'Bench Press', sets: 4, reps: 5, intensity: 0.725 }, { day: 'Thursday', exercise: 'Bench Press', sets: 3, reps: 3, intensity: 0.90 }, { day: 'Friday', exercise: 'Squat', sets: 4, reps: 3, intensity: 0.875 } ] },
+        { week: 7, phase: 'Intensification', days: [ { day: 'Sunday', exercise: 'Bench Press', sets: 5, reps: 3, intensity: 0.75 }, { day: 'Thursday', exercise: 'Bench Press', sets: 3, reps: 2, intensity: 0.925 }, { day: 'Friday', exercise: 'Squat', sets: 3, reps: 3, intensity: 0.90 } ] },
+        { week: 8, phase: 'Peak & Test', days: [ { day: 'Sunday', exercise: 'Bench Press', sets: 5, reps: 5, intensity: 0.70 }, { day: 'Thursday', exercise: 'Bench Press', sets: 3, reps: 1, intensity: 0.95 }, { day: 'Friday', exercise: 'Squat', sets: 3, reps: 1, intensity: 0.95 } ] }
+    ]
+};
 
-
-
-    // --- APPLICATION STATE ---
-    let state = {
+// ==========================================================================
+// 2. APPLICATION CORE
+// ==========================================================================
+const app = {
+    // 2.1. STATE MANAGEMENT
+    state: {
         benchPressTM: 0,
         squatTM: 0,
         progressData: {},
         editMode: false,
         history: [],
-        program: JSON.parse(JSON.stringify(programData)),
+        program: [],
         viewMode: 'all', // 'all' or 'single'
-        currentWeek: 1,   // 1-based index of the current week being viewed
-        displayStyle: 'traditional' // 'traditional' or 'group'
-    };
+        currentWeek: 1,
+        displayStyle: 'traditional'
+    },
 
-    // --- DOM ELEMENTS ---
-    const benchTmInput = document.getElementById('bench-tm');
-    const squatTmInput = document.getElementById('squat-tm');
-    const workoutContainer = document.getElementById('workout-plan');
-    const editModeToggle = document.getElementById('edit-mode-toggle');
-    const archiveBtn = document.getElementById('archive-cycle-btn');
-    const viewHistoryBtn = document.getElementById('view-history-btn');
-    const prevWeekBtn = document.getElementById('prev-week-btn');
-    const nextWeekBtn = document.getElementById('next-week-btn');
-    const viewToggleBtn = document.getElementById('view-toggle-btn');
-    const viewControls = document.querySelector('.view-controls');
-    const exportBtn = document.getElementById('export-btn');
-    const importBtn = document.getElementById('import-btn');
-    const importFileInput = document.getElementById('import-file');
-    const modalConfirmBtn = document.getElementById('modal-confirm-btn');
-    const modalCancelBtn = document.getElementById('modal-cancel-btn');
+    // 2.2. DOM ELEMENT CACHE
+    dom: {},
 
-    // --- LOCALSTORAGE LOGIC ---
-    function saveData() {
-        localStorage.setItem('workoutLogData', JSON.stringify(state));
-    }
-
-    function loadData() {
-        const savedData = localStorage.getItem('workoutLogData');
-        if (savedData) {
-            const parsedData = JSON.parse(savedData);
-            // Merge saved data with default state to ensure new properties are not lost
-            state = { ...state, ...parsedData };
-            state.history = parsedData.history || []; // Ensure history is an array
-            state.editMode = false;
-        }
-    }
-
-    // --- UTILITY FUNCTIONS ---
-     function getExerciseIcon(exercise) {
-        const icons = {
-            'Bench Press': '🏋️', // 使用卧推的 emoji
-            'Squat': '🦵',       // 使用深蹲的 emoji
+    // 2.3. INITIALIZATION
+    init() {
+        this.dom = {
+            benchTmInput: document.getElementById('bench-tm'),
+            squatTmInput: document.getElementById('squat-tm'),
+            workoutContainer: document.getElementById('workout-plan'),
+            historyContainer: document.getElementById('history-container'),
+            editModeToggle: document.getElementById('edit-mode-toggle'),
+            archiveBtn: document.getElementById('archive-cycle-btn'),
+            viewHistoryBtn: document.getElementById('view-history-btn'),
+            prevWeekBtn: document.getElementById('prev-week-btn'),
+            nextWeekBtn: document.getElementById('next-week-btn'),
+            viewToggleBtn: document.getElementById('view-toggle-btn'),
+            viewControls: document.querySelector('.view-controls'),
+            exportBtn: document.getElementById('export-btn'),
+            importBtn: document.getElementById('import-btn'),
+            importFileInput: document.getElementById('import-file'),
+            modal: document.getElementById('custom-modal'),
+            modalTitle: document.getElementById('modal-title'),
+            modalText: document.getElementById('modal-text'),
+            modalBody: document.getElementById('modal-body'),
+            modalConfirmBtn: document.getElementById('modal-confirm-btn'),
+            modalCancelBtn: document.getElementById('modal-cancel-btn'),
+            mainHeader: document.querySelector('header h1'),
+            historyView: document.getElementById('history-view'),
+            tmInputs: document.querySelector('.tm-inputs')
         };
-        return icons[exercise] ? `<span class="exercise-icon">${icons[exercise]}</span>` : '';
-    }
 
-   function getUniqueOptions(program, key) {
+        this.storage.load();
+        this.render.updateDisplay();
+        this.setupEventListeners();
+    },
+
+    // 2.4. EVENT LISTENER SETUP
+    setupEventListeners() {
+        // Main controls
+        this.dom.benchTmInput.addEventListener('input', this.handlers.handleTMChange.bind(this));
+        this.dom.squatTmInput.addEventListener('input', this.handlers.handleTMChange.bind(this));
+        this.dom.editModeToggle.addEventListener('click', this.handlers.handleEditModeToggle.bind(this));
+        this.dom.archiveBtn.addEventListener('click', this.handlers.archiveAndStartNewCycle.bind(this));
+        this.dom.viewHistoryBtn.addEventListener('click', this.handlers.toggleHistoryView.bind(this));
+        this.dom.exportBtn.addEventListener('click', this.handlers.exportPlan.bind(this));
+        this.dom.importBtn.addEventListener('click', this.handlers.importPlan.bind(this));
+        this.dom.importFileInput.addEventListener('change', this.handlers.handleFileSelect.bind(this));
+
+        // View controls
+        this.dom.prevWeekBtn.addEventListener('click', this.handlers.handlePrevWeek.bind(this));
+        this.dom.nextWeekBtn.addEventListener('click', this.handlers.handleNextWeek.bind(this));
+        this.dom.viewToggleBtn.addEventListener('click', this.handlers.handleViewToggle.bind(this));
+
+        // Workout plan interactions
+        this.dom.workoutContainer.addEventListener('click', (e) => {
+            this.handlers.handleProgressToggle(e);
+            this.handlers.handleCardActions(e);
+        });
+        this.dom.workoutContainer.addEventListener('change', this.handlers.handleWorkoutDataChange.bind(this));
+
+        // History view interactions
+        this.dom.historyContainer.addEventListener('click', (e) => {
+            this.handlers.handleHistoryClick(e);
+            this.handlers.handleCardActions(e);
+        });
+        this.dom.historyContainer.addEventListener('change', this.handlers.handleWorkoutDataChange.bind(this));
+        this.dom.historyContainer.addEventListener('input', this.handlers.handleHistoryTMChange.bind(this));
+
+        // Modal interactions
+        this.dom.modalConfirmBtn.addEventListener('click', this.handlers.handleModalConfirm.bind(this));
+        this.dom.modalCancelBtn.addEventListener('click', this.render.hideModal.bind(this));
+    }
+};
+
+// ==========================================================================
+// 3. UTILITY FUNCTIONS
+// ==========================================================================
+app.utils = {
+    deepClone(obj) {
+        return JSON.parse(JSON.stringify(obj));
+    },
+
+    getExerciseIcon(exercise) {
+        const icons = { 'Bench Press': '🏋️', 'Squat': '🦵' };
+        return icons[exercise] ? `<span class="exercise-icon">${icons[exercise]}</span>` : '';
+    },
+
+    getUniqueOptions(program, key) {
         const allValues = program.flatMap(week => week.days.map(day => day[key]));
         return [...new Set(allValues)];
-    }
+    },
 
-    function createSelectHTML(options, selectedValue, dataAttributes) {
-        let attrs = '';
-        for (const key in dataAttributes) {
-            attrs += `data-${key}="${dataAttributes[key]}" `;
-        }
-
-        let optionsHTML = options.map(option =>
-            `<option value="${option}" ${option === selectedValue ? 'selected' : ''}>${option}</option>`
-        ).join('');
-
-        return `<select ${attrs}>${optionsHTML}</select>`;
-    }
-    function calculateWeight(tm, intensity) {
+    calculateWeight(tm, intensity) {
         if (tm <= 0) return 0;
         const weight = tm * intensity;
         return Math.round(weight / 2.5) * 2.5;
-    }
+    },
 
-    function isDayCompleted(weekData, day, dayIndex, progressData, isHistory, historyIndex) {
+    isDayCompleted(weekData, day, dayIndex, progressData, isHistory, historyIndex) {
         const setsCount = (day.groups && day.groups.length > 0) ? day.groups.length : day.sets;
         if (setsCount === 0) return false;
 
@@ -188,325 +144,136 @@ document.addEventListener('DOMContentLoaded', () => {
             const progressId = isHistory
                 ? `h${historyIndex}w${weekData.week}d${dayIndex}s${i}`
                 : `w${weekData.week}d${dayIndex}s${i}`;
-            if (!progressData[progressId]) {
-                return false; // If any set is not completed, the day is not completed
-            }
+            if (!progressData[progressId]) return false;
         }
         return true;
     }
+};
 
-    // --- RENDER/DISPLAY FUNCTIONS ---
-    function updateDisplay() {
-        updateWorkoutPlan();
-        updateTMInputs();
-        updateHeaderButtons();
-        renderHistory();
-        updateViewControls();
+// ==========================================================================
+// 4. LOCALSTORAGE MANAGEMENT
+// ==========================================================================
+app.storage = {
+    save() {
+        localStorage.setItem('workoutLogData', JSON.stringify(app.state));
+    },
+
+    load() {
+        const savedData = localStorage.getItem('workoutLogData');
+        const defaultState = {
+            benchPressTM: 0, squatTM: 0, progressData: {}, editMode: false, history: [],
+            program: app.utils.deepClone(config.programData),
+            viewMode: 'all', currentWeek: 1, displayStyle: 'traditional'
+        };
+        
+        let loadedState = defaultState;
+        if (savedData) {
+            try {
+                const parsedData = JSON.parse(savedData);
+                // Merge to ensure new properties from defaultState are included
+                loadedState = { ...defaultState, ...parsedData };
+                loadedState.history = parsedData.history || [];
+            } catch (e) {
+                console.error("Failed to parse saved data from localStorage.", e);
+            }
+        }
+        app.state = loadedState;
+        app.state.editMode = false; // Always start in view mode
     }
+};
 
-    function renderHistory() {
-        const historyContainer = document.getElementById('history-container');
-        historyContainer.innerHTML = ''; // Clear existing
-        const h2 = document.querySelector('#history-view h2');
+// ==========================================================================
+// 5. RENDERING & UI
+// ==========================================================================
+app.render = {
+    // Main update function
+    updateDisplay() {
+        this.updateTMInputs();
+        this.updateHeaderButtons();
+        this.updateViewControls();
+        this.updateWorkoutPlan();
+        this.renderHistory();
+    },
 
-        if (!state.history || state.history.length === 0) {
+    // Component updaters
+    updateTMInputs() {
+        app.dom.benchTmInput.value = app.state.benchPressTM > 0 ? app.state.benchPressTM : '';
+        app.dom.squatTmInput.value = app.state.squatTM > 0 ? app.state.squatTM : '';
+    },
+
+    updateHeaderButtons() {
+        app.dom.editModeToggle.textContent = app.state.editMode ? 'Done' : 'Edit';
+        app.dom.editModeToggle.classList.toggle('btn-secondary', !app.state.editMode);
+    },
+
+    updateViewControls() {
+        if (app.state.viewMode === 'single') {
+            document.body.classList.add('single-week-view');
+            app.dom.viewToggleBtn.textContent = 'All Weeks View';
+            app.dom.prevWeekBtn.style.display = 'inline-block';
+            app.dom.nextWeekBtn.style.display = 'inline-block';
+            app.dom.prevWeekBtn.disabled = app.state.currentWeek <= 1;
+            app.dom.nextWeekBtn.disabled = app.state.currentWeek >= app.state.program.length;
+        } else {
+            document.body.classList.remove('single-week-view');
+            app.dom.viewToggleBtn.textContent = 'Single Week View';
+            app.dom.prevWeekBtn.style.display = 'none';
+            app.dom.nextWeekBtn.style.display = 'none';
+        }
+    },
+
+    updateWorkoutPlan() {
+        const tmData = { benchPressTM: app.state.benchPressTM, squatTM: app.state.squatTM };
+        this.renderPlan(app.dom.workoutContainer, app.state.program, tmData, app.state.progressData, app.state.editMode, false);
+    },
+    
+    renderHistory() {
+        const { historyContainer } = app.dom;
+        historyContainer.innerHTML = '';
+        const h2 = app.dom.historyView.querySelector('h2');
+
+        if (!app.state.history || app.state.history.length === 0) {
             h2.textContent = 'No Archived Cycles Found';
-            historyContainer.innerHTML = '';
             return;
         }
-
         h2.textContent = 'Archived Cycles';
 
-        state.history.forEach((archive, index) => {
+        app.state.history.forEach((archive, index) => {
             const archiveWrapper = document.createElement('div');
             archiveWrapper.className = 'archive-cycle';
-
-            const archiveHeader = document.createElement('h3');
-            archiveHeader.className = 'archive-header'; // Make it clickable
-            archiveHeader.dataset.historyIndex = index; // Add index for click handling
-            const archiveDate = new Date(archive.archivedAt).toLocaleString();
-            const isEditing = archive.editMode || false;
-            archiveHeader.innerHTML = `
-                        <span>Cycle Archived on ${archiveDate}</span>
-                        <div class="archive-tms">
-                            <div class="tm-item">
-                                <label>Bench TM:</label>
-                                <input type="number" value="${archive.benchPressTM}" data-history-index="${index}" data-tm-type="bench" ${!isEditing ? 'disabled' : ''}>
-                            </div>
-                            <div class="tm-item">
-                                <label>Squat TM:</label>
-                                <input type="number" value="${archive.squatTM}" data-history-index="${index}" data-tm-type="squat" ${!isEditing ? 'disabled' : ''}>
-                            </div>
-                        </div>
-                        <button class="btn-edit-archive" data-history-index="${index}">${isEditing ? 'Save' : 'Edit'}</button>
-                        <button class="btn-delete-history" data-history-index="${index}">Delete</button>
-                    `;
-            archiveWrapper.appendChild(archiveHeader);
-
+            archiveWrapper.innerHTML = this.createHistoryHeaderHTML(archive, index);
+            
             const contentWrapper = document.createElement('div');
-            const isCollapsed = archive.isCollapsed !== false; // Default to true
+            const isCollapsed = archive.isCollapsed !== false;
             contentWrapper.className = `archive-content ${isCollapsed ? 'collapsed' : ''}`;
-            archiveWrapper.appendChild(contentWrapper);
-
+            
             const planContainer = document.createElement('div');
             planContainer.className = 'archived-plan';
             contentWrapper.appendChild(planContainer);
-
-            const tmData = { benchPressTM: archive.benchPressTM, squatTM: archive.squatTM };
-            const isEditable = archive.editMode || false; // Assume false if not set
-            renderPlan(planContainer, archive.program, tmData, archive.progressData, isEditable, true, index);
-
+            
+            this.renderPlan(planContainer, archive.program, { benchPressTM: archive.benchPressTM, squatTM: archive.squatTM }, archive.progressData, archive.editMode, true, index);
+            
+            archiveWrapper.appendChild(contentWrapper);
             historyContainer.appendChild(archiveWrapper);
         });
-    }
+    },
 
-    function updateTMInputs() {
-        benchTmInput.value = state.benchPressTM > 0 ? state.benchPressTM : '';
-        squatTmInput.value = state.squatTM > 0 ? state.squatTM : '';
-    }
-
-    function updateHeaderButtons() {
-        editModeToggle.textContent = state.editMode ? 'Done' : 'Edit';
-        editModeToggle.classList.toggle('btn-secondary', !state.editMode);
-        archiveBtn.classList.add('btn-secondary');
-    }
-
-    function updateViewControls() {
-        if (state.viewMode === 'single') {
-            document.body.classList.add('single-week-view');
-            viewToggleBtn.textContent = 'All Weeks View';
-            prevWeekBtn.style.display = 'inline-block';
-            nextWeekBtn.style.display = 'inline-block';
-
-            // Disable buttons at boundaries
-            prevWeekBtn.disabled = state.currentWeek <= 1;
-            nextWeekBtn.disabled = state.currentWeek >= state.program.length;
-
-        } else { // 'all' view
-            document.body.classList.remove('single-week-view');
-            viewToggleBtn.textContent = 'Single Week View';
-            prevWeekBtn.style.display = 'none';
-            nextWeekBtn.style.display = 'none';
-        }
-    }
-
-    function renderPlan(containerElement, programData, tmData, progressData, isEditable, isHistory, historyIndex = -1) {
-        const uniqueDays = dayOrder;
-        const uniqueExercises = getUniqueOptions(programData, 'exercise');
-
-        containerElement.innerHTML = ''; // Clear previous content
-
-        const weeksToRender = state.viewMode === 'single' && !isHistory
-            ? programData.filter(week => week.week === state.currentWeek)
+    // The main plan renderer (for both main view and history)
+    renderPlan(container, programData, tmData, progressData, isEditable, isHistory, historyIndex = -1) {
+        container.innerHTML = '';
+        const weeksToRender = app.state.viewMode === 'single' && !isHistory
+            ? programData.filter(week => week.week === app.state.currentWeek)
             : programData;
 
         weeksToRender.forEach(weekData => {
             const weekContainer = document.createElement('div');
             weekContainer.className = 'week-container';
+            weekContainer.innerHTML = `<h2 class="week-header">Week ${weekData.week}: ${weekData.phase}</h2>`;
 
-            const weekHeader = document.createElement('h2');
-            weekHeader.className = 'week-header';
-            weekHeader.textContent = `Week ${weekData.week}: ${weekData.phase}`;
-            weekContainer.appendChild(weekHeader);
-
-            // Sort days to ensure consistent order (Sunday -> Saturday)
-            weekData.days.sort((a, b) => {
-                const dayA_index = dayOrder.indexOf(a.day);
-                const dayB_index = dayOrder.indexOf(b.day);
-                // Handle cases where a day might not be in the order array
-                if (dayA_index === -1) return 1;
-                if (dayB_index === -1) return -1;
-                return dayA_index - dayB_index;
-            });
-
+            weekData.days.sort((a, b) => config.dayOrder.indexOf(a.day) - config.dayOrder.indexOf(b.day));
+            
             weekData.days.forEach((day, dayIndex) => {
-                // Ensure every day object has a `groups` array for consistency.
-                if (!day.groups || day.groups.length === 0) {
-                    day.groups = Array.from({ length: day.sets }, () => ({
-                        reps: day.reps,
-                        intensity: day.intensity
-                    }));
-                }
-
-                const dayCard = document.createElement('div');
-                dayCard.className = 'card';
-                if (!isEditable && isDayCompleted(weekData, day, dayIndex, progressData, isHistory, historyIndex)) {
-                    dayCard.classList.add('day-completed');
-                }
-                if (isEditable) {
-                    dayCard.classList.add('editable');
-                    if (day.displayStyle === 'group') {
-                        dayCard.classList.add('group-display');
-                    }
-                }
-
-
-                if (isEditable) {
-                    const weekIdx = weekData.week - 1;
-                    const tm = day.exercise === 'Bench Press' ? tmData.benchPressTM : tmData.squatTM;
-
-                    // Data attributes to identify which part of the state to update
-                    const baseDataAttrs = {
-                        'week-idx': weekIdx,
-                        'day-idx': dayIndex,
-                    };
-                    if (isHistory) {
-                        baseDataAttrs['history-idx'] = historyIndex;
-                    }
-
-                    const createDataAttrs = (prop, groupIdx) => {
-                        const attrs = { ...baseDataAttrs, prop };
-                        if (groupIdx !== undefined) {
-                            attrs['group-idx'] = groupIdx;
-                        }
-                        return attrs;
-                    };
-
-
-                    const daySelectHTML = createSelectHTML(uniqueDays, day.day, createDataAttrs('day'));
-                    const exerciseSelectHTML = createSelectHTML(uniqueExercises, day.exercise, createDataAttrs('exercise'));
-
-                    const createInput = (type, value, prop, groupIdx) => {
-                        let stepAttr = '';
-                        if (type === 'number') {
-                        if (prop === 'intensity') {
-                            stepAttr = 'step="0.01"';
-                        } else if (prop === 'weight') {
-                            stepAttr = 'step="0.5" min="0"';
-                        } else {
-                            stepAttr = 'step="1" min="0"';
-                        }
-                        }
-                        return `<input type="${type}" value="${value}" ${stepAttr} ` +
-                            Object.entries(createDataAttrs(prop, groupIdx)).map(([key, val]) => `data-${key}="${val}"`).join(' ') +
-                            '>';
-                    }
-
-
-                    let editorContent = '';
-                    if (day.displayStyle === 'group') {
-                        let groupsHTML = day.groups.map((group, groupIdx) => `
-                            <div class="group-edit-row">
-                                <div class="group-edit-inputs">
-                                    <div class="form-item">
-                                        <label>Reps</label>
-                                        ${createInput('number', group.reps, 'reps', groupIdx)}
-                                    </div>
-                                    <div class="form-item">
-                                        <label>Intensity</label>
-                                        ${createInput('number', group.intensity, 'intensity', groupIdx)}
-                                    </div>
-                                    <div class="form-item">
-                                        <label>Weight (kg)</label>
-                                        ${createInput('number', calculateWeight(tm, group.intensity), 'weight', groupIdx)}
-                                    </div>
-                                </div>
-                                <div class="group-edit-actions">
-                                     <button class="btn-delete-group" data-week-idx="${weekIdx}" data-day-idx="${dayIndex}" data-group-idx="${groupIdx}" ${isHistory ? `data-history-idx="${historyIndex}"` : ''}>&times;</button>
-                                </div>
-                            </div>
-                        `).join('');
-
-                        editorContent = `
-                            <div class="group-editor-container">
-                                ${groupsHTML}
-                                <button class="btn-add-group" data-week-idx="${weekIdx}" data-day-idx="${dayIndex}" ${isHistory ? `data-history-idx="${historyIndex}"` : ''}>+ Add Group</button>
-                            </div>
-                        `;
-                    } else {
-                        editorContent = `
-                            <div class="form-row form-row-numeric">
-                                <div class="form-item">
-                                    <label>Sets</label>
-                                    ${createInput('number', day.sets, 'sets')}
-                                </div>
-                                <div class="form-item">
-                                    <label>Reps</label>
-                                    ${createInput('number', day.reps, 'reps')}
-                                </div>
-                                <div class="form-item">
-                                    <label>Intensity</label>
-                                    ${createInput('number', day.intensity, 'intensity')}
-                                </div>
-                                <div class="form-item">
-                                    <label>Weight (kg)</label>
-                                    ${createInput('number', calculateWeight(tm, day.intensity), 'weight')}
-                                </div>
-                            </div>
-                        `;
-                    }
-
-
-                    dayCard.innerHTML = `
-                                <div class="form-row form-row-select">
-                                    <div class="form-item">
-                                        <label>Day</label>
-                                        ${daySelectHTML}
-                                    </div>
-                                    <div class="form-item">
-                                        <label>Exercise</label>
-                                        ${exerciseSelectHTML}
-                                    </div>
-                                </div>
-                                ${editorContent}
-                                <div class="card-actions">
-                                     <button class="btn-toggle-style" title="Toggle view style" data-week-idx="${weekIdx}" data-day-idx="${dayIndex}" ${isHistory ? `data-history-idx="${historyIndex}"` : ''}>
-                                        ⇄
-                                    </button>
-                                    <button class="btn-delete-day" data-week-idx="${weekIdx}" data-day-idx="${dayIndex}" ${isHistory ? `data-history-idx="${historyIndex}"` : ''}>&times;</button>
-                                </div>
-                            `;
-                } else {
-                    let content = `<h3>${day.day}</h3>`;
-                    const tm = day.exercise === 'Bench Press' ? tmData.benchPressTM : tmData.squatTM;
-                    const icon = getExerciseIcon(day.exercise);
-
-                    if (day.displayStyle === 'group') {
-                        content += `<div class="exercise-info"><p>${icon} ${day.exercise}</p></div>`;
-                        let progressHTML = '<div class="group-progress-container">';
-                        day.groups.forEach((group, i) => {
-                            const weight = calculateWeight(tm, group.intensity);
-                            const progressId = isHistory
-                                ? `h${historyIndex}w${weekData.week}d${dayIndex}s${i}`
-                                : `w${weekData.week}d${dayIndex}s${i}`;
-                            const isCompleted = progressData[progressId] ? 'completed' : '';
-                             const progressBoxAttrs = isHistory
-                                ? 'style="cursor: default;"'
-                                : `data-progress-id="${progressId}"`;
-
-                            progressHTML += `
-                                <div class="group-row">
-                                    <div class="group-details">
-                                        ${i + 1}: <strong>${weight}kg</strong> (${(group.intensity * 100).toFixed(1)}%) for ${group.reps} reps
-                                    </div>
-                                    <div class="group-completion">
-                                        <div class="progress-box ${isCompleted}" ${progressBoxAttrs}></div>
-                                    </div>
-                                </div>
-                            `;
-                        });
-                        progressHTML += '</div>';
-                        content += progressHTML;
-                    } else {
-                        const weight = calculateWeight(tm, day.intensity);
-                        content += `<div class="exercise-info"><p>${icon} ${day.exercise}</p><p class="weight-details"><strong>${weight}kg</strong> (${day.intensity * 100}%)</p><p>${day.sets} sets of ${day.reps} reps</p></div>`;
-
-                        let progressHTML = '<div class="progress-container">';
-                        for (let i = 0; i < day.sets; i++) {
-                            const progressId = isHistory
-                                ? `h${historyIndex}w${weekData.week}d${dayIndex}s${i}`
-                                : `w${weekData.week}d${dayIndex}s${i}`;
-                            const isCompleted = progressData[progressId] ? 'completed' : '';
-                            const progressBoxAttrs = isHistory
-                                ? 'style="cursor: default;"'
-                                : `data-progress-id="${progressId}"`;
-                            progressHTML += `<div class="progress-box ${isCompleted}" ${progressBoxAttrs}></div>`;
-                        }
-                        progressHTML += '</div>';
-                        content += progressHTML;
-                    }
-                    dayCard.innerHTML = content;
-                }
+                const dayCard = this.createDayCard(weekData, day, dayIndex, tmData, progressData, isEditable, isHistory, historyIndex);
                 weekContainer.appendChild(dayCard);
             });
 
@@ -514,396 +281,407 @@ document.addEventListener('DOMContentLoaded', () => {
                 const addDayBtn = document.createElement('button');
                 addDayBtn.className = 'btn btn-add-day';
                 addDayBtn.textContent = '+ Add Day';
-                const weekIdx = weekData.week - 1;
-                addDayBtn.dataset.weekIdx = weekIdx;
-                if (isHistory) {
-                    addDayBtn.dataset.historyIdx = historyIndex;
-                }
+                addDayBtn.dataset.prop = 'add-day';
+                addDayBtn.dataset.weekIdx = weekData.week - 1;
+                if (isHistory) addDayBtn.dataset.historyIdx = historyIndex;
                 weekContainer.appendChild(addDayBtn);
             }
-            containerElement.appendChild(weekContainer);
+            container.appendChild(weekContainer);
         });
-    }
-
-    // Renders the entire 8-week program to the page.
-    function updateWorkoutPlan() {
-        const tmData = { benchPressTM: state.benchPressTM, squatTM: state.squatTM };
-        renderPlan(workoutContainer, state.program, tmData, state.progressData, state.editMode, false);
-    }
-
-    // --- EVENT HANDLERS ---
-    function handleTMChange(event) {
-        const { id, value } = event.target;
-        const tmValue = parseFloat(value) || 0;
-
-        if (id === 'bench-tm') {
-            state.benchPressTM = tmValue;
-        } else if (id === 'squat-tm') {
-            state.squatTM = tmValue;
-        }
-
-        saveData();
-        updateWorkoutPlan(); // Re-render the entire plan with new weights
-    }
-
-    function handleProgressToggle(event) {
-        const target = event.target;
-        if (target.classList.contains('progress-box')) {
-            const progressId = target.dataset.progressId;
-            if (!progressId) return; // Ignore clicks on history progress boxes
-
-            state.progressData[progressId] = !state.progressData[progressId];
-            target.classList.toggle('completed');
-            saveData();
-
-            // Check if the whole day is complete now and update card style
-            const dayCard = target.closest('.card');
-            const allBoxes = dayCard.querySelectorAll('.progress-box');
-            const allCompleted = [...allBoxes].every(box => box.classList.contains('completed'));
-
-            if (allCompleted) {
-                dayCard.classList.add('day-completed');
-            } else {
-                dayCard.classList.remove('day-completed');
-            }
-        }
-    }
-
-    function handleHistoryClick(event) {
-        const deleteBtn = event.target.closest('.btn-delete-history');
-        if (deleteBtn) {
-            const historyIndex = parseInt(deleteBtn.dataset.historyIndex, 10);
-            showModal({
-                title: 'Delete History?',
-                text: 'Are you sure you want to permanently delete this archived cycle?',
-                confirmText: 'Delete',
-                onConfirm: () => {
-                    state.history.splice(historyIndex, 1);
-                    saveData();
-                    renderHistory(); // Re-render the history view
-                }
-            });
-            return;
-        }
-
-        const editArchiveBtn = event.target.closest('.btn-edit-archive');
-        if (editArchiveBtn) {
-            const historyIndex = parseInt(editArchiveBtn.dataset.historyIndex, 10);
-            state.history[historyIndex].editMode = !state.history[historyIndex].editMode;
-            saveData();
-            renderHistory();
-            return;
-        }
-
-        const header = event.target.closest('.archive-header');
-        if (header && !event.target.closest('button, input')) {
-            const historyIndex = parseInt(header.dataset.historyIndex, 10);
-            if (!isNaN(historyIndex)) {
-                const isCollapsed = state.history[historyIndex].isCollapsed !== false;
-                state.history[historyIndex].isCollapsed = !isCollapsed;
-                saveData();
-                renderHistory();
-            }
-        }
-    }
-
-    function handleHistoryTMChange(event) {
-        if (event.target.matches('[data-tm-type]')) {
-            const historyIndex = parseInt(event.target.dataset.historyIndex, 10);
-            const tmType = event.target.dataset.tmType;
-            const newValue = parseFloat(event.target.value) || 0;
-
-            if (tmType === 'bench') {
-                state.history[historyIndex].benchPressTM = newValue;
-            } else if (tmType === 'squat') {
-                state.history[historyIndex].squatTM = newValue;
-            }
-            // Changes are saved when the user clicks 'Save'
-        }
-    }
-
-
-    function handleWorkoutDataChange(event) {
-        const { historyIdx, weekIdx, dayIdx, groupIdx, prop } = event.target.dataset;
-        let value = event.target.value;
-
-        const isHistory = historyIdx !== undefined;
-        const program = isHistory ? state.history[parseInt(historyIdx, 10)].program : state.program;
-        const dayData = program[parseInt(weekIdx, 10)].days[parseInt(dayIdx, 10)];
-        const tm = dayData.exercise === 'Bench Press'
-            ? (isHistory ? state.history[parseInt(historyIdx, 10)].benchPressTM : state.benchPressTM)
-            : (isHistory ? state.history[parseInt(historyIdx, 10)].squatTM : state.squatTM);
-
-        if (event.target.type === 'number') {
-            value = parseFloat(value) || 0;
-        }
-
-        const targetData = groupIdx !== undefined ? dayData.groups[parseInt(groupIdx, 10)] : dayData;
-
-        // --- Update state based on input ---
-        if (prop === 'weight') {
-            if (tm > 0) {
-                targetData.intensity = parseFloat((value / tm).toFixed(2));
-            } else {
-                targetData.intensity = 0;
-            }
-        } else {
-            // This handles 'intensity', 'reps', 'sets', etc.
-            if (targetData[prop] === value) return; // No change
-            targetData[prop] = value;
-        }
-
-        // If a core property is changed in traditional edit mode, regenerate the groups to match
-        if (['sets', 'reps', 'intensity'].includes(prop) && groupIdx === undefined) {
-            dayData.groups = Array.from({ length: dayData.sets }, () => ({
-                reps: dayData.reps,
-                intensity: dayData.intensity
+    },
+    
+    // Card creation logic
+    createDayCard(weekData, day, dayIndex, tmData, progressData, isEditable, isHistory, historyIndex) {
+        // Ensure groups array exists for consistency
+        if (!day.groups || day.groups.length === 0) {
+            day.groups = Array.from({ length: day.sets || 0 }, () => ({
+                reps: day.reps, intensity: day.intensity
             }));
         }
 
-        saveData();
-
-        // Re-render the plan to show updated values
-        if (isHistory) {
-            renderHistory();
+        const dayCard = document.createElement('div');
+        dayCard.className = 'card';
+        if (isEditable) {
+            dayCard.classList.add('editable');
+            if (day.displayStyle === 'group') dayCard.classList.add('group-display');
+            dayCard.innerHTML = this.createEditableCardContent(weekData, day, dayIndex, tmData, isHistory, historyIndex);
         } else {
-            updateWorkoutPlan();
+            if (app.utils.isDayCompleted(weekData, day, dayIndex, progressData, isHistory, historyIndex)) {
+                dayCard.classList.add('day-completed');
+            }
+            dayCard.innerHTML = this.createDisplayCardContent(weekData, day, dayIndex, tmData, progressData, isHistory, historyIndex);
         }
+        return dayCard;
+    },
+
+    // HTML generators for card content
+    createEditableCardContent(weekData, day, dayIndex, tmData, isHistory, historyIndex) {
+        const weekIdx = weekData.week - 1;
+        const tm = day.exercise === 'Bench Press' ? tmData.benchPressTM : tmData.squatTM;
+        const baseAttrs = { 'week-idx': weekIdx, 'day-idx': dayIndex };
+        if (isHistory) baseAttrs['history-idx'] = historyIndex;
+        
+        const createDataAttrs = (prop, groupIdx) => {
+            const attrs = { ...baseAttrs, prop };
+            if (groupIdx !== undefined) attrs['group-idx'] = groupIdx;
+            return Object.entries(attrs).map(([k, v]) => `data-${k}="${v}"`).join(' ');
+        };
+
+        const createSelect = (options, selected, prop) => `<select ${createDataAttrs(prop)}>${options.map(o => `<option value="${o}" ${o === selected ? 'selected' : ''}>${o}</option>`).join('')}</select>`;
+        const createInput = (type, val, prop, groupIdx) => `<input type="${type}" value="${val}" ${createDataAttrs(prop, groupIdx)} ${prop==='intensity'?'step="0.01"':''}>`;
+        
+        const daySelect = createSelect(config.dayOrder, day.day, 'day');
+        const exerciseSelect = createSelect(app.utils.getUniqueOptions(app.state.program, 'exercise'), day.exercise, 'exercise');
+
+        let editorContent;
+        if (day.displayStyle === 'group') {
+            const groupsHTML = day.groups.map((group, groupIdx) => `
+                <div class="group-edit-row">
+                    <div class="group-edit-inputs">
+                        <div class="form-item"><label>Reps</label>${createInput('number', group.reps, 'reps', groupIdx)}</div>
+                        <div class="form-item"><label>Intensity</label>${createInput('number', group.intensity, 'intensity', groupIdx)}</div>
+                        <div class="form-item"><label>Weight (kg)</label>${createInput('number', app.utils.calculateWeight(tm, group.intensity), 'weight', groupIdx)}</div>
+                    </div>
+                    <div class="group-edit-actions"><button class="btn-delete-group" ${createDataAttrs('delete-group', groupIdx)}>&times;</button></div>
+                </div>
+            `).join('');
+            editorContent = `<div class="group-editor-container">${groupsHTML}<button class="btn btn-add-group" ${createDataAttrs('add-group')}>+ Add Group</button></div>`;
+        } else {
+            editorContent = `
+                <div class="form-row form-row-numeric">
+                    <div class="form-item"><label>Sets</label>${createInput('number', day.sets, 'sets')}</div>
+                    <div class="form-item"><label>Reps</label>${createInput('number', day.reps, 'reps')}</div>
+                    <div class="form-item"><label>Intensity</label>${createInput('number', day.intensity, 'intensity')}</div>
+                    <div class="form-item"><label>Weight (kg)</label>${createInput('number', app.utils.calculateWeight(tm, day.intensity), 'weight')}</div>
+                </div>`;
+        }
+        
+        return `
+            <div class="form-row form-row-select">
+                <div class="form-item"><label>Day</label>${daySelect}</div>
+                <div class="form-item"><label>Exercise</label>${exerciseSelect}</div>
+            </div>
+            ${editorContent}
+            <div class="card-actions">
+                <button class="btn-toggle-style" title="Toggle view style" ${createDataAttrs('toggle-style')}>⇄</button>
+                <button class="btn-delete-day" ${createDataAttrs('delete-day')}>&times;</button>
+            </div>`;
+    },
+
+    createDisplayCardContent(weekData, day, dayIndex, tmData, progressData, isHistory, historyIndex) {
+        const tm = day.exercise === 'Bench Press' ? tmData.benchPressTM : tmData.squatTM;
+        const icon = app.utils.getExerciseIcon(day.exercise);
+        let content = `<h3>${day.day}</h3>`;
+        
+        if (day.displayStyle === 'group') {
+            const groupsHTML = day.groups.map((group, i) => {
+                const progressId = isHistory ? `h${historyIndex}w${weekData.week}d${dayIndex}s${i}` : `w${weekData.week}d${dayIndex}s${i}`;
+                const isCompleted = progressData[progressId] ? 'completed' : '';
+                return `
+                    <div class="group-row">
+                        <div class="group-details">${i + 1}: <strong>${app.utils.calculateWeight(tm, group.intensity)}kg</strong> (${(group.intensity * 100).toFixed(1)}%) for ${group.reps} reps</div>
+                        <div class="group-completion"><div class="progress-box ${isCompleted}" data-progress-id="${progressId}"></div></div>
+                    </div>`;
+            }).join('');
+            content += `<div class="exercise-info"><p>${icon} ${day.exercise}</p></div><div class="group-progress-container">${groupsHTML}</div>`;
+        } else {
+            const weight = app.utils.calculateWeight(tm, day.intensity);
+            const progressBoxes = Array.from({ length: day.sets }, (_, i) => {
+                const progressId = isHistory ? `h${historyIndex}w${weekData.week}d${dayIndex}s${i}` : `w${weekData.week}d${dayIndex}s${i}`;
+                const isCompleted = progressData[progressId] ? 'completed' : '';
+                return `<div class="progress-box ${isCompleted}" data-progress-id="${progressId}"></div>`;
+            }).join('');
+            content += `
+                <div class="exercise-info">
+                    <p>${icon} ${day.exercise}</p>
+                    <p class="weight-details"><strong>${weight}kg</strong> (${day.intensity * 100}%)</p>
+                    <p>${day.sets} sets of ${day.reps} reps</p>
+                </div>
+                <div class="progress-container">${progressBoxes}</div>`;
+        }
+        return content;
+    },
+    
+    createHistoryHeaderHTML(archive, index) {
+        const archiveDate = new Date(archive.archivedAt).toLocaleString();
+        const isEditing = archive.editMode || false;
+        return `
+            <h3 class="archive-header" data-history-index="${index}">
+                <span>Cycle Archived on ${archiveDate}</span>
+                <div class="archive-tms">
+                    <div class="tm-item">
+                        <label>Bench TM:</label>
+                        <input type="number" value="${archive.benchPressTM}" data-history-index="${index}" data-tm-type="bench" ${!isEditing ? 'disabled' : ''}>
+                    </div>
+                    <div class="tm-item">
+                        <label>Squat TM:</label>
+                        <input type="number" value="${archive.squatTM}" data-history-index="${index}" data-tm-type="squat" ${!isEditing ? 'disabled' : ''}>
+                    </div>
+                </div>
+                <button class="btn btn-edit-archive" data-history-index="${index}">${isEditing ? 'Save' : 'Edit'}</button>
+                <button class="btn btn-delete-history" data-history-index="${index}">Delete</button>
+            </h3>`;
+    },
+
+    // Modal display
+    showModal({ title, text, bodyHtml = '', confirmText = 'Confirm', cancelText = 'Cancel', onConfirm }) {
+        this.modalConfirmCallback = onConfirm;
+        app.dom.modalTitle.textContent = title;
+        app.dom.modalText.style.display = bodyHtml ? 'none' : 'block';
+        app.dom.modalBody.style.display = bodyHtml ? 'block' : 'none';
+        app.dom.modalText.textContent = text;
+        app.dom.modalBody.innerHTML = bodyHtml;
+
+        app.dom.modalConfirmBtn.textContent = confirmText;
+        app.dom.modalCancelBtn.textContent = cancelText;
+        app.dom.modalConfirmBtn.style.display = confirmText ? 'inline-block' : 'none';
+        app.dom.modalCancelBtn.style.display = cancelText ? 'inline-block' : 'none';
+
+        app.dom.modal.classList.add('visible');
+    },
+
+    hideModal() {
+        app.dom.modal.classList.remove('visible');
+        this.modalConfirmCallback = null;
     }
+};
 
-    // --- MODAL LOGIC ---
-    let modalConfirmCallback = null;
+// ==========================================================================
+// 6. EVENT HANDLERS
+// ==========================================================================
+app.handlers = {
+    // TM inputs
+    handleTMChange(event) {
+        const { id, value } = event.target;
+        const tmValue = parseFloat(value) || 0;
+        app.state[id === 'bench-tm' ? 'benchPressTM' : 'squatTM'] = tmValue;
+        app.storage.save();
+        app.render.updateWorkoutPlan();
+    },
 
-    function handleCardActions(event) {
-        const toggleBtn = event.target.closest('.btn-toggle-style');
-        if (toggleBtn) {
-            const { historyIdx, weekIdx, dayIdx } = toggleBtn.dataset;
-            const isHistory = historyIdx !== undefined;
-            const program = isHistory ? state.history[parseInt(historyIdx, 10)].program : state.program;
-            const dayData = program[parseInt(weekIdx, 10)].days[parseInt(dayIdx, 10)];
+    // Progress boxes
+    handleProgressToggle(event) {
+        const target = event.target;
+        if (target.classList.contains('progress-box')) {
+            const progressId = target.dataset.progressId;
+            if (!progressId || progressId.startsWith('h')) return;
 
-            // Toggle the display style
-            dayData.displayStyle = dayData.displayStyle === 'group' ? 'traditional' : 'group';
-
-            saveData();
-            isHistory ? renderHistory() : updateWorkoutPlan();
-            return;
-        }
-
-        const addGroupBtn = event.target.closest('.btn-add-group');
-        if (addGroupBtn) {
-            const { historyIdx, weekIdx, dayIdx } = addGroupBtn.dataset;
-            const isHistory = historyIdx !== undefined;
-            const program = isHistory ? state.history[parseInt(historyIdx, 10)].program : state.program;
-            const dayData = program[parseInt(weekIdx, 10)].days[parseInt(dayIdx, 10)];
+            app.state.progressData[progressId] = !app.state.progressData[progressId];
+            target.classList.toggle('completed');
             
-            const lastGroup = dayData.groups[dayData.groups.length - 1] || { reps: 5, intensity: 0.75 };
-            dayData.groups.push({ ...lastGroup });
-            dayData.sets = dayData.groups.length; // Sync sets count
-
-            saveData();
-            isHistory ? renderHistory() : updateWorkoutPlan();
-            return;
+            const dayCard = target.closest('.card');
+            const allBoxes = dayCard.querySelectorAll('.progress-box');
+            const allCompleted = [...allBoxes].every(box => box.classList.contains('completed'));
+            dayCard.classList.toggle('day-completed', allCompleted);
+            
+            app.storage.save();
         }
+    },
 
-        const deleteGroupBtn = event.target.closest('.btn-delete-group');
-        if (deleteGroupBtn) {
-            const { historyIdx, weekIdx, dayIdx, groupIdx } = deleteGroupBtn.dataset;
-            const isHistory = historyIdx !== undefined;
-            const program = isHistory ? state.history[parseInt(historyIdx, 10)].program : state.program;
-            const dayData = program[parseInt(weekIdx, 10)].days[parseInt(dayIdx, 10)];
+    // Edit mode
+    handleEditModeToggle() {
+        app.state.editMode = !app.state.editMode;
+        app.render.updateDisplay();
+    },
 
-            dayData.groups.splice(parseInt(groupIdx, 10), 1);
-            dayData.sets = dayData.groups.length; // Sync sets count
+    // Data changes in edit mode
+    handleWorkoutDataChange(event) {
+        const { historyIdx, weekIdx, dayIdx, groupIdx, prop } = event.target.dataset;
+        if (prop === undefined) return;
+        
+        const isHistory = historyIdx !== undefined;
+        const program = isHistory ? app.state.history[historyIdx].program : app.state.program;
+        const dayData = program[weekIdx].days[dayIdx];
+        const tm = dayData.exercise === 'Bench Press' 
+            ? (isHistory ? app.state.history[historyIdx].benchPressTM : app.state.benchPressTM)
+            : (isHistory ? app.state.history[historyIdx].squatTM : app.state.squatTM);
 
-            saveData();
-            isHistory ? renderHistory() : updateWorkoutPlan();
-            return;
-        }
+        let value = event.target.type === 'number' ? parseFloat(event.target.value) || 0 : event.target.value;
+        const targetData = groupIdx !== undefined ? dayData.groups[groupIdx] : dayData;
 
-        const addBtn = event.target.closest('.btn-add-day');
-        if (addBtn) {
-            const { historyIdx, weekIdx } = addBtn.dataset;
-            const isHistory = historyIdx !== undefined;
-            const program = isHistory ? state.history[parseInt(historyIdx, 10)].program : state.program;
-            const weekIndex = parseInt(weekIdx, 10);
-
-            const newDay = { day: 'Sunday', exercise: 'Bench Press', sets: 3, reps: 5, intensity: 0.7 };
-            program[weekIndex].days.push(newDay);
-
-            saveData();
-            isHistory ? renderHistory() : updateWorkoutPlan();
-            return; // Action handled, exit early.
-        }
-
-        const deleteBtn = event.target.closest('.btn-delete-day');
-        if (deleteBtn) {
-            const { historyIdx, weekIdx, dayIdx } = deleteBtn.dataset;
-
-            showModal({
-                title: 'Delete Training Day?',
-                text: 'Are you sure you want to permanently delete this day?',
-                confirmText: 'Delete',
-                onConfirm: () => {
-                    const isHistory = historyIdx !== undefined;
-                    const program = isHistory ? state.history[parseInt(historyIdx, 10)].program : state.program;
-                    const weekIndex = parseInt(weekIdx, 10);
-                    const dayIndex = parseInt(dayIdx, 10);
-
-                    program[weekIndex].days.splice(dayIndex, 1);
-
-                    saveData();
-                    isHistory ? renderHistory() : updateWorkoutPlan();
-                }
-            });
-        }
-    }
-
-    function showModal({ title, text, bodyHtml = '', confirmText = 'Confirm', cancelText = 'Cancel', onConfirm }) {
-        document.getElementById('modal-title').textContent = title;
-        const modalText = document.getElementById('modal-text');
-        const modalBody = document.getElementById('modal-body');
-
-        if (bodyHtml) {
-            modalText.style.display = 'none';
-            modalBody.innerHTML = bodyHtml;
-            modalBody.style.display = 'block';
+        if (prop === 'weight') {
+            targetData.intensity = tm > 0 ? parseFloat((value / tm).toFixed(3)) : 0;
         } else {
-            modalText.textContent = text;
-            modalText.style.display = 'block';
-            modalBody.innerHTML = '';
-            modalBody.style.display = 'none';
+            targetData[prop] = value;
         }
 
-        const confirmBtn = document.getElementById('modal-confirm-btn');
-        const cancelBtn = document.getElementById('modal-cancel-btn');
-
-        confirmBtn.textContent = confirmText;
-        cancelBtn.textContent = cancelText;
-
-        confirmBtn.style.display = confirmText ? 'inline-block' : 'none';
-        cancelBtn.style.display = cancelText ? 'inline-block' : 'none';
-
-        modalConfirmCallback = onConfirm;
-        document.getElementById('custom-modal').classList.add('visible');
-    }
-
-    function hideModal() {
-        document.getElementById('custom-modal').classList.remove('visible');
-        modalConfirmCallback = null;
-    }
-
-    function handleModalConfirm() {
-        if (modalConfirmCallback) {
-            modalConfirmCallback();
+        if (['sets', 'reps', 'intensity'].includes(prop) && groupIdx === undefined) {
+            dayData.groups = Array.from({ length: dayData.sets }, () => ({
+                reps: dayData.reps, intensity: dayData.intensity
+            }));
         }
-        hideModal();
-    }
 
-    function archiveAndStartNewCycle() {
-        showModal({
+        app.storage.save();
+        isHistory ? app.render.renderHistory() : app.render.updateWorkoutPlan();
+    },
+    
+    // Edit/delete buttons on cards, add group/day
+    handleCardActions(event) {
+        const button = event.target.closest('button');
+        if (!button) return;
+        const { historyIdx, weekIdx, dayIdx, groupIdx, prop: action } = button.dataset;
+
+        if (!action) return;
+
+        const isHistory = historyIdx !== undefined;
+        const program = isHistory ? app.state.history[historyIdx].program : app.state.program;
+
+        // Action that doesn't need dayData
+        if (action === 'add-day') {
+            program[weekIdx].days.push({ day: 'Sunday', exercise: 'Bench Press', sets: 3, reps: 5, intensity: 0.7 });
+            app.storage.save();
+            isHistory ? app.render.renderHistory() : app.render.updateWorkoutPlan();
+            return;
+        }
+
+        // Actions that need dayData
+        const dayData = program[weekIdx].days[dayIdx];
+        if (!dayData) return;
+
+        switch (action) {
+            case 'toggle-style':
+                dayData.displayStyle = dayData.displayStyle === 'group' ? 'traditional' : 'group';
+                break;
+            case 'add-group':
+                const lastGroup = dayData.groups[dayData.groups.length - 1] || { reps: 5, intensity: 0.75 };
+                dayData.groups.push({ ...lastGroup });
+                dayData.sets = dayData.groups.length;
+                break;
+            case 'delete-group':
+                dayData.groups.splice(groupIdx, 1);
+                dayData.sets = dayData.groups.length;
+                break;
+            case 'delete-day':
+                app.render.showModal({
+                    title: 'Delete Training Day?',
+                    text: 'Are you sure you want to permanently delete this day?',
+                    confirmText: 'Delete',
+                    onConfirm: () => {
+                        program[weekIdx].days.splice(dayIdx, 1);
+                        app.storage.save();
+                        isHistory ? app.render.renderHistory() : app.render.updateWorkoutPlan();
+                    }
+                });
+                return; // Modal handles rerender
+        }
+        
+        app.storage.save();
+        isHistory ? app.render.renderHistory() : app.render.updateWorkoutPlan();
+    },
+
+    // Cycle management
+    archiveAndStartNewCycle() {
+        app.render.showModal({
             title: 'Archive Cycle?',
             text: 'Are you sure? Your current progress will be saved to history.',
             onConfirm: () => {
                 const archive = {
                     archivedAt: new Date().toISOString(),
-                    program: JSON.parse(JSON.stringify(state.program)),
-                    progressData: JSON.parse(JSON.stringify(state.progressData)),
-                    benchPressTM: state.benchPressTM,
-                    squatTM: state.squatTM,
-                    editMode: false, // Track edit state for the plan
+                    program: app.utils.deepClone(app.state.program),
+                    progressData: app.utils.deepClone(app.state.progressData),
+                    benchPressTM: app.state.benchPressTM,
+                    squatTM: app.state.squatTM,
+                    editMode: false,
                     isCollapsed: true
                 };
-                state.history.unshift(archive);
-                state.program = JSON.parse(JSON.stringify(workoutProgram));
-                state.progressData = {};
-                saveData();
-                updateDisplay();
-
-                showModal({
-                    title: 'Success!',
-                    text: 'Cycle archived. A new cycle is ready.',
-                    confirmText: 'OK',
-                    cancelText: null
-                });
+                app.state.history.unshift(archive);
+                app.state.program = app.utils.deepClone(config.programData);
+                app.state.progressData = {};
+                app.storage.save();
+                app.render.updateDisplay();
+                app.render.showModal({ title: 'Success!', text: 'Cycle archived. A new cycle is ready.', confirmText: 'OK', cancelText: null });
             }
         });
-    }
+    },
 
-    function toggleHistoryView() {
-        const mainPlan = document.getElementById('workout-plan');
-        const historyView = document.getElementById('history-view');
-        const tmInputs = document.querySelector('.tm-inputs');
-        const mainHeader = document.querySelector('header h1');
-        const isHistoryVisible = historyView.style.display !== 'none';
-
-        if (isHistoryVisible) {
-            // Switch back to main view
-            historyView.style.display = 'none';
-            mainPlan.style.display = '';
-            tmInputs.style.display = 'flex';
-            mainHeader.style.display = 'block';
-            editModeToggle.style.display = 'inline-block'; // Show
-            archiveBtn.style.display = 'inline-block';     // Show
-            exportBtn.style.display = 'inline-block';
-            importBtn.style.display = 'inline-block';
-            viewControls.style.display = 'flex';     // Show
-            viewHistoryBtn.textContent = 'History';
-        } else {
-            // When entering history view, reset all states to default
-            state.history.forEach(archive => {
+    toggleHistoryView() {
+        const isHistoryVisible = app.dom.historyView.style.display !== 'none';
+        app.dom.historyView.style.display = isHistoryVisible ? 'none' : 'block';
+        app.dom.workoutContainer.style.display = isHistoryVisible ? 'grid' : 'none';
+        app.dom.tmInputs.style.display = isHistoryVisible ? 'flex' : 'none';
+        app.dom.mainHeader.style.display = isHistoryVisible ? 'block' : 'none';
+        app.dom.editModeToggle.style.display = isHistoryVisible ? 'inline-block' : 'none';
+        app.dom.archiveBtn.style.display = isHistoryVisible ? 'inline-block' : 'none';
+        app.dom.exportBtn.style.display = isHistoryVisible ? 'inline-block' : 'none';
+        app.dom.importBtn.style.display = isHistoryVisible ? 'inline-block' : 'none';
+        app.dom.viewControls.style.display = isHistoryVisible ? 'flex' : 'none';
+        app.dom.viewHistoryBtn.textContent = isHistoryVisible ? 'History' : 'Back to Cycle';
+        
+        if (!isHistoryVisible) { // Entering history view
+            app.state.history.forEach(archive => {
                 archive.editMode = false;
                 archive.isCollapsed = true;
             });
-            saveData();
-            renderHistory(); // Re-render with reset states before showing
-
-            // Switch to history view
-            historyView.style.display = 'block';
-            mainPlan.style.display = 'none';
-            tmInputs.style.display = 'none';
-            mainHeader.style.display = 'none';
-            editModeToggle.style.display = 'none'; // Hide
-            archiveBtn.style.display = 'none';     // Hide
-            exportBtn.style.display = 'none';
-            importBtn.style.display = 'none';
-            viewControls.style.display = 'none';   // Hide
-            viewHistoryBtn.textContent = 'Back to Cycle';
+            app.storage.save();
+            app.render.renderHistory();
         }
-    }
+    },
+    
+    // History View specific actions
+    handleHistoryClick(event) {
+        const header = event.target.closest('.archive-header');
+        const historyIndex = header?.dataset.historyIndex;
+        if (historyIndex === undefined) return;
+        
+        const archive = app.state.history[historyIndex];
 
-    function handleEditModeToggle() {
-        state.editMode = !state.editMode;
-        updateDisplay();
-    }
-
-    function handleViewToggle() {
-        state.viewMode = state.viewMode === 'all' ? 'single' : 'all';
-        updateDisplay();
-    }
-
-    function handlePrevWeek() {
-        if (state.currentWeek > 1) {
-            state.currentWeek--;
-            updateDisplay();
+        if (event.target.closest('.btn-delete-history')) {
+            app.render.showModal({
+                title: 'Delete History?',
+                text: 'Are you sure you want to permanently delete this archived cycle?',
+                confirmText: 'Delete',
+                onConfirm: () => {
+                    app.state.history.splice(historyIndex, 1);
+                    app.storage.save();
+                    app.render.renderHistory();
+                }
+            });
+        } else if (event.target.closest('.btn-edit-archive')) {
+            archive.editMode = !archive.editMode;
+            app.storage.save();
+            app.render.renderHistory();
+        } else if (!event.target.closest('button, input')) { // Toggle collapse
+            archive.isCollapsed = !archive.isCollapsed;
+            app.storage.save();
+            app.render.renderHistory();
         }
-    }
-
-    function handleNextWeek() {
-        if (state.currentWeek < state.program.length) {
-            state.currentWeek++;
-            updateDisplay();
+    },
+    
+    handleHistoryTMChange(event) {
+        const input = event.target;
+        if (input.matches('[data-tm-type]')) {
+            const { historyIndex, tmType } = input.dataset;
+            app.state.history[historyIndex][tmType === 'bench' ? 'benchPressTM' : 'squatTM'] = parseFloat(input.value) || 0;
+            // No save, saved on "Save" button click
         }
-    }
+    },
 
-    function exportPlan() {
+    // View mode toggles
+    handleViewToggle() {
+        app.state.viewMode = app.state.viewMode === 'all' ? 'single' : 'all';
+        app.render.updateDisplay();
+    },
+    handlePrevWeek() {
+        if (app.state.currentWeek > 1) {
+            app.state.currentWeek--;
+            app.render.updateDisplay();
+        }
+    },
+    handleNextWeek() {
+        if (app.state.currentWeek < app.state.program.length) {
+            app.state.currentWeek++;
+            app.render.updateDisplay();
+        }
+    },
+
+    // Import / Export
+    exportPlan() {
         const dataToExport = {
-            benchPressTM: state.benchPressTM,
-            squatTM: state.squatTM,
-            progressData: state.progressData,
-            program: state.program,
+            benchPressTM: app.state.benchPressTM,
+            squatTM: app.state.squatTM,
+            progressData: app.state.progressData,
+            program: app.state.program,
         };
-
         const dataStr = JSON.stringify(dataToExport, null, 2);
         const blob = new Blob([dataStr], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
@@ -914,89 +692,49 @@ document.addEventListener('DOMContentLoaded', () => {
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
-    }
-
-    function importPlan() {
-        importFileInput.click();
-    }
-
-    function handleFileSelect(event) {
+    },
+    importPlan() {
+        app.dom.importFileInput.click();
+    },
+    handleFileSelect(event) {
         const file = event.target.files[0];
-        if (!file) {
-            return;
-        }
+        if (!file) return;
 
         const reader = new FileReader();
-        reader.onload = function (e) {
+        reader.onload = (e) => {
             try {
                 const importedData = JSON.parse(e.target.result);
-                
-                // Validate imported data structure
-                if (
-                    typeof importedData.benchPressTM === 'number' &&
-                    typeof importedData.squatTM === 'number' &&
-                    typeof importedData.progressData === 'object' &&
-                    Array.isArray(importedData.program)
-                ) {
-                    state.benchPressTM = importedData.benchPressTM;
-                    state.squatTM = importedData.squatTM;
-                    state.progressData = importedData.progressData;
-                    state.program = importedData.program;
-
-                    saveData();
-                    updateDisplay();
-
-                     showModal({
-                        title: 'Success!',
-                        text: 'Plan imported successfully.',
-                        confirmText: 'OK',
-                        cancelText: null
-                    });
-                } else {
+                if (typeof importedData.benchPressTM !== 'number' || typeof importedData.squatTM !== 'number' || typeof importedData.progressData !== 'object' || !Array.isArray(importedData.program)) {
                     throw new Error('Invalid file format.');
                 }
+                app.state.benchPressTM = importedData.benchPressTM;
+                app.state.squatTM = importedData.squatTM;
+                app.state.progressData = importedData.progressData;
+                app.state.program = importedData.program;
+                app.storage.save();
+                app.render.updateDisplay();
+                app.render.showModal({ title: 'Success!', text: 'Plan imported successfully.', confirmText: 'OK', cancelText: null });
             } catch (error) {
-                 showModal({
-                    title: 'Import Error',
-                    text: `Failed to import plan: ${error.message}`,
-                    confirmText: 'OK',
-                    cancelText: null
-                });
+                app.render.showModal({ title: 'Import Error', text: `Failed to import plan: ${error.message}`, confirmText: 'OK', cancelText: null });
             } finally {
-                // Reset file input to allow re-selection of the same file
-                importFileInput.value = '';
+                app.dom.importFileInput.value = '';
             }
         };
         reader.readAsText(file);
+    },
+
+    // Modal confirmation
+    handleModalConfirm() {
+        if (app.render.modalConfirmCallback) {
+            app.render.modalConfirmCallback();
+        }
+        app.render.hideModal();
     }
+};
 
-    // --- INITIALIZATION ---
-    function init() {
-        loadData();
-
-        benchTmInput.addEventListener('input', handleTMChange);
-        squatTmInput.addEventListener('input', handleTMChange);
-        editModeToggle.addEventListener('click', handleEditModeToggle);
-        workoutContainer.addEventListener('click', handleProgressToggle);
-        workoutContainer.addEventListener('click', handleCardActions);
-        workoutContainer.addEventListener('change', handleWorkoutDataChange);
-        document.getElementById('history-container').addEventListener('change', handleWorkoutDataChange);
-        archiveBtn.addEventListener('click', archiveAndStartNewCycle);
-        viewHistoryBtn.addEventListener('click', toggleHistoryView);
-        prevWeekBtn.addEventListener('click', handlePrevWeek);
-        nextWeekBtn.addEventListener('click', handleNextWeek);
-        viewToggleBtn.addEventListener('click', handleViewToggle);
-        exportBtn.addEventListener('click', exportPlan);
-        importBtn.addEventListener('click', importPlan);
-        importFileInput.addEventListener('change', handleFileSelect);
-        modalConfirmBtn.addEventListener('click', handleModalConfirm);
-        modalCancelBtn.addEventListener('click', hideModal);
-        document.getElementById('history-container').addEventListener('click', handleHistoryClick);
-        document.getElementById('history-container').addEventListener('click', handleCardActions);
-        document.getElementById('history-container').addEventListener('input', handleHistoryTMChange);
-
-        updateDisplay(); // Initial render
-    }
-
-    init();
+// ==========================================================================
+// 7. APP INITIALIZATION
+// ==========================================================================
+document.addEventListener('DOMContentLoaded', () => {
+    app.init();
 });
