@@ -103,7 +103,7 @@ const app = {
         } catch (error) {
             this.state.operatingMode = 'static';
         }
-        console.log(`Operating in ${this.state.operatingMode} mode.`); // For debugging
+        console.log(`Operating in ${this.state.operatingMode} mode.`);
     },
 
     // 2.4. EVENT LISTENER SETUP
@@ -207,40 +207,51 @@ app.storage = {
     },
 
     async load() {
-        const defaultState = {
+        const currentOperatingMode = app.state.operatingMode;
+
+        const defaultData = {
             benchPressTM: 0, squatTM: 0, progressData: {}, editMode: false, history: [],
             program: app.utils.deepClone(config.programData),
             viewMode: 'all', currentWeek: 1, displayStyle: 'traditional',
-            operatingMode: app.state.operatingMode
         };
 
-        let loadedState = defaultState;
+        let loadedData = null;
 
-        if (app.state.operatingMode === 'server') {
-            try {
-                const planData = await app.api.getPlan();
-                if (planData && Object.keys(planData).length > 0) {
-                    // Merge server data with defaults to ensure all keys exist
-                    loadedState = { ...defaultState, ...planData };
-                }
-            } catch (error) {
-                console.error("Failed to load data from server. Using default state.", error);
-            }
-        } else {
+        if (currentOperatingMode === 'static') {
             const savedData = localStorage.getItem('workoutLogData');
             if (savedData) {
                 try {
-                    const parsedData = JSON.parse(savedData);
-                    loadedState = { ...defaultState, ...parsedData };
+                    loadedData = JSON.parse(savedData);
                 } catch (e) {
-                    console.error("Failed to parse saved data from localStorage.", e);
+                    console.error("Failed to parse data from localStorage.", e);
+                    loadedData = null;
                 }
+            }
+        } else { // server mode
+            try {
+                if (app.api.token) {
+                    loadedData = await app.api.getPlan();
+                }
+            } catch (error) {
+                console.error("Failed to load data from server.", error);
+                loadedData = null;
             }
         }
 
-        app.state = loadedState;
-        app.state.history = app.state.history || []; // Ensure history is always an array
-        app.state.editMode = false; // Always start in view mode
+        app.state = { ...defaultData, ...loadedData };
+
+        // CRITICAL FIX: Always restore the runtime-detected operating mode
+        app.state.operatingMode = currentOperatingMode;
+        
+        app.state.editMode = false;
+        
+        // Final validation for crucial data structures
+        if (!app.state.program || !Array.isArray(app.state.program) || app.state.program.length === 0) {
+            app.state.program = app.utils.deepClone(config.programData);
+        }
+        if (!app.state.history || !Array.isArray(app.state.history)) {
+            app.state.history = [];
+        }
     }
 };
 
@@ -312,33 +323,33 @@ app.api = {
 // ==========================================================================
 app.render = {
     toggleAuthForm(showLogin) {
-        this.dom.loginForm.style.display = showLogin ? 'block' : 'none';
-        this.dom.registerForm.style.display = showLogin ? 'none' : 'block';
+        app.dom.loginForm.style.display = showLogin ? 'block' : 'none';
+        app.dom.registerForm.style.display = showLogin ? 'none' : 'block';
     },
     
     updateAuthView() {
-        if (this.state.operatingMode === 'server' && !app.api.token) {
+        if (app.state.operatingMode === 'server' && !app.api.token) {
             // Server mode, not logged in: show auth
-            this.dom.authContainer.style.display = 'block';
-            this.dom.mainContent.style.display = 'none';
-            this.dom.mainHeader.style.display = 'none';
-            this.dom.logoutBtn.style.display = 'none';
+            app.dom.authContainer.style.display = 'block';
+            app.dom.mainContent.style.display = 'none';
+            app.dom.mainHeader.style.display = 'none';
+            app.dom.logoutBtn.style.display = 'none';
         } else {
             // Static mode or logged in: show main app
-            this.dom.authContainer.style.display = 'none';
-            this.dom.mainContent.style.display = 'block';
-            this.dom.mainHeader.style.display = 'block';
-            if (this.state.operatingMode === 'server' && app.api.token) {
-                this.dom.logoutBtn.style.display = 'inline-block';
+            app.dom.authContainer.style.display = 'none';
+            app.dom.mainContent.style.display = 'block';
+            app.dom.mainHeader.style.display = 'block';
+            if (app.state.operatingMode === 'server' && app.api.token) {
+                app.dom.logoutBtn.style.display = 'inline-block';
             } else {
-                this.dom.logoutBtn.style.display = 'none';
+                app.dom.logoutBtn.style.display = 'none';
             }
         }
     },
     // Main update function
     updateDisplay() {
         this.updateAuthView();
-        if (this.state.operatingMode === 'static' || app.api.token) {
+        if (app.state.operatingMode === 'static' || app.api.token) {
         this.updateTMInputs();
         this.updateHeaderButtons();
         this.updateViewControls();
@@ -630,7 +641,7 @@ app.handlers = {
                 confirmText: 'OK',
                 cancelText: null,
                 onConfirm: () => {
-                    this.render.toggleAuthForm(true);
+                    app.render.toggleAuthForm(true);
                 }
             });
         } catch (error) {
