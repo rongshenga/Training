@@ -27,12 +27,12 @@
 
 ## 3. 前端改造 (Frontend Refactoring)
 - [x] **API 服务模块**: 在 `public/script.js` 中创建一个模块或一组函数，用于封装所有对后端 API 的 `fetch` 调用。
-- [ ] **双模式持久化改造 (Dual-Mode Persistence)**:
+- [x] **双模式持久化改造 (Dual-Mode Persistence)**:
   - [x] **模式检测**: 通过健康检查API (`/api/health`) 动态判断运行模式。
     - [x] 后端: 添加 `GET /api/health` 端点。
     - [x] 前端: 在 `app.init` 中调用健康检查API，根据结果设置模式，失败则回退到静态模式。
-  - [ ] 改造 `app.storage` 模块，使其成为一个抽象数据层，能根据当前模式调用 `localStorage` 或 API。
-  - [ ] 更新所有数据保存和加载的调用点，使用新的抽象数据层。
+  - [x] 改造 `app.storage` 模块，使其成为一个抽象数据层，能根据当前模式调用 `localStorage` 或 API。
+  - [x] 更新所有数据保存和加载的调用点，使用新的抽象数据层。
 - [ ] **集成用户认证 (Authentication)**:
   - [ ] 在服务器模式下，添加并显示登录/注册 UI。
   - [ ] 在服务器模式下，实现完整的登录、Token 保存和 API 请求认证流程。
