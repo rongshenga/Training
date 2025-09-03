@@ -533,12 +533,10 @@ header {
    ========================================================================== */
 body.single-week-view #workout-plan {
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    justify-content: center;
 }
 body.single-week-view .week-container {
     max-width: 800px;
-    width: 100%;
     margin: 0 auto;
 }
 body.single-week-view .card h3,
