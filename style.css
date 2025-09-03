@@ -417,7 +417,7 @@ body.single-week-view .progress-container {
 }
 
 .form-row-numeric {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: 0.6fr 0.6fr 1fr 1fr;
 }
 
 .form-item {
@@ -557,7 +557,7 @@ body.single-week-view .progress-container {
 
 .group-edit-inputs {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: 0.6fr 1fr 1fr;
     gap: 10px;
     flex-grow: 1;
     align-items: end;
