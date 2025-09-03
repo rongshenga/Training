@@ -35,7 +35,8 @@ const app = {
         program: [],
         viewMode: 'all', // 'all' or 'single'
         currentWeek: 1,
-        displayStyle: 'traditional'
+        displayStyle: 'traditional',
+        operatingMode: 'static' // 'static' or 'server'
     },
 
     // 2.2. DOM ELEMENT CACHE
@@ -68,6 +69,10 @@ const app = {
             historyView: document.getElementById('history-view'),
             tmInputs: document.querySelector('.tm-inputs')
         };
+
+        // Detect operating mode
+        this.state.operatingMode = window.location.protocol === 'file:' ? 'static' : 'server';
+        console.log(`Operating in ${this.state.operatingMode} mode.`); // For debugging
 
         this.storage.load();
         this.render.updateDisplay();
