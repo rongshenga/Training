@@ -51,6 +51,18 @@ input[type="number"]::-webkit-outer-spin-button {
     margin: 0;
 }
 
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
 
 /* ==========================================================================
    3. LAYOUT
@@ -88,14 +100,17 @@ header {
 }
 
 .tm-inputs {
+    margin-bottom: 2rem;
+}
+
+.tm-inputs form {
     display: flex;
     justify-content: center;
     gap: 20px;
     flex-wrap: wrap;
-    margin-bottom: 2rem;
 }
 
-.tm-inputs div {
+.tm-inputs .form-group {
     display: flex;
     flex-direction: column;
     align-items: center;

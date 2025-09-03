@@ -31,3 +31,8 @@ The application follows a simple, state-driven architecture implemented in vanil
 
 - 使用中文回复所有问题和说明
 - 涉及代码的改动，改动完运行正常后都需要提交到git
+
+## Coding Style and Conventions
+
+- **HTML Content**: All user-visible text in `index.html` must be in English.
+- **Git Commits**: All git commit messages must be written in Chinese.
