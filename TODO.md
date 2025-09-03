@@ -5,11 +5,11 @@
 - [x] **迁移前端文件**: 将 `index.html`, `style.css`, `script.js` 移动到 `public/` 目录下。
 - [x] **初始化后端项目**: 在项目根目录创建 `package.json`，并安装 `express`, `sqlite3`, `nodemon`, `dotenv`。
 - [x] **配置开发脚本**: 在 `package.json` 中添加 `start` 和 `dev` 命令，后者使用 `nodemon` 实现服务器热重载。
-- [ ] **创建基础后端服务**: 创建 `server/app.js`，设置一个 Express 服务器，并完成以下配置：
+- [x] **创建基础后端服务**: 创建 `server/app.js`，设置一个 Express 服务器，并完成以下配置：
   - 能够托管 `public` 目录下的静态文件。
   - 使用 `dotenv` 加载环境变量（如 `PORT`）。
   - 配置 CORS 中间件，允许跨域请求。
-- [ ] **验证**: 启动服务器后，确保在浏览器中访问时，现有静态页面功能完全正常。
+- [x] **验证**: 启动服务器后，确保在浏览器中访问时，现有静态页面功能完全正常。
 
 ## 2. 后端开发 (Backend Development)
 - [ ] **数据库设计与初始化**:
