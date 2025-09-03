@@ -16,8 +16,8 @@
   - 选用 **SQLite** 数据库。
   - 在 `server/` 目录下创建数据库初始化脚本，定义 `users` 和 `training_plans` 等表结构。
 - [ ] **用户认证 (Authentication)**:
-  - 实现用户注册 API (`POST /auth/register`)。
-  - 实现用户登录 API (`POST /auth/login`)，成功后返回 JWT Token。
+  - [x] 实现用户注册 API (`POST /auth/register`)。
+  - [ ] 实现用户登录 API (`POST /auth/login`)，成功后返回 JWT Token。
 - [ ] **核心 API 开发 (Core API)**:
   - 创建身份验证中间件，用于保护需要登录的接口。
   - 实现训练计划 API (`GET /api/plan`, `POST /api/plan`)。

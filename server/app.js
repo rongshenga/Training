@@ -10,6 +10,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// API 路由
+const authRoutes = require('./routes/auth.js');
+app.use('/auth', authRoutes);
+
 // 静态文件托管
 const publicDirectoryPath = path.join(__dirname, '../public');
 app.use(express.static(publicDirectoryPath));
