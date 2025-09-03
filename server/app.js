@@ -12,7 +12,9 @@ app.use(express.json());
 
 // API 路由
 const authRoutes = require('./routes/auth.js');
+const apiRoutes = require('./routes/api.js');
 app.use('/auth', authRoutes);
+app.use('/api', apiRoutes);
 
 // 静态文件托管
 const publicDirectoryPath = path.join(__dirname, '../public');
