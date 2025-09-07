@@ -3,22 +3,32 @@
 // ==========================================================================
 const config = {
     dayOrder: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
-    programData: [
-        {
-            week: 1, phase: 'Accumulation', days: [
-                { day: 'Sunday', exercise: 'Bench Press', sets: 4, reps: 8, intensity: 0.65, groups: [ { intensity: 0.65, reps: 8 }, { intensity: 0.65, reps: 8 }, { intensity: 0.65, reps: 8 }, { intensity: 0.65, reps: 8 } ] },
-                { day: 'Thursday', exercise: 'Bench Press', sets: 5, reps: 5, intensity: 0.775, groups: [ { intensity: 0.775, reps: 5 }, { intensity: 0.775, reps: 5 }, { intensity: 0.775, reps: 5 }, { intensity: 0.775, reps: 5 }, { intensity: 0.775, reps: 5 } ] },
-                { day: 'Friday', exercise: 'Squat', sets: 5, reps: 5, intensity: 0.75, groups: [ { intensity: 0.75, reps: 5 }, { intensity: 0.75, reps: 5 }, { intensity: 0.75, reps: 5 }, { intensity: 0.75, reps: 5 }, { intensity: 0.75, reps: 5 } ] }
-            ]
-        },
-        { week: 2, phase: 'Accumulation', days: [ { day: 'Sunday', exercise: 'Bench Press', sets: 4, reps: 8, intensity: 0.675 }, { day: 'Thursday', exercise: 'Bench Press', sets: 5, reps: 5, intensity: 0.80 }, { day: 'Friday', exercise: 'Squat', sets: 5, reps: 5, intensity: 0.775 } ] },
-        { week: 3, phase: 'Accumulation', days: [ { day: 'Sunday', exercise: 'Bench Press', sets: 4, reps: 8, intensity: 0.70 }, { day: 'Thursday', exercise: 'Bench Press', sets: 5, reps: 5, intensity: 0.825 }, { day: 'Friday', exercise: 'Squat', sets: 5, reps: 5, intensity: 0.80 } ] },
-        { week: 4, phase: 'Deload', days: [ { day: 'Sunday', exercise: 'Bench Press', sets: 3, reps: 5, intensity: 0.60 }, { day: 'Thursday', exercise: 'Bench Press', sets: 3, reps: 5, intensity: 0.60 }, { day: 'Friday', exercise: 'Squat', sets: 3, reps: 5, intensity: 0.60 } ] },
-        { week: 5, phase: 'Intensification', days: [ { day: 'Sunday', exercise: 'Bench Press', sets: 4, reps: 5, intensity: 0.70 }, { day: 'Thursday', exercise: 'Bench Press', sets: 4, reps: 3, intensity: 0.875 }, { day: 'Friday', exercise: 'Squat', sets: 5, reps: 3, intensity: 0.85 } ] },
-        { week: 6, phase: 'Intensification', days: [ { day: 'Sunday', exercise: 'Bench Press', sets: 4, reps: 5, intensity: 0.725 }, { day: 'Thursday', exercise: 'Bench Press', sets: 3, reps: 3, intensity: 0.90 }, { day: 'Friday', exercise: 'Squat', sets: 4, reps: 3, intensity: 0.875 } ] },
-        { week: 7, phase: 'Intensification', days: [ { day: 'Sunday', exercise: 'Bench Press', sets: 5, reps: 3, intensity: 0.75 }, { day: 'Thursday', exercise: 'Bench Press', sets: 3, reps: 2, intensity: 0.925 }, { day: 'Friday', exercise: 'Squat', sets: 3, reps: 3, intensity: 0.90 } ] },
-        { week: 8, phase: 'Peak & Test', days: [ { day: 'Sunday', exercise: 'Bench Press', sets: 5, reps: 5, intensity: 0.70 }, { day: 'Thursday', exercise: 'Bench Press', sets: 3, reps: 1, intensity: 0.95 }, { day: 'Friday', exercise: 'Squat', sets: 3, reps: 1, intensity: 0.95 } ] }
-    ]
+    programTemplates: {
+        eightWeekClassic: [
+            {
+                week: 1, phase: 'Accumulation', days: [
+                    { day: 'Sunday', exercise: 'Bench Press', sets: 4, reps: 8, intensity: 0.65, groups: [ { intensity: 0.65, reps: 8 }, { intensity: 0.65, reps: 8 }, { intensity: 0.65, reps: 8 }, { intensity: 0.65, reps: 8 } ] },
+                    { day: 'Thursday', exercise: 'Bench Press', sets: 5, reps: 5, intensity: 0.775, groups: [ { intensity: 0.775, reps: 5 }, { intensity: 0.775, reps: 5 }, { intensity: 0.775, reps: 5 }, { intensity: 0.775, reps: 5 }, { intensity: 0.775, reps: 5 } ] },
+                    { day: 'Friday', exercise: 'Squat', sets: 5, reps: 5, intensity: 0.75, groups: [ { intensity: 0.75, reps: 5 }, { intensity: 0.75, reps: 5 }, { intensity: 0.75, reps: 5 }, { intensity: 0.75, reps: 5 }, { intensity: 0.75, reps: 5 } ] }
+                ]
+            },
+            { week: 2, phase: 'Accumulation', days: [ { day: 'Sunday', exercise: 'Bench Press', sets: 4, reps: 8, intensity: 0.675 }, { day: 'Thursday', exercise: 'Bench Press', sets: 5, reps: 5, intensity: 0.80 }, { day: 'Friday', exercise: 'Squat', sets: 5, reps: 5, intensity: 0.775 } ] },
+            { week: 3, phase: 'Accumulation', days: [ { day: 'Sunday', exercise: 'Bench Press', sets: 4, reps: 8, intensity: 0.70 }, { day: 'Thursday', exercise: 'Bench Press', sets: 5, reps: 5, intensity: 0.825 }, { day: 'Friday', exercise: 'Squat', sets: 5, reps: 5, intensity: 0.80 } ] },
+            { week: 4, phase: 'Deload', days: [ { day: 'Sunday', exercise: 'Bench Press', sets: 3, reps: 5, intensity: 0.60 }, { day: 'Thursday', exercise: 'Bench Press', sets: 3, reps: 5, intensity: 0.60 }, { day: 'Friday', exercise: 'Squat', sets: 3, reps: 5, intensity: 0.60 } ] },
+            { week: 5, phase: 'Intensification', days: [ { day: 'Sunday', exercise: 'Bench Press', sets: 4, reps: 5, intensity: 0.70 }, { day: 'Thursday', exercise: 'Bench Press', sets: 4, reps: 3, intensity: 0.875 }, { day: 'Friday', exercise: 'Squat', sets: 5, reps: 3, intensity: 0.85 } ] },
+            { week: 6, phase: 'Intensification', days: [ { day: 'Sunday', exercise: 'Bench Press', sets: 4, reps: 5, intensity: 0.725 }, { day: 'Thursday', exercise: 'Bench Press', sets: 3, reps: 3, intensity: 0.90 }, { day: 'Friday', exercise: 'Squat', sets: 4, reps: 3, intensity: 0.875 } ] },
+            { week: 7, phase: 'Intensification', days: [ { day: 'Sunday', exercise: 'Bench Press', sets: 5, reps: 3, intensity: 0.75 }, { day: 'Thursday', exercise: 'Bench Press', sets: 3, reps: 2, intensity: 0.925 }, { day: 'Friday', exercise: 'Squat', sets: 3, reps: 3, intensity: 0.90 } ] },
+            { week: 8, phase: 'Peak & Test', days: [ { day: 'Sunday', exercise: 'Bench Press', sets: 5, reps: 5, intensity: 0.70 }, { day: 'Thursday', exercise: 'Bench Press', sets: 3, reps: 1, intensity: 0.95 }, { day: 'Friday', exercise: 'Squat', sets: 3, reps: 1, intensity: 0.95 } ] }
+        ],
+        sixWeekPeaking: [
+            { week: 1, phase: 'Deload', days: [ { day: 'Sunday', exercise: 'Bench Press', sets: 3, reps: 5, intensity: 0.60 }, { day: 'Thursday', exercise: 'Bench Press', sets: 3, reps: 5, intensity: 0.60 }, { day: 'Friday', exercise: 'Squat', sets: 3, reps: 5, intensity: 0.60 } ] },
+            { week: 2, phase: 'Intensification', days: [ { day: 'Sunday', exercise: 'Bench Press', sets: 4, reps: 5, intensity: 0.70 }, { day: 'Thursday', exercise: 'Bench Press', sets: 4, reps: 3, intensity: 0.875 }, { day: 'Friday', exercise: 'Squat', sets: 5, reps: 3, intensity: 0.85 } ] },
+            { week: 3, phase: 'Intensification', days: [ { day: 'Sunday', exercise: 'Bench Press', sets: 4, reps: 5, intensity: 0.725 }, { day: 'Thursday', exercise: 'Bench Press', sets: 3, reps: 3, intensity: 0.90 }, { day: 'Friday', exercise: 'Squat', sets: 4, reps: 3, intensity: 0.875 } ] },
+            { week: 4, phase: 'Intensification', days: [ { day: 'Sunday', exercise: 'Bench Press', sets: 5, reps: 3, intensity: 0.75 }, { day: 'Thursday', exercise: 'Bench Press', sets: 3, reps: 2, intensity: 0.925 }, { day: 'Friday', exercise: 'Squat', sets: 3, reps: 3, intensity: 0.90 } ] },
+            { week: 5, phase: 'Intensification', days: [ { day: 'Sunday', exercise: 'Bench Press', sets: 4, reps: 3, intensity: 0.775 }, { day: 'Thursday', exercise: 'Bench Press', sets: 3, reps: 2, intensity: 0.95 }, { day: 'Friday', exercise: 'Squat', sets: 3, reps: 2, intensity: 0.925 } ] },
+            { week: 6, phase: 'Peak & Test', days: [ { day: 'Sunday', exercise: 'Bench Press', sets: 5, reps: 5, intensity: 0.70 }, { day: 'Thursday', exercise: 'Bench Press', sets: 3, reps: 1, intensity: 0.95 }, { day: 'Friday', exercise: 'Squat', sets: 3, reps: 1, intensity: 0.95 } ] }
+        ]
+    }
 };
 
 // ==========================================================================
@@ -33,6 +43,7 @@ const app = {
         editMode: false,
         history: [],
         program: [],
+        activeProgramKey: 'eightWeekClassic', // Add this line
         viewMode: 'all', // 'all' or 'single'
         currentWeek: 1,
         displayStyle: 'traditional',
@@ -68,6 +79,7 @@ const app = {
             mainHeader: document.querySelector('header h1'),
             historyView: document.getElementById('history-view'),
             tmInputs: document.querySelector('.tm-inputs'),
+            programSelect: document.getElementById('program-select'), // Add this
             authContainer: document.getElementById('auth-container'),
             loginForm: document.getElementById('login-form'),
             registerForm: document.getElementById('register-form'),
@@ -118,6 +130,7 @@ const app = {
         // Main controls
         this.dom.benchTmInput.addEventListener('input', this.handlers.handleTMChange.bind(this));
         this.dom.squatTmInput.addEventListener('input', this.handlers.handleTMChange.bind(this));
+        this.dom.programSelect.addEventListener('change', this.handlers.handleProgramChange.bind(this)); // Add this
         this.dom.editModeToggle.addEventListener('click', this.handlers.handleEditModeToggle.bind(this));
         this.dom.archiveBtn.addEventListener('click', this.handlers.archiveAndStartNewCycle.bind(this));
         this.dom.viewHistoryBtn.addEventListener('click', this.handlers.toggleHistoryView.bind(this));
@@ -211,7 +224,8 @@ app.storage = {
 
         const defaultData = {
             benchPressTM: 0, squatTM: 0, progressData: {}, editMode: false, history: [],
-            program: app.utils.deepClone(config.programData),
+            activeProgramKey: 'eightWeekClassic',
+            program: app.utils.deepClone(config.programTemplates['eightWeekClassic']),
             viewMode: 'all', currentWeek: 1, displayStyle: 'traditional',
         };
 
@@ -247,7 +261,8 @@ app.storage = {
         
         // Final validation for crucial data structures
         if (!app.state.program || !Array.isArray(app.state.program) || app.state.program.length === 0) {
-            app.state.program = app.utils.deepClone(config.programData);
+            const key = app.state.activeProgramKey || 'eightWeekClassic';
+            app.state.program = app.utils.deepClone(config.programTemplates[key]);
         }
         if (!app.state.history || !Array.isArray(app.state.history)) {
             app.state.history = [];
@@ -351,6 +366,7 @@ app.render = {
         this.updateAuthView();
         if (app.state.operatingMode === 'static' || app.api.token) {
         this.updateTMInputs();
+        this.updateProgramSelector(); // Add this
         this.updateHeaderButtons();
         this.updateViewControls();
         this.updateWorkoutPlan();
@@ -362,6 +378,24 @@ app.render = {
     updateTMInputs() {
         app.dom.benchTmInput.value = app.state.benchPressTM > 0 ? app.state.benchPressTM : '';
         app.dom.squatTmInput.value = app.state.squatTM > 0 ? app.state.squatTM : '';
+    },
+
+    updateProgramSelector() {
+        const select = app.dom.programSelect;
+        // Populate only if it's empty, to avoid re-creating on every render
+        if (select.options.length === 0) {
+            const programNames = {
+                eightWeekClassic: '8-Week Classic',
+                sixWeekPeaking: '6-Week Peaking'
+            };
+            Object.keys(config.programTemplates).forEach(key => {
+                const option = document.createElement('option');
+                option.value = key;
+                option.textContent = programNames[key] || key;
+                select.appendChild(option);
+            });
+        }
+        select.value = app.state.activeProgramKey;
     },
 
     updateHeaderButtons() {
@@ -656,7 +690,8 @@ app.handlers = {
         // Reset state to default, but keep server mode
         const defaultState = {
             benchPressTM: 0, squatTM: 0, progressData: {}, editMode: false, history: [],
-            program: app.utils.deepClone(config.programData),
+            activeProgramKey: 'eightWeekClassic',
+            program: app.utils.deepClone(config.programTemplates.eightWeekClassic),
             viewMode: 'all', currentWeek: 1, displayStyle: 'traditional',
             operatingMode: 'server'
         };
@@ -799,7 +834,8 @@ app.handlers = {
                     isCollapsed: true
                 };
                 app.state.history.unshift(archive);
-                app.state.program = app.utils.deepClone(config.programData);
+                const key = app.state.activeProgramKey || 'eightWeekClassic';
+                app.state.program = app.utils.deepClone(config.programTemplates[key]);
                 app.state.progressData = {};
                 await app.storage.save();
                 app.render.updateDisplay();
@@ -943,6 +979,47 @@ app.handlers = {
             await app.render.modalConfirmCallback();
         }
         app.render.hideModal();
+    },
+
+    handleProgramChange(event) {
+        const newProgramKey = event.target.value;
+        if (newProgramKey === app.state.activeProgramKey) return;
+
+        app.render.showModal({
+            title: 'Change Training Program?',
+            text: 'This will archive your current cycle and start a new one with the selected program. Are you sure?',
+            confirmText: 'Confirm & Start New',
+            onConfirm: async () => {
+                // 1. Archive current cycle
+                const archive = {
+                    archivedAt: new Date().toISOString(),
+                    program: app.utils.deepClone(app.state.program),
+                    progressData: app.utils.deepClone(app.state.progressData),
+                    benchPressTM: app.state.benchPressTM,
+                    squatTM: app.state.squatTM,
+                    editMode: false,
+                    isCollapsed: true,
+                    programKey: app.state.activeProgramKey // Store which program was used
+                };
+                app.state.history.unshift(archive);
+
+                // 2. Start new cycle with the new program
+                app.state.activeProgramKey = newProgramKey;
+                app.state.program = app.utils.deepClone(config.programTemplates[newProgramKey]);
+                app.state.progressData = {};
+                app.state.currentWeek = 1;
+                app.state.viewMode = 'all';
+
+                // 3. Save and re-render
+                await app.storage.save();
+                app.render.updateDisplay();
+                app.render.showModal({ title: 'Success!', text: `New ${newProgramKey} cycle started.`, confirmText: 'OK', cancelText: null });
+            },
+            onCancel: () => {
+                // If user cancels, revert the dropdown to its original value
+                event.target.value = app.state.activeProgramKey;
+            }
+        });
     }
 };
 
