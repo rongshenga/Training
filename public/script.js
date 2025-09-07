@@ -185,7 +185,8 @@ app.utils = {
     calculateWeight(tm, intensity) {
         if (tm <= 0) return 0;
         const weight = tm * intensity;
-        return Math.round(weight / 2.5) * 2.5;
+        // Round to one decimal place to handle floating point issues without aggressive snapping
+        return Math.round(weight * 10) / 10;
     },
 
     isDayCompleted(weekData, day, dayIndex, progressData, isHistory, historyIndex) {
@@ -751,7 +752,7 @@ app.handlers = {
         const targetData = groupIdx !== undefined ? dayData.groups[groupIdx] : dayData;
 
         if (prop === 'weight') {
-            targetData.intensity = tm > 0 ? parseFloat((value / tm).toFixed(3)) : 0;
+            targetData.intensity = tm > 0 ? parseFloat((value / tm).toFixed(5)) : 0;
         } else {
             targetData[prop] = value;
         }
