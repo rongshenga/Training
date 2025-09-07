@@ -160,7 +160,7 @@ const app = {
 
         // Modal interactions
         this.dom.modalConfirmBtn.addEventListener('click', this.handlers.handleModalConfirm.bind(this));
-        this.dom.modalCancelBtn.addEventListener('click', this.render.hideModal.bind(this));
+        this.dom.modalCancelBtn.addEventListener('click', this.handlers.handleModalCancel.bind(this));
     }
 };
 
@@ -621,8 +621,9 @@ app.render = {
     },
 
     // Modal display
-    showModal({ title, text, bodyHtml = '', confirmText = 'Confirm', cancelText = 'Cancel', onConfirm }) {
+    showModal({ title, text, bodyHtml = '', confirmText = 'Confirm', cancelText = 'Cancel', onConfirm, onCancel }) {
         this.modalConfirmCallback = onConfirm;
+        this.modalCancelCallback = onCancel;
         app.dom.modalTitle.textContent = title;
         app.dom.modalText.style.display = bodyHtml ? 'none' : 'block';
         app.dom.modalBody.style.display = bodyHtml ? 'block' : 'none';
@@ -640,6 +641,7 @@ app.render = {
     hideModal() {
         app.dom.modal.classList.remove('visible');
         this.modalConfirmCallback = null;
+        this.modalCancelCallback = null;
     }
 };
 
@@ -977,6 +979,13 @@ app.handlers = {
     async handleModalConfirm() {
         if (app.render.modalConfirmCallback) {
             await app.render.modalConfirmCallback();
+        }
+        app.render.hideModal();
+    },
+
+    handleModalCancel() {
+        if (app.render.modalCancelCallback) {
+            app.render.modalCancelCallback();
         }
         app.render.hideModal();
     },
