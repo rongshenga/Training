@@ -1016,8 +1016,9 @@ app.handlers = {
                 app.render.showModal({ title: 'Success!', text: `New ${newProgramKey} cycle started.`, confirmText: 'OK', cancelText: null });
             },
             onCancel: () => {
-                // If user cancels, revert the dropdown to its original value
+                // If user cancels, revert the dropdown to its original value and re-render
                 event.target.value = app.state.activeProgramKey;
+                app.render.updateDisplay(); // Force a re-render to ensure consistency
             }
         });
     }
