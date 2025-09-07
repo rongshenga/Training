@@ -592,7 +592,7 @@ app.render = {
             content += `
                 <div class="exercise-info">
                     <p>${icon} ${day.exercise}</p>
-                    <p class="weight-details"><strong>${weight}kg</strong> (${day.intensity * 100}%)</p>
+                    <p class="weight-details"><strong>${weight}kg</strong> (${(day.intensity * 100).toFixed(1)}%)</p>
                     <p>${day.sets} sets of ${day.reps} reps</p>
                 </div>
                 <div class="progress-container">${progressBoxes}</div>`;
