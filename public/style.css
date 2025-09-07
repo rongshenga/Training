@@ -120,6 +120,16 @@ header {
     width: 100px;
 }
 
+.tm-inputs select {
+    background-color: var(--secondary-bg);
+    color: var(--primary-text);
+    border: 1px solid var(--border-color);
+    padding: 8px;
+    border-radius: 4px;
+    font-size: 1em;
+    width: 160px; /* Adjust width for longer text */
+}
+
 .week-header {
     font-size: 1.5em;
     font-weight: bold;
